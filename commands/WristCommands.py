@@ -24,15 +24,14 @@ class WristWithJoysticks(commands2.Command):
 
 class WristMotorStop(commands2.Command):
     
-    def __init__(self, WristSubsytem: WristSubsystemClass, joystickinput: float) -> None:
+    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
         self.WristSub = WristSubsytem
-        self.inputvalue = joystickinput
     
     def initialize(self):
         logger.info("wrist motor stop initialize")
 
     def execute(self):
-        self.WristSub.wristmotorstop(self.inputvalue)
+        self.WristSub.wristmotorstop()
         logger.info("stopping")
 
     def isFinished(self):
