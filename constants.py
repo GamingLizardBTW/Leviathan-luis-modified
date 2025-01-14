@@ -17,14 +17,15 @@ from collections import namedtuple
 import rev
 import phoenix6
 
+
 # Physical constants
 phys_data = {
     # "track_width": (23.0 * u.inch).m_as(u.m),
     # "wheel_base": (23.0 * u.inch).m_as(u.m),
     # "wheel_circumference": 4 * math.pi * u.inch,
-    "track_width": (23.0 * u.inch).m_as(u.m),
-    "wheel_base": (23.0 * u.inch).m_as(u.m),
-    "wheel_circumference": 4 * math.pi * u.inch,
+    "track_width_in_inch": 23.0,
+    "wheel_base_in_inch": 23.0,
+    "wheel_circumference_in_inch": 4 * math.pi
 }
 PHYS = namedtuple("Data", phys_data.keys())(**phys_data)
 
