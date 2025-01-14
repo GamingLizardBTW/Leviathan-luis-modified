@@ -1,5 +1,5 @@
 import subsystems.AlgaeSubsystem
-from commands.AlgaeCommands import AlgaeIntakeCommand, AlgaeOutakeCommand, AlgaeStop
+from commands.AlgaeCommands import AlgaeIntakeCommand, AlgaeOutakeCommand, AlgaeStop, AlgaeWithTriggers
 
 from wpilib import XboxController
 
@@ -20,4 +20,4 @@ class RobotContainer:
         pass
 
     def configureButtonBindings(self):
-        self.algaesub.setDefaultCommand()
+        self.algaesub.setDefaultCommand(AlgaeWithTriggers(self.algaesub, self.OperatorController.getLeftTriggerAxis(), self.OperatorController.getRightTriggerAxis()))

@@ -16,10 +16,12 @@ class AlgaeWithTriggers(commands2.Command):
 
     def execute(self):
         self.calculated_input = self.righttrigger - self.lefttrigger
-        if self.calculated_input >= 0.00:
+        if self.calculated_input >= 0.05:
             self.algaesub.algaeintake()
         elif self.calculated_input <= 0.05:
-            self.algaesub.algaeoutake
+            self.algaesub.algaeoutake()
+        else:
+            self.algaesub.algaestop()
         logger.info("x")
 
     def isFinished(self):
@@ -70,7 +72,7 @@ class AlgaeStop(commands2.Command):
         self.algaesub = algaesubsystem
 
     def initialize(self):
-        logger.info("algae stop command initialized")
+        logger.info("algae stop initialized")
 
     def execute(self):
         self.algaesub.algaestop()
