@@ -9,10 +9,11 @@ class RobotContainer:
         self.wristsub = subsystems.WristSubsystem.WristSubsystemClass()
         self.DriverController = XboxController(0)
         self.OperatorController = XboxController(1)
+        self.configureButtonBindings()
     
     def get_autonomous_command(self):
         pass
 
 
     def configureButtonBindings(self):
-        self.wristsub.setDefaultCommand(WristWithJoysticks(self.wristsub, self.OperatorController.getRightY()))
+        self.wristsub.setDefaultCommand(WristWithJoysticks(self.wristsub))
