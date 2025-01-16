@@ -12,6 +12,8 @@ from wpimath.kinematics import (
 )
 from navx import AHRS
 
+import constants
+
 class SwerveModule:
     def __init__(self,
                  driveMotorID: int, 
@@ -24,15 +26,21 @@ class SwerveModule:
         self.driveMotorOutput = controls.DutyCycleOut(0)
         self.TurnMotoOutput = controls.DutyCycleOut(0)
 
-        self.driveMotor.setNeutralMode(1)
-        self.turnMotor.setNeutralMode(1)
+        self.driveMotor.setNeutralMode(constants.OP.driveMotor_neutral)
+        self.turnMotor.setNeutralMode(1)(constants.OP.steerMotor_neutral)
         #coast is 0, brake is 1
 
         self.turnAbsoluteEncoder = wpilib.DutyCycleEncoder(turnAbsoluteEncoderID)
-        self.driveMotor.get_velocity
+        
 
     def getState(self) -> SwerveModuleState:
-        
-        return SwerveModuleState()
+        self.swerveModuleMeterPerSecond = (
+            self.driveMotor.get_rotor_velocity() / 
+            (constants.MECH.swerve_module_driving_gearing_ratio) * 
+            (constants.MECH.wheel_circumference_in_inch) * 
+            (constants.CVR.meterPerInch)
+        )
+        self.driveMotor.
+        return SwerveModuleState(self.swerveModuleMeterPerSecond, self.turnAbsoluteEncoder.get())
 
 

@@ -17,12 +17,15 @@ from collections import namedtuple
 import rev
 import phoenix6
 
+#Unit Conversions
+cvr_data = {
+    "meterPerInch": 0.0254
+}
+CVR = namedtuple("Data", cvr_data.keys())(**cvr_data)
 
 # Physical constants
 phys_data = {
-    # "track_width": (23.0 * u.inch).m_as(u.m),
-    # "wheel_base": (23.0 * u.inch).m_as(u.m),
-    # "wheel_circumference": 4 * math.pi * u.inch,
+    #Numbers are in inches
     "track_width_in_inch": 23.0,
     "wheel_base_in_inch": 23.0,
     "wheel_circumference_in_inch": 4 * math.pi
@@ -31,10 +34,10 @@ PHYS = namedtuple("Data", phys_data.keys())(**phys_data)
 
 # Mechanical constants
 mech_data = {
-    "swerve_module_propulsion_gearing_ratio": 6.75,  # SDS Mk4i L2
+    "swerve_module_driving_gearing_ratio": 6.75,  # SDS Mk4i L2
     "swerve_module_steering_gearing_ratio": 150 / 7,  # SDS Mk4i
 
-    "propulsion_motor_inverted": False,
+    "driving_motor_inverted": False,
     "steering_motor_inverted": True,
 }
 MECH = namedtuple("Data", mech_data.keys())(**mech_data)
@@ -76,18 +79,10 @@ op_data = {
     "speed_limit": 4.0 * (u.m / u.s),
     "angular_velocity_limit": 8.0 * (u.rad / u.s),
 
-    # For NEO / SparkMAX, use the following and comment out the Falcon500 values
-    "propulsion_neutral": rev.CANSparkMax.IdleMode.kBrake,
-    "steering_neutral": rev.CANSparkMax.IdleMode.kBrake,
-    # For Falcon500 / TalonFX, use the following and comment out the NEO values
-    #"propulsion_neutral": phoenix5.NeutralMode.Coast,
-    #"steering_neutral": phoenix5.NeutralMode.Brake,
+    # 0 is coast, 1 is brake
+    "driveMotor_neutral": 1,
+    "steerMotor_neutral": 1,
 
-    # Values to pass to stick.getRawAxis()
-    # Set these according to your operator preferences
-    "translation_joystick_axis": JOYSTICK_AXES["LEFT_Y"],
-    "strafe_joystick_axis": JOYSTICK_AXES["LEFT_X"],
-    "rotation_joystick_axis": JOYSTICK_AXES["RIGHT_X"],
 }
 OP = namedtuple("Data", op_data.keys())(**op_data)
 
