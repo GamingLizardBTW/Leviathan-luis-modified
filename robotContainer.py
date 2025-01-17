@@ -21,4 +21,4 @@ class RobotContainer:
         pass
 
     def configureButtonBindings(self):
-        self.algaesub.setDefaultCommand(AlgaeWithTriggers(self.algaesub, self.OperatorController.getLeftTriggerAxis(), self.OperatorController.getRightTriggerAxis()))
+        self.algaesub.setDefaultCommand(AlgaeWithTriggers(self.algaesub))
