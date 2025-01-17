@@ -7,6 +7,7 @@ logger = logging.getLogger("algaesubsystemlogger")
 class AlgaeWithTriggers(commands2.Command):
     def __init__(self, algaesubsystem: AlgaeSubsystemClass, lefttrigger: float, righttrigger: float) -> None:
         super().__init__()
+        self.addRequirements(algaesubsystem)
         self.algaesub = algaesubsystem
         self.lefttrigger = lefttrigger
         self.righttrigger = righttrigger

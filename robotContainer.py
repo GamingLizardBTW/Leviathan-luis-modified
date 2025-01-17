@@ -15,6 +15,7 @@ class RobotContainer:
         self.algaesub = subsystems.AlgaeSubsystem.AlgaeSubsystemClass()
         self.DriverController = XboxController(0)
         self.OperatorController = XboxController(1)
+        self.configureButtonBindings()
 
     def get_autonomous_command(self):
         pass
