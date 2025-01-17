@@ -19,7 +19,10 @@ class WristWithJoysticks(commands2.Command):
 
     def execute(self):
         self.inputvalue = XboxController(OP.operator_controller).getRightY()
-        self.WristSub.wristwithjoystick(self.inputvalue)
+        if self.inputvalue > 0.1 or self.inputvalue < -0.1:
+            self.WristSub.wristwithjoystick(self.inputvalue)
+        else:
+            self.WristSub.wristmotorstop()
         logging.info("Running motor")
 
     def isFinished(self):
