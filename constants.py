@@ -14,7 +14,6 @@
 
 import math
 from collections import namedtuple
-import rev
 import phoenix6
 
 #Unit Conversions
@@ -45,6 +44,7 @@ MECH = namedtuple("Data", mech_data.keys())(**mech_data)
 # Electrical constants
 elec_data = {
 
+    #SwerveDrive
     "RF_steer_CAN_ID": 15,
     "RF_drive_CAN_ID": 1,
     "RF_encoder_DIO": 2,
@@ -58,6 +58,17 @@ elec_data = {
     "LF_drive_CAN_ID": 7,
     "LF_encoder_DIO": 1,  
 
+    #Wrist
+    "wrist_motor_CAN_ID": 0,
+    "wrist_neutral_mode": 1,
+    "wrist_speed_multiplier": 0.5,
+
+    #Algae
+    "algae_leftmotor_CAN_ID": 2,
+    "algae_rightmotor_CAN_ID": 1,
+    "algae_neutral_mode": 1,
+    "algae_speed": 0.2,
+
 }
 ELEC = namedtuple("Data", elec_data.keys())(**elec_data)
 
@@ -69,15 +80,15 @@ op_data = {
 
     # These maximum parameters reflect the maximum physically possible, not the
     # desired maximum limit.
-    "max_speed": 4.5 * (u.m / u.s),
-    "max_angular_velocity": 11.5 * (u.rad / u.s),
+    # "max_speed": 4.5 * (u.m / u.s),
+    # "max_angular_velocity": 11.5 * (u.rad / u.s),
 
-    # You can limit how fast your robot moves (e.g. during testing) using the
-    # following parameters.  Setting to None is the same as setting to
-    # max_speed/max_angular_velocity, and indicates no limit.
-    #
-    "speed_limit": 4.0 * (u.m / u.s),
-    "angular_velocity_limit": 8.0 * (u.rad / u.s),
+    # # You can limit how fast your robot moves (e.g. during testing) using the
+    # # following parameters.  Setting to None is the same as setting to
+    # # max_speed/max_angular_velocity, and indicates no limit.
+    # #
+    # "speed_limit": 4.0 * (u.m / u.s),
+    # "angular_velocity_limit": 8.0 * (u.rad / u.s),
 
     # 0 is coast, 1 is brake
     "driveMotor_neutral": 1,
