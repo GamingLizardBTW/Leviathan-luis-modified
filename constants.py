@@ -64,7 +64,8 @@ elec_data = {
 
     #Algae
     "algae_leftmotor_CAN_ID": 2,
-    "algae_rightmotor_CAN_ID": 3,
+    "algae_rightmotor_CAN_ID": 3, 
+    "algae_neutral_mode": 1,
 
 }
 ELEC = namedtuple("Data", elec_data.keys())(**elec_data)
