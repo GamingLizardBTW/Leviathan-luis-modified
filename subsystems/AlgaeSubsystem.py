@@ -11,12 +11,12 @@ class AlgaeSubsystemClass(commands2.Subsystem):
         
     
     def algaeintake(self):
-        self.algaeintakeLeftmotor.set(0.5)
-        self.algaeintakeRightmotor.set(-0.5)
+        self.algaeintakeLeftmotor.set(0.20)
+        self.algaeintakeRightmotor.set(-0.20)
         
     def algaeoutake(self):
-        self.algaeintakeLeftmotor.set(-0.5)
-        self.algaeintakeRightmotor.set(0.5)
+        self.algaeintakeLeftmotor.set(-0.20)
+        self.algaeintakeRightmotor.set(0.20)
     
     def algaestop(self):
         self.algaeintakeLeftmotor.set(0)

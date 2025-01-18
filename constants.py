@@ -59,12 +59,12 @@ elec_data = {
     "LF_encoder_DIO": 1,  
 
     #Wrist
-    "wrist_motor_CAN_ID": 1,
+    "wrist_motor_CAN_ID": 0,
     "wrist_neutral_mode": 1,
 
     #Algae
     "algae_leftmotor_CAN_ID": 2,
-    "algae_rightmotor_CAN_ID": 3,
+    "algae_rightmotor_CAN_ID": 1,
 
 }
 ELEC = namedtuple("Data", elec_data.keys())(**elec_data)
