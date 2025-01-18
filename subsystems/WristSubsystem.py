@@ -11,7 +11,7 @@ class WristSubsystemClass(commands2.Subsystem):
         self.wristmotor.setNeutralMode(self.brakemode)
 
     def wristwithjoystick(self, joystickinput):
-        self.calculatedinput = joystickinput * 0.5
+        self.calculatedinput = joystickinput * ELEC.wrist_speed_multiplier
         self.wristmotor.set(self.calculatedinput)
 
     def wristmotorstop(self):

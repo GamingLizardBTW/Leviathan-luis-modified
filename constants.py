@@ -61,10 +61,13 @@ elec_data = {
     #Wrist
     "wrist_motor_CAN_ID": 0,
     "wrist_neutral_mode": 1,
+    "wrist_speed_multiplier": 0.5,
 
     #Algae
     "algae_leftmotor_CAN_ID": 2,
     "algae_rightmotor_CAN_ID": 1,
+    "algae_neutral_mode": 1,
+    "algae_speed": 0.2,
 
 }
 ELEC = namedtuple("Data", elec_data.keys())(**elec_data)
