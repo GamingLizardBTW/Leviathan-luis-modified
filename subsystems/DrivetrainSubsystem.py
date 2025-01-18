@@ -40,7 +40,6 @@ class SwerveModule:
             (constants.MECH.wheel_circumference_in_inch) * 
             (constants.CVR.meterPerInch)
         )
-        self.driveMotor.
         return SwerveModuleState(self.swerveModuleMeterPerSecond, self.turnAbsoluteEncoder.get())
 
 
