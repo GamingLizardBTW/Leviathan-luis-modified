@@ -64,12 +64,18 @@ elec_data = {
     "wrist_speed_multiplier": 0.5,
 
     #Algae
-    "algae_leftmotor_CAN_ID": 2,
+    "algae_leftmotor_CAN_ID": 5,
     "algae_rightmotor_CAN_ID": 1,
     "algae_neutral_mode": 1,
     "algae_speed": 0.2,
 
-}
+    #Coral
+    "coral_leftmotor_CAN_ID": 3,
+    "coral_rightmotor_CAN_ID": 2,
+    "coral_neutral_mode": 1,
+    "coral_speed": 0.2,
+
+}    
 ELEC = namedtuple("Data", elec_data.keys())(**elec_data)
 
 # Operation constants
