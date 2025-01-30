@@ -1,0 +1,43 @@
+import wpilib
+import wpimath
+import commands2
+import wpimath.filter
+from subsystems.DrivetrainSubsystem import drivetrainSubsystemClass
+import logging
+logger = logging.getLogger("Drivetrain Logger")
+from wpilib import XboxController
+from constants import OP, PHYS
+
+class driveWithJoystickCommand(commands2.Command):
+    def __init__(self, drivetrainSubsystem: drivetrainSubsystemClass) -> None :
+        self.drivetrainSub = drivetrainSubsystem
+        self.xSpeedLimiter = wpimath.filter.SlewRateLimiter(3)
+        self.ySpeedLimiter = wpimath.filter.SlewRateLimiter(3)
+        self.rotateSpeedLimiter = wpimath.filter.SlewRateLimiter(3)
+        self.addRequirements(drivetrainSubsystem)
+        logger.info("driveWithJoystick constructor")
+    
+    def initialize(self):
+        logger.info("driveWithJoystick initiate")
+
+    def execute(self):
+        #forward is positive X and left is positive Y.
+        self.leftY = XboxController(OP.driver_controller).getLeftY() #This will be xSpeed(front and back)
+        xSpeed = (-self.xSpeedLimiter.calculate(wpimath.applyDeadband(self.leftY, 0.02)) * OP.max_speed)
+
+        self.leftX = XboxController(OP.driver_controller).getLeftX() #This will be ySpeed(left and right)
+        ySpeed = (-self.ySpeedLimiter.calculate(wpimath.applyDeadband(self.leftX, 0.02)) * OP.max_speed)
+
+        self.rightX = XboxController(OP.driver_controller).getRightX()#This will be rotation(turn heading left and right)
+        rotationSpeed = (-self.rotateSpeedLimiter.calculate(wpimath.applyDeadband(self.rightX, 0.02)) * OP.max_speed)
+
+        # self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed)
+
+        self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed, False, 0.02)
+        self.drivetrainSub.showAbsoluteEncoderValues()
+
+    def isFinished(self):
+        return False
+    
+    def end(self, interrupted):
+        self.drivetrainSub.drive(0,0,0,True,0.02)

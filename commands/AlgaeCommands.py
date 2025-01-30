@@ -5,6 +5,7 @@ import logging
 logger = logging.getLogger("algaesubsystemlogger")
 from wpilib import XboxController
 import phoenix6
+from constants import OP
 
 class AlgaeWithTriggers(commands2.Command):
     def __init__(self, algaesubsystem: AlgaeSubsystemClass) -> None:
@@ -15,8 +16,8 @@ class AlgaeWithTriggers(commands2.Command):
         logger.info("algae intake command initialized")
 
     def execute(self):
-        self.lefttrigger = XboxController(1).getLeftTriggerAxis()
-        self.righttrigger = XboxController(1).getRightTriggerAxis()
+        self.lefttrigger = XboxController(OP.operator_controller).getLeftTriggerAxis()
+        self.righttrigger = XboxController(OP.operator_controller).getRightTriggerAxis()
         self.calculated_input = self.righttrigger - self.lefttrigger
         if self.calculated_input >= 0.05:
             self.algaesub.algaeintake()
