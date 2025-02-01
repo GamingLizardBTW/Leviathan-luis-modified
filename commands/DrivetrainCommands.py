@@ -24,17 +24,22 @@ class driveWithJoystickCommand(commands2.Command):
         #forward is positive X and left is positive Y.
         self.leftY = XboxController(OP.driver_controller).getLeftY() #This will be xSpeed(front and back)
         xSpeed = (-self.xSpeedLimiter.calculate(wpimath.applyDeadband(self.leftY, 0.02)) * OP.max_speed)
+        #xSpeed = -self.leftY * OP.max_speed
 
         self.leftX = XboxController(OP.driver_controller).getLeftX() #This will be ySpeed(left and right)
         ySpeed = (-self.ySpeedLimiter.calculate(wpimath.applyDeadband(self.leftX, 0.02)) * OP.max_speed)
+        #ySpeed = -self.leftX * OP.max_speed
 
         self.rightX = XboxController(OP.driver_controller).getRightX()#This will be rotation(turn heading left and right)
         rotationSpeed = (-self.rotateSpeedLimiter.calculate(wpimath.applyDeadband(self.rightX, 0.02)) * OP.max_speed)
+        #rotationSpeed = -self.rightX * OP.max_speed
 
         # self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed)
 
         self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed, False, 0.02)
         self.drivetrainSub.showAbsoluteEncoderValues()
+        self.drivetrainSub.showAbsoluteEncoderValuesInRadians()
+        self.drivetrainSub.showSteeringSetpoint()
 
     def isFinished(self):
         return False
