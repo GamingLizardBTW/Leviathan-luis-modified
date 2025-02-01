@@ -18,6 +18,7 @@ class driveWithJoystickCommand(commands2.Command):
         logger.info("driveWithJoystick constructor")
     
     def initialize(self):
+        self.drivetrainSub.resetAllEncoders()
         logger.info("driveWithJoystick initiate")
 
     def execute(self):
@@ -40,6 +41,7 @@ class driveWithJoystickCommand(commands2.Command):
         self.drivetrainSub.showAbsoluteEncoderValues()
         self.drivetrainSub.showAbsoluteEncoderValuesInRadians()
         self.drivetrainSub.showSteeringSetpoint()
+        self.drivetrainSub.showTurnMotorEncoderValues()
 
     def isFinished(self):
         return False
