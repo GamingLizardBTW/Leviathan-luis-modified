@@ -37,7 +37,7 @@ class driveWithJoystickCommand(commands2.Command):
 
         # self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed)
 
-        self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed, False, 0.02)
+        self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed, True, 0.02)
         self.drivetrainSub.showAbsoluteEncoderValues()
         self.drivetrainSub.showAbsoluteEncoderValuesInRadians()
         self.drivetrainSub.showSteeringSetpoint()
