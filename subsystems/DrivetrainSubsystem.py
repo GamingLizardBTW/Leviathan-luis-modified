@@ -42,10 +42,9 @@ class SwerveModule:
 
         self.turnAbsoluteEncoder = wpilib.DutyCycleEncoder(turnAbsoluteEncoderID, 1, turnAbsoluteEncoderOffset)
         self.turnAbsoluteEncoderOffset = turnAbsoluteEncoderOffset
-        # self.turnAbsoluteEncoder.setInverted(True)
 
         self.drivePIDcontroller = wpimath.controller.PIDController(1,0,0)
-        self.turnPIDcontroller = wpimath.controller.ProfiledPIDController(1.2,0,0,wpimath.trajectory.TrapezoidProfile.Constraints(OP.max_steering_velocity, OP.max_steering_acceleration))
+        self.turnPIDcontroller = wpimath.controller.ProfiledPIDController(1.5,0,0,wpimath.trajectory.TrapezoidProfile.Constraints(OP.max_steering_velocity, OP.max_steering_acceleration))
         self.turnPIDcontroller.enableContinuousInput(-math.pi, math.pi)
 
     def getState(self) -> SwerveModuleState:

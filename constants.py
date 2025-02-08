@@ -129,15 +129,15 @@ sw_data = {
 	# NOTE: when facing wheels "front", make sure that the bevel gears are all
 	# facing right.  Otherwise the wheel will run in reverse!
 	#
-	"lf_enc_zeropos":  0.5644,
-	"rf_enc_zeropos":  0.6558,
-	"lb_enc_zeropos":  0.2079,
-	"rb_enc_zeropos":  0.6759,
+	"lf_enc_zeropos":  0.5198,
+	"rf_enc_zeropos":  0.6684,
+	"lb_enc_zeropos":  0.2002,
+	"rb_enc_zeropos":  0.6287,
 
     # Constants for PID control of the propulsion AND steering motors
     # (kP must be non-zero, or azimuth motors won't engage.)
     #"kP": 0.3,  # representative value for Falcon500 motors
-    "kP": 0.01,   # representative value for NEO motors
+    "kP": 1.2,   # representative value for NEO motors
     "kI": 0,
     "kD": 0,
 
