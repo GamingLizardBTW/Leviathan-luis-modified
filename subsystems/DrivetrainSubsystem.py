@@ -40,11 +40,12 @@ class SwerveModule:
         self.driveMotor.setNeutralMode(ELEC.driveMotor_neutral)
         self.turnMotor.setNeutralMode(ELEC.steerMotor_neutral)
 
-        self.turnAbsoluteEncoder = wpilib.DutyCycleEncoder(turnAbsoluteEncoderID)
+        self.turnAbsoluteEncoder = wpilib.DutyCycleEncoder(turnAbsoluteEncoderID, 1, turnAbsoluteEncoderOffset)
         self.turnAbsoluteEncoderOffset = turnAbsoluteEncoderOffset
+        # self.turnAbsoluteEncoder.setInverted(True)
 
         self.drivePIDcontroller = wpimath.controller.PIDController(1,0,0)
-        self.turnPIDcontroller = wpimath.controller.ProfiledPIDController(0,0,0,wpimath.trajectory.TrapezoidProfile.Constraints(OP.max_steering_velocity, OP.max_steering_acceleration))
+        self.turnPIDcontroller = wpimath.controller.ProfiledPIDController(1.2,0,0,wpimath.trajectory.TrapezoidProfile.Constraints(OP.max_steering_velocity, OP.max_steering_acceleration))
         self.turnPIDcontroller.enableContinuousInput(-math.pi, math.pi)
 
     def getState(self) -> SwerveModuleState:
@@ -72,36 +73,43 @@ class SwerveModule:
         
         return SwerveModulePosition(swerveModulePosition, absoluteEncoderPositionInRadian)
     
-    def getAbsoluteEncoderValue(self, encoderOffset: float):
-        # return self.turnAbsoluteEncoder.get() + encoderOffset
+    def getAbsoluteEncoderValue(self):
         return self.turnAbsoluteEncoder.get()
+
+        # return self.turnAbsoluteEncoder.get() + self.turnAbsoluteEncoderOffset
     
-    def getAbsoluteEncoderValueInRadians(self, encoderOffset: float):
-        return (self.turnAbsoluteEncoder.get() + encoderOffset) * constants.CVR.radianPerRotation
+    def getAbsoluteEncoderValueInRadians(self):
+        return (self.turnAbsoluteEncoder.get() + self.turnAbsoluteEncoderOffset) * constants.CVR.radianPerRotation
     
     def getTurnMotorEncoderValue(self):
-        return self.turnMotor.get_rotor_position().value
+        # if self.turnMotor.get_rotor_position().value >= MECH.swerve_module_steering_gearing_ratio or self.turnMotor.get_rotor_position().value <= 0:
+        #     self.turnMotor.set_position(0)
+        return self.turnMotor.get_rotor_position().value / MECH.swerve_module_steering_gearing_ratio
     
     def getSteeringSetpoint(self, desireState: SwerveModuleState):
         return desireState.angle.radians()
     
     def getTurnMotorPositionInRadian(self) -> float:
-        if -self.turnMotor.get_rotor_position().value > MECH.swerve_module_steering_gearing_ratio or -self.turnMotor.get_rotor_position().value < -MECH.swerve_module_steering_gearing_ratio:
-            return 0
-        else:
-            return -self.turnMotor.get_rotor_position().value / MECH.swerve_module_steering_gearing_ratio
+        # if self.turnMotor.get_rotor_position().value >= MECH.swerve_module_steering_gearing_ratio or self.turnMotor.get_rotor_position().value <= 0:
+        #     self.turnMotor.set_position(0)
+        # if (self.turnMotor.get_rotor_position().value / MECH.swerve_module_steering_gearing_ratio) >= 1 or (self.turnMotor.get_rotor_position().value / MECH.swerve_module_steering_gearing_ratio) <= 0:
+        #     self.turnMotor.set_position(0)
+        return self.turnMotor.get_rotor_position().value / MECH.swerve_module_steering_gearing_ratio * math.tau - math.pi
     
-    def resetEncoders(self, encoderOffset: float):
+    def resetEncoders(self):
         self.driveMotor.set_position(0)
         #Calibrate turnMotor's built-in encoder value based on the reading of the absolute encoder, 
         #convert from a 0 to 1 scale to a 0 to 150/7(about 21.4) scale because 150 motor rotation is 7 drivetrain rotation
-        self.turnMotor.set_position(-self.getAbsoluteEncoderValue(encoderOffset) * MECH.swerve_module_steering_gearing_ratio)
+        #In this case, absolute encoder increase value by turning ccw, while built-in encoder increase value by turning cw,
+        #so you have to subtract 1 by the absolute encoder value to have it increase by turning cw.
+        self.turnMotor.set_position(self.getAbsoluteEncoderValue() * MECH.swerve_module_steering_gearing_ratio)
 
     
     def setDesiredState(self, desiredState: SwerveModuleState) -> None:
 
-        turnEncoderPosition = Rotation2d((((-self.turnMotor.get_rotor_position().value / MECH.swerve_module_steering_gearing_ratio)+ self.turnAbsoluteEncoderOffset) * constants.CVR.radianPerRotation) - math.pi)
-        # turnEncoderPosition = Rotation2d(self.getTurnMotorPositionInRadian)
+        turnEncoderPosition = Rotation2d(self.turnAbsoluteEncoder.get() * math.tau - math.pi)
+    
+        # turnEncoderPosition = Rotation2d(self.getTurnMotorPositionInRadian() + math.pi)
         #turnEncoderPosition = Rotation2d(((self.turnMotor.get_rotor_position().value + self.turnAbsoluteEncoderOffset) * constants.CVR.radianPerRotation))
         desiredState.optimize(turnEncoderPosition)
         #desiredState.cosineScale(turnEncoderPosition)
@@ -113,14 +121,14 @@ class SwerveModule:
             (constants.CVR.meterPerInch)
         )
 
-        swerveModuleTurnPosition = (((-self.turnMotor.get_rotor_position().value / MECH.swerve_module_steering_gearing_ratio)+ self.turnAbsoluteEncoderOffset) * constants.CVR.radianPerRotation)
-        # swerveModuleTurnPosition = self.getTurnMotorPositionInRadian()
+        #swerveModuleTurnPosition = (-self.turnMotor.get_rotor_position().value / MECH.swerve_module_steering_gearing_ratio * math.tau - math.pi)
+        #swerveModuleTurnPosition = self.getTurnMotorPositionInRadian()
         #swerveModuleTurnPosition = (self.turnMotor.get_rotor_position().value + self.turnAbsoluteEncoderOffset) * constants.CVR.radianPerRotation
 
         driveMotorOutput = self.drivePIDcontroller.calculate(swerveModuleMeterPerSecond, desiredState.speed)
         # turnMotorOutput = self.turnPIDcontroller.calculate((swerveModuleTurnPosition - math.pi), desiredState.angle.radians())
-        turnMotorOutput = self.turnPIDcontroller.calculate(swerveModuleTurnPosition, desiredState.angle.radians())
-        #turnMotorOutput = self.turnPIDcontroller.calculate((self.turnAbsoluteEncoder.get() - 1), (desiredState.angle.radians() / math.pi))
+        # turnMotorOutput = self.turnPIDcontroller.calculate(self.getTurnMotorPositionInRadian(), desiredState.angle.radians())
+        turnMotorOutput = self.turnPIDcontroller.calculate(self.turnAbsoluteEncoder.get() * math.tau - math.pi, desiredState.angle.radians())
 
         self.driveMotor.setVoltage(driveMotorOutput)
         self.turnMotor.setVoltage(turnMotorOutput)
@@ -232,32 +240,38 @@ class drivetrainSubsystemClass(commands2.Subsystem):
         )
 
     def resetAllEncoders(self) -> None:
-        self.frontLeftModule.resetEncoders(SW.lf_enc_zeropos)
-        self.frontRightModule.resetEncoders(SW.rf_enc_zeropos)
-        self.backLeftModule.resetEncoders(SW.lb_enc_zeropos)
-        self.backRightModule.resetEncoders(SW.rb_enc_zeropos)
+        self.frontLeftModule.resetEncoders()
+        self.frontRightModule.resetEncoders()
+        self.backLeftModule.resetEncoders()
+        self.backRightModule.resetEncoders()
 
     def showAbsoluteEncoderValues(self) -> None:
-        wpilib.SmartDashboard.putNumber("frontLeftEncoder", self.frontLeftModule.getAbsoluteEncoderValue(SW.lf_enc_zeropos))
-        wpilib.SmartDashboard.putNumber("frontRightEncoder", self.frontLeftModule.getAbsoluteEncoderValue(SW.rf_enc_zeropos))
-        wpilib.SmartDashboard.putNumber("backLeftEncoder", self.backLeftModule.getAbsoluteEncoderValue(SW.lb_enc_zeropos))
-        wpilib.SmartDashboard.putNumber("backRightEncoder", self.backRightModule.getAbsoluteEncoderValue(SW.rb_enc_zeropos))
+        wpilib.SmartDashboard.putNumber("frontLeftEncoder", self.frontLeftModule.getAbsoluteEncoderValue())
+        wpilib.SmartDashboard.putNumber("frontRightEncoder", self.frontRightModule.getAbsoluteEncoderValue())
+        wpilib.SmartDashboard.putNumber("backLeftEncoder", self.backLeftModule.getAbsoluteEncoderValue())
+        wpilib.SmartDashboard.putNumber("backRightEncoder", self.backRightModule.getAbsoluteEncoderValue())
 
     def showTurnMotorEncoderValues(self) -> None:
-        # wpilib.SmartDashboard.putNumber("frontLeftMotorEncoder", self.frontLeftModule.getTurnMotorEncoderValue())
-        # wpilib.SmartDashboard.putNumber("frontRightMotorEncoder", self.frontRightModule.getTurnMotorEncoderValue())
-        # wpilib.SmartDashboard.putNumber("backLeftMotorEncoder", self.backLeftModule.getTurnMotorEncoderValue())
-        # wpilib.SmartDashboard.putNumber("backRightMotorEncoder", self.backRightModule.getTurnMotorEncoderValue())
-        wpilib.SmartDashboard.putNumber("frontLeftMotorEncoder", self.frontLeftModule.getTurnMotorPositionInRadian())
-        wpilib.SmartDashboard.putNumber("frontRightMotorEncoder", self.frontRightModule.getTurnMotorPositionInRadian())
-        wpilib.SmartDashboard.putNumber("backLeftMotorEncoder", self.backLeftModule.getTurnMotorPositionInRadian())
-        wpilib.SmartDashboard.putNumber("backRightMotorEncoder", self.backRightModule.getTurnMotorPositionInRadian())
+        wpilib.SmartDashboard.putNumber("frontLeftMotorEncoder", self.frontLeftModule.getTurnMotorEncoderValue())
+        wpilib.SmartDashboard.putNumber("frontRightMotorEncoder", self.frontRightModule.getTurnMotorEncoderValue())
+        wpilib.SmartDashboard.putNumber("backLeftMotorEncoder", self.backLeftModule.getTurnMotorEncoderValue())
+        wpilib.SmartDashboard.putNumber("backRightMotorEncoder", self.backRightModule.getTurnMotorEncoderValue())
+
+        # wpilib.SmartDashboard.putNumber("frontLeftMotorEncoder", self.frontLeftModule.getTurnMotorEncoderValue() / MECH.swerve_module_steering_gearing_ratio)
+        # wpilib.SmartDashboard.putNumber("frontRightMotorEncoder", self.frontRightModule.getTurnMotorEncoderValue() / MECH.swerve_module_steering_gearing_ratio)
+        # wpilib.SmartDashboard.putNumber("backLeftMotorEncoder", self.backLeftModule.getTurnMotorEncoderValue() / MECH.swerve_module_steering_gearing_ratio)
+        # wpilib.SmartDashboard.putNumber("backRightMotorEncoder", self.backRightModule.getTurnMotorEncoderValue() / MECH.swerve_module_steering_gearing_ratio)
+
+        # wpilib.SmartDashboard.putNumber("frontLeftMotorEncoder", self.frontLeftModule.getTurnMotorPositionInRadian())
+        # wpilib.SmartDashboard.putNumber("frontRightMotorEncoder", self.frontRightModule.getTurnMotorPositionInRadian())
+        # wpilib.SmartDashboard.putNumber("backLeftMotorEncoder", self.backLeftModule.getTurnMotorPositionInRadian())
+        # wpilib.SmartDashboard.putNumber("backRightMotorEncoder", self.backRightModule.getTurnMotorPositionInRadian())
 
     def showAbsoluteEncoderValuesInRadians(self) -> None:
-        wpilib.SmartDashboard.putNumber("frontLeftRadian", (self.frontLeftModule.getAbsoluteEncoderValueInRadians(SW.lf_enc_zeropos) - math.pi))
-        wpilib.SmartDashboard.putNumber("frontRightRadian", (self.frontRightModule.getAbsoluteEncoderValueInRadians(SW.rf_enc_zeropos) - math.pi))
-        wpilib.SmartDashboard.putNumber("backLeftRadian", (self.backLeftModule.getAbsoluteEncoderValueInRadians(SW.lb_enc_zeropos) - math.pi))
-        wpilib.SmartDashboard.putNumber("backRightRadian", (self.backRightModule.getAbsoluteEncoderValueInRadians(SW.rb_enc_zeropos) - math.pi))
+        wpilib.SmartDashboard.putNumber("frontLeftRadian", (self.frontLeftModule.getAbsoluteEncoderValueInRadians() - math.pi))
+        wpilib.SmartDashboard.putNumber("frontRightRadian", (self.frontRightModule.getAbsoluteEncoderValueInRadians() - math.pi))
+        wpilib.SmartDashboard.putNumber("backLeftRadian", (self.backLeftModule.getAbsoluteEncoderValueInRadians() - math.pi))
+        wpilib.SmartDashboard.putNumber("backRightRadian", (self.backRightModule.getAbsoluteEncoderValueInRadians() - math.pi))
 
     def showSteeringSetpoint(self) -> None:
         wpilib.SmartDashboard.putNumber("frontLeftSetpoint", self.frontLeftModule.getSteeringSetpoint(self.swerveModuleState[0]))

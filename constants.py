@@ -51,13 +51,13 @@ elec_data = {
     "RF_encoder_DIO": 9,
     "RB_steer_CAN_ID": 2,
     "RB_drive_CAN_ID": 1,
-    "RB_encoder_DIO": 6,
+    "RB_encoder_DIO": 3,
     "LB_steer_CAN_ID": 8,
     "LB_drive_CAN_ID": 7,
     "LB_encoder_DIO": 0,
     "LF_steer_CAN_ID": 6,
     "LF_drive_CAN_ID": 5,
-    "LF_encoder_DIO": 8,  
+    "LF_encoder_DIO": 6,  
     "driveMotor_neutral": phoenix6.signals.NeutralModeValue(1),
     "steerMotor_neutral": phoenix6.signals.NeutralModeValue(1),
 
@@ -129,10 +129,10 @@ sw_data = {
 	# NOTE: when facing wheels "front", make sure that the bevel gears are all
 	# facing right.  Otherwise the wheel will run in reverse!
 	#
-	"lf_enc_zeropos":  -0.6112,
-	"rf_enc_zeropos":  -0.6112,
-	"lb_enc_zeropos":  -0.2068,
-	"rb_enc_zeropos":  -0.6720,
+	"lf_enc_zeropos":  0.5644,
+	"rf_enc_zeropos":  0.6558,
+	"lb_enc_zeropos":  0.2079,
+	"rb_enc_zeropos":  0.6759,
 
     # Constants for PID control of the propulsion AND steering motors
     # (kP must be non-zero, or azimuth motors won't engage.)
