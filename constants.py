@@ -80,6 +80,11 @@ ELEC = namedtuple("Data", elec_data.keys())(**elec_data)
 
 # Operation constants
 op_data = {
+    
+    # Algae motor constants
+    "AlgaeWristMotor": 0,
+    "AlgaeMotor": 1,
+    
     #Driver/Operator's controllers
     "driver_controller": 0,
     "operator_controller": 1,
@@ -139,6 +144,12 @@ sw_data = {
     "kS": 0,
     "kV": 0,
     "kA": 0,
+    
+    # Algae spped & PID constants
+    "AlgaeIntakeSpeed": .6,
+    "AlgaeOutakeSpeed": -1,
+    
+    "AlgaeWristKp": 0.1,
     
 }
 SW = namedtuple("Data", sw_data.keys())(**sw_data)

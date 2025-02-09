@@ -24,7 +24,6 @@ class AlgaeWithTriggers(commands2.Command):
             self.algaesub.algaeoutake()
         else:
             self.algaesub.algaestop()
-        logger.info("x")
 
     def isFinished(self):
         return False
@@ -41,7 +40,6 @@ class AlgaeIntakeCommand(commands2.Command):
 
     def execute(self):
         self.algaesub.algaeintake()
-        logger.info("intaking")
 
     def isFinished(self):
         return False
@@ -58,7 +56,6 @@ class AlgaeOutakeCommand(commands2.Command):
 
     def execute(self):
         self.algaesub.algaeoutake()
-        logger.info("outaking")
 
     def isFinished(self):
         return False
@@ -75,10 +72,109 @@ class AlgaeStop(commands2.Command):
 
     def execute(self):
         self.algaesub.algaestop()
-        logger.info("stopping")
 
     def isFinished(self):
         return False
    
     def end(self, interrupted):
         self.algaesub.algaestop()
+
+class AlgaeWristForward(commands2.Command):
+    def __init__(self, algaesubsystem: AlgaeSubsystemClass) -> None:
+        self.algaesub = algaesubsystem
+
+    def initialize(self):
+        logger.info("algae wrist initialized")
+
+    def execute(self):
+        self.algaesub.wristForward()
+
+    def isFinished(self):
+        return False
+   
+    def end(self, interrupted):
+        self.algaesub.algaeWristStop()
+
+class AlgaeWristBackwards(commands2.Command):
+    def __init__(self, algaesubsystem: AlgaeSubsystemClass) -> None:
+        self.algaesub = algaesubsystem
+
+    def initialize(self):
+        logger.info("algae wrist initialized")
+
+    def execute(self):
+        self.algaesub.wristBackwards()
+        logger.info("outaking")
+
+    def isFinished(self):
+        return False
+   
+    def end(self, interrupted):
+        self.algaesub.algaeWristStop()
+
+class AlgaeWristStop(commands2.Command):
+    def __init__(self, algaesubsystem: AlgaeSubsystemClass) -> None:
+        self.algaesub = algaesubsystem
+
+    def initialize(self):
+        logger.info("algae wrist stop")
+
+    def execute(self):
+        self.algaesub.algaeWristStop()
+
+    def isFinished(self):
+        return False
+   
+    def end(self, interrupted):
+        self.algaesub.algaeWristStop()
+
+class AlgaeWristToFloor(commands2.Command):
+    def __init__(self, algaesubsystem: AlgaeSubsystemClass) -> None:
+        self.algaesub = algaesubsystem
+
+    def initialize(self):
+        logger.info("algae wrist to floor")
+
+    def execute(self):
+        self.algaesub.wristToFloor()
+        if self.algaesub.wristToFloor():
+            self.algaesub.algaeintake()
+
+    def isFinished(self):
+        return False
+   
+    def end(self, interrupted):
+        self.algaesub.algaeWristStop()
+        self.algaesub.algaestop()
+
+class AlgaeWristToRobot(commands2.Command):
+    def __init__(self, algaesubsystem: AlgaeSubsystemClass) -> None:
+        self.algaesub = algaesubsystem
+
+    def initialize(self):
+        logger.info("algae wrist to robot")
+
+    def execute(self):
+        self.algaesub.wristToRobot()
+
+    def isFinished(self):
+        return False
+   
+    def end(self, interrupted):
+        self.algaesub.algaeWristStop()
+
+class resetWristEncoder(commands2.Command):
+    def __init__(self, algaesubsystem: AlgaeSubsystemClass) -> None:
+        self.algaesub = algaesubsystem
+
+    def initialize(self):
+        logger.info("Wrist PID offset reset")
+
+    def execute(self):
+        self.algaesub.resetPIDOffset()
+
+    def isFinished(self):
+        return False
+   
+    def end(self, interrupted):
+        self.algaesub.resetPIDOffset()
