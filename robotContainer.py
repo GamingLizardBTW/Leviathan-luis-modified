@@ -1,4 +1,5 @@
 from wpilib import XboxController
+import subsystems.DrivetrainSubsystem
 import commands2
 
 # Constants
@@ -14,6 +15,7 @@ from commands.AlgaeCommands import AlgaeIntakeCommand, AlgaeOutakeCommand, Algae
 from commands.WristCommands import WristMotorStop, WristWithJoysticks
 from commands.CoralCommands import CoralIntake, CoralOuttake, CoralStop
 
+from commands.DrivetrainCommands import driveWithJoystickCommand
 class RobotContainer:
     """
     This example robot container should serve as a demonstration for how to
@@ -28,6 +30,7 @@ class RobotContainer:
         self.algaesub = subsystems.AlgaeSubsystem.AlgaeSubsystemClass()
         self.wristsub = subsystems.WristSubsystem.WristSubsystemClass()
         self.coralsub = subsystems.CoralSubsystem.CoralSubsystemClass()
+        self.drivetrainSub = subsystems.DrivetrainSubsystem.drivetrainSubsystemClass()
         
         # Controllers
         self.DriverController = commands2.button.CommandXboxController(OP.driver_controller)
@@ -44,6 +47,7 @@ class RobotContainer:
         # Dont Need
         # self.algaesub.setDefaultCommand(AlgaeWithTriggers(self.algaesub))
         # self.wristsub.setDefaultCommand(WristWithJoysticks(self.wristsub))
+        self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub))
         
         # Will re-add later on
         # self.OperatorController.leftBumper().whileTrue(CoralOuttake(self.coralsub))
@@ -67,4 +71,5 @@ class RobotContainer:
         self.OperatorController.b().whileFalse(AlgaeWristStop(self.algaesub))
         
         self.OperatorController.button(7).whileTrue(resetWristEncoder(self.algaesub))
+
 

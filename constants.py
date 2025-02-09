@@ -18,7 +18,8 @@ import phoenix6
 
 #Unit Conversions
 cvr_data = {
-    "meterPerInch": 0.0254
+    "meterPerInch": 0.0254,
+    "radianPerRotation": math.tau
 }
 CVR = namedtuple("Data", cvr_data.keys())(**cvr_data)
 
@@ -33,7 +34,7 @@ PHYS = namedtuple("Data", phys_data.keys())(**phys_data)
 
 # Mechanical constants
 mech_data = {
-    "swerve_module_driving_gearing_ratio": 6.75,  # SDS Mk4i L2
+    "swerve_module_driving_gearing_ratio": 6.75,  # SDS Mk4i L2  6.75 rotation on motor per 1 rotatio on drivetrain
     "swerve_module_steering_gearing_ratio": 150 / 7,  # SDS Mk4i
 
     "driving_motor_inverted": False,
@@ -45,33 +46,35 @@ MECH = namedtuple("Data", mech_data.keys())(**mech_data)
 elec_data = {
 
     #SwerveDrive
-    "RF_steer_CAN_ID": 15,
-    "RF_drive_CAN_ID": 1,
-    "RF_encoder_DIO": 2,
+    "RF_steer_CAN_ID": 4,
+    "RF_drive_CAN_ID": 3,
+    "RF_encoder_DIO": 9,
     "RB_steer_CAN_ID": 2,
-    "RB_drive_CAN_ID": 3,
+    "RB_drive_CAN_ID": 1,
     "RB_encoder_DIO": 3,
-    "LB_steer_CAN_ID": 4,
-    "LB_drive_CAN_ID": 5,
-    "LB_encoder_DIO": 4,
+    "LB_steer_CAN_ID": 8,
+    "LB_drive_CAN_ID": 7,
+    "LB_encoder_DIO": 0,
     "LF_steer_CAN_ID": 6,
-    "LF_drive_CAN_ID": 7,
-    "LF_encoder_DIO": 1,  
+    "LF_drive_CAN_ID": 5,
+    "LF_encoder_DIO": 6,  
+    "driveMotor_neutral": phoenix6.signals.NeutralModeValue(1),
+    "steerMotor_neutral": phoenix6.signals.NeutralModeValue(1),
 
     #Wrist
-    "wrist_motor_CAN_ID": 0,
+    "wrist_motor_CAN_ID": 10,
     "wrist_neutral_mode": 1,
     "wrist_speed_multiplier": 0.5,
 
     #Algae
-    "algae_leftmotor_CAN_ID": 5,
-    "algae_rightmotor_CAN_ID": 1,
+    "algae_leftmotor_CAN_ID": 15,
+    "algae_rightmotor_CAN_ID": 11,
     "algae_neutral_mode": 1,
     "algae_speed": 0.2,
 
     #Coral
-    "coral_leftmotor_CAN_ID": 3,
-    "coral_rightmotor_CAN_ID": 2,
+    "coral_leftmotor_CAN_ID": 13,
+    "coral_rightmotor_CAN_ID": 12,
     "coral_neutral_mode": 1,
     "coral_speed": 0.2,
 
@@ -102,8 +105,11 @@ op_data = {
     # "angular_velocity_limit": 8.0 * (u.rad / u.s),
 
     # 0 is coast, 1 is brake
-    "driveMotor_neutral": 1,
-    "steerMotor_neutral": 1,
+    
+    #Swerve
+    "max_steering_velocity": math.pi,
+    "max_steering_acceleration": math.tau,
+    "max_speed": 5.0 #unit in meter per second
 
 }
 OP = namedtuple("Data", op_data.keys())(**op_data)
@@ -128,15 +134,15 @@ sw_data = {
 	# NOTE: when facing wheels "front", make sure that the bevel gears are all
 	# facing right.  Otherwise the wheel will run in reverse!
 	#
-	"lf_enc_zeropos":  9.7,
-	"rf_enc_zeropos":  1.5,
-	"lb_enc_zeropos":  93.7,
-	"rb_enc_zeropos":  -35.0,
+	"lf_enc_zeropos":  0.5198,
+	"rf_enc_zeropos":  0.6684,
+	"lb_enc_zeropos":  0.2002,
+	"rb_enc_zeropos":  0.6287,
 
     # Constants for PID control of the propulsion AND steering motors
     # (kP must be non-zero, or azimuth motors won't engage.)
     #"kP": 0.3,  # representative value for Falcon500 motors
-    "kP": 0.01,   # representative value for NEO motors
+    "kP": 1.2,   # representative value for NEO motors
     "kI": 0,
     "kD": 0,
 

@@ -16,3 +16,4 @@ class WristSubsystemClass(commands2.Subsystem):
 
     def wristmotorstop(self):
         self.wristmotor.set(0)
+        
