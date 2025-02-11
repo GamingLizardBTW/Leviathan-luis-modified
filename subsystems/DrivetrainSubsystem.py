@@ -19,7 +19,7 @@ from wpilib import SPI
 import wpimath.trajectory
 
 import constants
-from constants import OP, ELEC, PHYS, CVR, SW, MECH
+from constants import OP, ELEC, PHYS, CVR, SW, MECH, SW
 
 import navx
 import math
@@ -34,28 +34,33 @@ class SwerveModule:
         self.driveMotor = hardware.TalonFX(driveMotorID)
         self.turnMotor = hardware.TalonFX(turnMotorID)
 
-        self.driveMotorOutput = controls.DutyCycleOut(0)
-        self.TurnMotoOutput = controls.DutyCycleOut(0)
-
         self.driveMotor.setNeutralMode(ELEC.driveMotor_neutral)
         self.turnMotor.setNeutralMode(ELEC.steerMotor_neutral)
 
         self.turnAbsoluteEncoder = wpilib.DutyCycleEncoder(turnAbsoluteEncoderID, 1, turnAbsoluteEncoderOffset)
         self.turnAbsoluteEncoderOffset = turnAbsoluteEncoderOffset
 
-        self.drivePIDcontroller = wpimath.controller.PIDController(1,0,0)
-        self.turnPIDcontroller = wpimath.controller.ProfiledPIDController(1.5,0,0,wpimath.trajectory.TrapezoidProfile.Constraints(OP.max_steering_velocity, OP.max_steering_acceleration))
+        self.drivePIDcontroller = wpimath.controller.PIDController(SW.swerve_drive_kP,
+                                                                   SW.swerve_drive_kI,
+                                                                   SW.swerve_drive_kD)
+        # self.turnPIDcontroller = wpimath.controller.ProfiledPIDController(SW.swerve_steer_kP,
+        #                                                                   SW.swerve_steer_kI,
+        #                                                                   SW.swerve_steer_kD,
+        #                                                                   wpimath.trajectory.TrapezoidProfile.Constraints(OP.max_steering_velocity, OP.max_steering_acceleration))
+        self.turnPIDcontroller = wpimath.controller.PIDController(SW.swerve_steer_kP,
+                                                                   SW.swerve_steer_kI,
+                                                                   SW.swerve_steer_kD)
         self.turnPIDcontroller.enableContinuousInput(-math.pi, math.pi)
 
     def getState(self) -> SwerveModuleState:
         swerveModuleMeterPerSecond = (
             self.driveMotor.get_rotor_velocity().value / 
-            (constants.MECH.swerve_module_driving_gearing_ratio) * 
-            (constants.PHYS.wheel_circumference_in_inch) * 
-            (constants.CVR.meterPerInch)
+            (MECH.swerve_module_driving_gearing_ratio) * 
+            (PHYS.wheel_circumference_in_inch) * 
+            (CVR.meterPerInch)
         )
 
-        absoluteEncoderPositionInRadian = Rotation2d((self.turnAbsoluteEncoder.get() + self.turnAbsoluteEncoderOffset) * constants.CVR.radianPerRotation)
+        absoluteEncoderPositionInRadian = Rotation2d((self.turnAbsoluteEncoder.get() + self.turnAbsoluteEncoderOffset) * CVR.radianPerRotation)
 
         return SwerveModuleState(swerveModuleMeterPerSecond, absoluteEncoderPositionInRadian)
     
@@ -63,12 +68,12 @@ class SwerveModule:
 
         swerveModulePosition = (
             self.driveMotor.get_rotor_position().value /
-            (constants.MECH.swerve_module_driving_gearing_ratio) * 
-            (constants.PHYS.wheel_circumference_in_inch) * 
-            (constants.CVR.meterPerInch)
+            (MECH.swerve_module_driving_gearing_ratio) * 
+            (PHYS.wheel_circumference_in_inch) * 
+            (CVR.meterPerInch)
         )
 
-        absoluteEncoderPositionInRadian = Rotation2d((self.turnAbsoluteEncoder.get() + self.turnAbsoluteEncoderOffset) * constants.CVR.radianPerRotation)
+        absoluteEncoderPositionInRadian = Rotation2d((self.turnAbsoluteEncoder.get() + self.turnAbsoluteEncoderOffset) * CVR.radianPerRotation)
         
         return SwerveModulePosition(swerveModulePosition, absoluteEncoderPositionInRadian)
     
@@ -78,7 +83,7 @@ class SwerveModule:
         # return self.turnAbsoluteEncoder.get() + self.turnAbsoluteEncoderOffset
     
     def getAbsoluteEncoderValueInRadians(self):
-        return (self.turnAbsoluteEncoder.get() + self.turnAbsoluteEncoderOffset) * constants.CVR.radianPerRotation
+        return (self.turnAbsoluteEncoder.get() + self.turnAbsoluteEncoderOffset) * CVR.radianPerRotation
     
     def getTurnMotorEncoderValue(self):
         # if self.turnMotor.get_rotor_position().value >= MECH.swerve_module_steering_gearing_ratio or self.turnMotor.get_rotor_position().value <= 0:
@@ -109,20 +114,20 @@ class SwerveModule:
         turnEncoderPosition = Rotation2d(self.turnAbsoluteEncoder.get() * math.tau - math.pi)
     
         # turnEncoderPosition = Rotation2d(self.getTurnMotorPositionInRadian() + math.pi)
-        #turnEncoderPosition = Rotation2d(((self.turnMotor.get_rotor_position().value + self.turnAbsoluteEncoderOffset) * constants.CVR.radianPerRotation))
+        #turnEncoderPosition = Rotation2d(((self.turnMotor.get_rotor_position().value + self.turnAbsoluteEncoderOffset) * CVR.radianPerRotation))
         desiredState.optimize(turnEncoderPosition)
-        #desiredState.cosineScale(turnEncoderPosition)
+        desiredState.cosineScale(turnEncoderPosition)
 
         swerveModuleMeterPerSecond = (
             self.driveMotor.get_rotor_velocity().value / 
-            (constants.MECH.swerve_module_driving_gearing_ratio) * 
-            (constants.PHYS.wheel_circumference_in_inch) * 
-            (constants.CVR.meterPerInch)
+            (MECH.swerve_module_driving_gearing_ratio) * 
+            (PHYS.wheel_circumference_in_inch) * 
+            (CVR.meterPerInch)
         )
 
         #swerveModuleTurnPosition = (-self.turnMotor.get_rotor_position().value / MECH.swerve_module_steering_gearing_ratio * math.tau - math.pi)
         #swerveModuleTurnPosition = self.getTurnMotorPositionInRadian()
-        #swerveModuleTurnPosition = (self.turnMotor.get_rotor_position().value + self.turnAbsoluteEncoderOffset) * constants.CVR.radianPerRotation
+        #swerveModuleTurnPosition = (self.turnMotor.get_rotor_position().value + self.turnAbsoluteEncoderOffset) * CVR.radianPerRotation
 
         driveMotorOutput = self.drivePIDcontroller.calculate(swerveModuleMeterPerSecond, desiredState.speed)
         # turnMotorOutput = self.turnPIDcontroller.calculate((swerveModuleTurnPosition - math.pi), desiredState.angle.radians())
@@ -130,14 +135,14 @@ class SwerveModule:
         turnMotorOutput = self.turnPIDcontroller.calculate(self.turnAbsoluteEncoder.get() * math.tau - math.pi, desiredState.angle.radians())
 
         self.driveMotor.setVoltage(driveMotorOutput)
-        self.turnMotor.setVoltage(turnMotorOutput)
-        #self.turnMotor.set(turnMotorOutput)
+        # self.turnMotor.setVoltage(turnMotorOutput)
+        self.turnMotor.set(turnMotorOutput)
 
 class drivetrainSubsystemClass(commands2.Subsystem):
 
     def __init__(self) -> None:
-        trackwidth = constants.PHYS.track_width_in_inch * constants.CVR.meterPerInch
-        wheelbase = constants.PHYS.wheel_base_in_inch * constants.CVR.meterPerInch
+        trackwidth = PHYS.track_width_in_inch * CVR.meterPerInch
+        wheelbase = PHYS.wheel_base_in_inch * CVR.meterPerInch
         self.frontLeftModuleLocation = Translation2d((wheelbase/2), (trackwidth/2))
         self.frontRightModuleLocation = Translation2d((wheelbase/2), -(trackwidth/2))
         self.backLeftModuleLocation = Translation2d(-(wheelbase/2), (trackwidth/2))
@@ -177,18 +182,6 @@ class drivetrainSubsystemClass(commands2.Subsystem):
               rotation: float, 
               fieldRelative: bool, 
               periodSeconds: float):
-        
-    # def drive(self, 
-    #           xSpeed: float, 
-    #           ySpeed: float, 
-    #           rotation: float, 
-    #           periodSeconds: float):
-
-    # def drive(self, 
-    #           xSpeed: float, 
-    #           ySpeed: float, 
-    #           rotation: float, 
-    #         ):
 
         self.swerveModuleState = self.kinematics.toSwerveModuleStates(
             ChassisSpeeds.discretize(
@@ -202,24 +195,8 @@ class drivetrainSubsystemClass(commands2.Subsystem):
             periodSeconds,
             )
         )
-
-
-        # self.swerveModuleState = self.kinematics.toSwerveModuleStates(
-        #         (
-        #         ChassisSpeeds.fromFieldRelativeSpeeds(
-        #             xSpeed, ySpeed, rotation, self.gyro.getRotation2d()
-        #         )
-        #         if fieldRelative
-        #         else ChassisSpeeds(xSpeed, ySpeed, rotation)
-        #         ),
-        # )
-
-        # swerveModuleState = self.kinematics.toSwerveModuleStates(
-        #         ChassisSpeeds.fromFieldRelativeSpeeds(
-        #             xSpeed, ySpeed, rotation, self.gyro.getRotation2d()
-        #         )
-        # )
         #forward is positive X and left is positive Y.
+
         SwerveDrive4Kinematics.desaturateWheelSpeeds(self.swerveModuleState, OP.max_speed)
 
         self.frontLeftModule.setDesiredState(self.swerveModuleState[0])

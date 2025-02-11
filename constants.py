@@ -86,25 +86,12 @@ op_data = {
     #Driver/Operator's controllers
     "driver_controller": 0,
     "operator_controller": 1,
-
-    # These maximum parameters reflect the maximum physically possible, not the
-    # desired maximum limit.
-    # "max_speed": 4.5 * (u.m / u.s),
-    # "max_angular_velocity": 11.5 * (u.rad / u.s),
-
-    # # You can limit how fast your robot moves (e.g. during testing) using the
-    # # following parameters.  Setting to None is the same as setting to
-    # # max_speed/max_angular_velocity, and indicates no limit.
-    # #
-    # "speed_limit": 4.0 * (u.m / u.s),
-    # "angular_velocity_limit": 8.0 * (u.rad / u.s),
-
-    # 0 is coast, 1 is brake
     
     #Swerve
     "max_steering_velocity": math.pi,
     "max_steering_acceleration": math.tau,
-    "max_speed": 5.0 #unit in meter per second
+    "max_speed": 5.0, #unit in meter per second
+    "max_turn_speed": 8.0 #unit in radian per second
 
 }
 OP = namedtuple("Data", op_data.keys())(**op_data)
@@ -116,35 +103,22 @@ sw_data = {
     # requires a (non-Dummy) gyro.
     "field_relative": True,
 
-    # drive_open_loop: True if we're not using PID control *for velocity targeting*,
-    # i.e. when a target velocity is calculated, do we use the corresponding
-    # CoaxialDriveComponent's follow_velocity_open() method (set motor output
-    # proportionally based on target and max velocities) or
-    # follow_velocity_closed() method (put motor in PID control mode and set
-    # target velocity).
-    #
-    "drive_open_loop": True,
-
     # "Zero" (front-facing) positions, as read from the four encoders
 	# NOTE: when facing wheels "front", make sure that the bevel gears are all
 	# facing right.  Otherwise the wheel will run in reverse!
 	#
-	"lf_enc_zeropos":  0.5198,
-	"rf_enc_zeropos":  0.6684,
-	"lb_enc_zeropos":  0.2002,
-	"rb_enc_zeropos":  0.6287,
+	"lf_enc_zeropos":  0.01489,
+	"rf_enc_zeropos":  0.17205,
+	"lb_enc_zeropos":  0.70027,
+	"rb_enc_zeropos":  0.85221,
 
-    # Constants for PID control of the propulsion AND steering motors
-    # (kP must be non-zero, or azimuth motors won't engage.)
-    #"kP": 0.3,  # representative value for Falcon500 motors
-    "kP": 1.2,   # representative value for NEO motors
-    "kI": 0,
-    "kD": 0,
+    "swerve_drive_kP": 1,
+    "swerve_drive_kI": 0,
+    "swerve_drive_kD": 0,
 
-    # Constants for feed-forward of propulsion motors
-    "kS": 0,
-    "kV": 0,
-    "kA": 0,
-    
+    "swerve_steer_kP": 1,
+    "swerve_steer_kI": 0,
+    "swerve_steer_kD": 0,
+
 }
 SW = namedtuple("Data", sw_data.keys())(**sw_data)
