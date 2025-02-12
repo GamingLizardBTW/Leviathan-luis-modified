@@ -67,8 +67,8 @@ elec_data = {
     "wrist_speed_multiplier": 0.5,
 
     #Algae
-    "algae_leftmotor_CAN_ID": 15,
-    "algae_rightmotor_CAN_ID": 11,
+    "AlgaeWristMotor": 0,
+    "AlgaeMotor": 9,
     "algae_neutral_mode": 1,
     "algae_speed": 0.2,
 
@@ -83,10 +83,6 @@ ELEC = namedtuple("Data", elec_data.keys())(**elec_data)
 
 # Operation constants
 op_data = {
-    
-    # Algae motor constants
-    "AlgaeWristMotor": 0,
-    "AlgaeMotor": 1,
     
     #Driver/Operator's controllers
     "driver_controller": 0,

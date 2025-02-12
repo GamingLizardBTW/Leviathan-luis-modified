@@ -37,48 +37,33 @@ class AlgaeIntakeCommand(commands2.Command):
         self.algaesub = algaesubsystem
 
     def initialize(self):
+        self.algaesub.algaeintake()
         logger.info("algae intake command initialized")
 
-    def execute(self):
-        self.algaesub.algaeintake()
-
     def isFinished(self):
-        return False
-   
-    def end(self, interrupted):
-        self.algaesub.algaestop()
+        return True
 
 class AlgaeOutakeCommand(commands2.Command):
     def __init__(self, algaesubsystem: AlgaeSubsystemClass) -> None:
         self.algaesub = algaesubsystem
 
     def initialize(self):
+        self.algaesub.algaeoutake()
         logger.info("algae outake command initialized")
 
-    def execute(self):
-        self.algaesub.algaeoutake()
-
     def isFinished(self):
-        return False
-   
-    def end(self, interrupted):
-        self.algaesub.algaestop()
+        return True
 
 class AlgaeStop(commands2.Command):
     def __init__(self, algaesubsystem: AlgaeSubsystemClass) -> None:
         self.algaesub = algaesubsystem
 
     def initialize(self):
+        self.algaesub.algaestop()
         logger.info("algae stop initialized")
 
-    def execute(self):
-        self.algaesub.algaestop()
-
     def isFinished(self):
-        return False
-   
-    def end(self, interrupted):
-        self.algaesub.algaestop()
+        return True
 
 class AlgaeWristForward(commands2.Command):
     def __init__(self, algaesubsystem: AlgaeSubsystemClass) -> None:

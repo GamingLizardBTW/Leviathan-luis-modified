@@ -28,9 +28,9 @@ class RobotContainer:
         
         # Subsytems
         self.algaesub = subsystems.AlgaeSubsystem.AlgaeSubsystemClass()
-        self.wristsub = subsystems.WristSubsystem.WristSubsystemClass()
-        self.coralsub = subsystems.CoralSubsystem.CoralSubsystemClass()
-        self.drivetrainSub = subsystems.DrivetrainSubsystem.drivetrainSubsystemClass()
+        # self.wristsub = subsystems.WristSubsystem.WristSubsystemClass()
+        # self.coralsub = subsystems.CoralSubsystem.CoralSubsystemClass()
+        # self.drivetrainSub = subsystems.DrivetrainSubsystem.drivetrainSubsystemClass()
         
         # Controllers
         self.DriverController = commands2.button.CommandXboxController(OP.driver_controller)
@@ -47,7 +47,7 @@ class RobotContainer:
         # Dont Need
         # self.algaesub.setDefaultCommand(AlgaeWithTriggers(self.algaesub))
         # self.wristsub.setDefaultCommand(WristWithJoysticks(self.wristsub))
-        self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub))
+        # self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub))
         
         # Will re-add later on
         # self.OperatorController.leftBumper().whileTrue(CoralOuttake(self.coralsub))
@@ -55,12 +55,12 @@ class RobotContainer:
         # self.OperatorController.rightBumper().whileTrue(CoralIntake(self.coralsub))
         # self.OperatorController.rightBumper().whileFalse(CoralStop(self.coralsub))
         
-        self.OperatorController.x().whileTrue(AlgaeIntakeCommand(self.algaesub))
-        self.OperatorController.x().whileFalse(AlgaeStop(self.algaesub))
+        self.OperatorController.x().onTrue(AlgaeIntakeCommand(self.algaesub))
+        self.OperatorController.x().onFalse(AlgaeStop(self.algaesub))
         
         
-        self.OperatorController.y().whileTrue(AlgaeOutakeCommand(self.algaesub))
-        self.OperatorController.y().whileFalse(AlgaeStop(self.algaesub))
+        self.OperatorController.y().onTrue(AlgaeOutakeCommand(self.algaesub))
+        self.OperatorController.y().onFalse(AlgaeStop(self.algaesub))
         
         # self.OperatorController.a().whileTrue(AlgaeWristToRobot(self.algaesub))
         self.OperatorController.a().whileTrue(AlgaeWristForward(self.algaesub))
@@ -70,6 +70,6 @@ class RobotContainer:
         self.OperatorController.b().whileTrue(AlgaeWristBackwards(self.algaesub))
         self.OperatorController.b().whileFalse(AlgaeWristStop(self.algaesub))
         
-        self.OperatorController.button(7).whileTrue(resetWristEncoder(self.algaesub))
+        # self.OperatorController.button(7).whileTrue(resetWristEncoder(self.algaesub))
 
 
