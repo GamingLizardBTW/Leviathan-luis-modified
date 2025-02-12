@@ -24,6 +24,11 @@ from constants import OP, ELEC, PHYS, CVR, SW, MECH, SW
 import navx
 import math
 
+from pathplannerlib.auto import AutoBuilder
+from pathplannerlib.controller import PPHolonomicDriveController
+from pathplannerlib.config import RobotConfig, PIDConstants
+from wpilib import DriverStation
+
 class SwerveModule:
     def __init__(self,
                  driveMotorID: int, 
@@ -60,7 +65,7 @@ class SwerveModule:
             (CVR.meterPerInch)
         )
 
-        absoluteEncoderPositionInRadian = Rotation2d((self.turnAbsoluteEncoder.get() + self.turnAbsoluteEncoderOffset) * CVR.radianPerRotation)
+        absoluteEncoderPositionInRadian = Rotation2d(self.turnAbsoluteEncoder.get() * CVR.radianPerRotation - math.pi)
 
         return SwerveModuleState(swerveModuleMeterPerSecond, absoluteEncoderPositionInRadian)
     
@@ -73,7 +78,7 @@ class SwerveModule:
             (CVR.meterPerInch)
         )
 
-        absoluteEncoderPositionInRadian = Rotation2d((self.turnAbsoluteEncoder.get() + self.turnAbsoluteEncoderOffset) * CVR.radianPerRotation)
+        absoluteEncoderPositionInRadian = Rotation2d(self.turnAbsoluteEncoder.get() * CVR.radianPerRotation - math.pi)
         
         return SwerveModulePosition(swerveModulePosition, absoluteEncoderPositionInRadian)
     
@@ -176,6 +181,24 @@ class drivetrainSubsystemClass(commands2.Subsystem):
 
         self.gyro.reset()
 
+        config = RobotConfig.fromGUISettings()
+
+        AutoBuilder.configure(
+            self.odometry.getPose(),
+            self.odometry.resetPose(),
+            self.kinematics.toChassisSpeeds(self.frontLeftModule.getState(),
+                                            self.frontRightModule.getState(),
+                                            self.backLeftModule.getState(),
+                                            self.backRightModule.getState()),
+            self.driveRobotRelative(),
+            PPHolonomicDriveController(PIDConstants(1,0,0),
+                                       PIDConstants(1,0,0)),
+            config,
+            DriverStation.getAlliance() == DriverStation.Alliance.kRed,
+            #If the alliance is red, this line will return true which flips the path(primary path are made based on blue)
+            self
+        )
+
     def drive(self, 
               xSpeed: float, 
               ySpeed: float, 
@@ -203,6 +226,9 @@ class drivetrainSubsystemClass(commands2.Subsystem):
         self.frontRightModule.setDesiredState(self.swerveModuleState[1])
         self.backLeftModule.setDesiredState(self.swerveModuleState[2])
         self.backRightModule.setDesiredState(self.swerveModuleState[3])
+
+    def driveRobotRelative(self, robotRelativeSpeed: ChassisSpeeds):
+        self.kinematics.toSwerveModuleStates(ChassisSpeeds.discretize(robotRelativeSpeed, 0.02))
 
     def updateOdometry(self) -> None:
         self.odometry.update(            
