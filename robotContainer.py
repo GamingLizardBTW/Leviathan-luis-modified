@@ -30,7 +30,7 @@ class RobotContainer:
         self.algaesub = subsystems.AlgaeSubsystem.AlgaeSubsystemClass()
         # self.wristsub = subsystems.WristSubsystem.WristSubsystemClass()
         # self.coralsub = subsystems.CoralSubsystem.CoralSubsystemClass()
-        # self.drivetrainSub = subsystems.DrivetrainSubsystem.drivetrainSubsystemClass()
+        self.drivetrainSub = subsystems.DrivetrainSubsystem.drivetrainSubsystemClass()
         
         # Controllers
         self.DriverController = commands2.button.CommandXboxController(OP.driver_controller)
@@ -47,7 +47,7 @@ class RobotContainer:
         # Dont Need
         # self.algaesub.setDefaultCommand(AlgaeWithTriggers(self.algaesub))
         # self.wristsub.setDefaultCommand(WristWithJoysticks(self.wristsub))
-        # self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub))
+        self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub))
         
         # Will re-add later on
         # self.OperatorController.leftBumper().whileTrue(CoralOuttake(self.coralsub))

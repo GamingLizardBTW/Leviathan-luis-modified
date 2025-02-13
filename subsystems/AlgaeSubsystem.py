@@ -30,8 +30,8 @@ class AlgaeSubsystemClass(commands2.Subsystem):
         # PID for talonFX motor
         self.my_config = TalonFXConfiguration()
         self.algaeintakemotor.configurator.refresh(self.my_config) # Writes current configs into algaeintakemotor
-        self.my_slot0_pid_config = Slot0Configs(k_p = 0.5)
-        self.wristMotor.configurator.apply(self.my_config.with_slot0(self.my_slot0_pid_config))
+        # self.my_slot0_pid_config = Slot0Configs(0.5)
+        # self.wristMotor.configurator.apply(self.my_config.with_slot0(self.my_slot0_pid_config))
         
         # Pid settings for the wrist
         self.wristPID = wpimath.controller.PIDController(SW.AlgaeWristKp, 0, 0)
@@ -88,6 +88,6 @@ class AlgaeSubsystemClass(commands2.Subsystem):
         self.wristMotor.set(self.wristPID.calculate(self.wristsEncoder, 0))
         return self.wristPID.atSetpoint()
     
-    def setPIDWithControlRequest(self):
-        self.control_request = PositionDutyCycle(0.5, slot = 0)
-        self.wristMotor.set_control(self.control_request)
+    # def setPIDWithControlRequest(self):
+    #     self.control_request = PositionDutyCycle(0.5, slot = 0)
+    #     self.wristMotor.set_control(self.control_request)

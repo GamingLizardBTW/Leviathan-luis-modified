@@ -6,7 +6,7 @@ from subsystems.DrivetrainSubsystem import drivetrainSubsystemClass
 import logging
 logger = logging.getLogger("Drivetrain Logger")
 from wpilib import XboxController
-from constants import OP, PHYS
+from constants import OP, PHYS, SW
 
 class driveWithJoystickCommand(commands2.Command):
     def __init__(self, drivetrainSubsystem: drivetrainSubsystemClass) -> None :
@@ -24,20 +24,20 @@ class driveWithJoystickCommand(commands2.Command):
     def execute(self):
         #forward is positive X and left is positive Y.
         self.leftY = XboxController(OP.driver_controller).getLeftY() #This will be xSpeed(front and back)
-        xSpeed = (-self.xSpeedLimiter.calculate(wpimath.applyDeadband(self.leftY, 0.02)) * OP.max_speed)
+        xSpeed = (-self.xSpeedLimiter.calculate(wpimath.applyDeadband(self.leftY, 0.08)) * OP.max_speed)
         #xSpeed = -self.leftY * OP.max_speed
 
         self.leftX = XboxController(OP.driver_controller).getLeftX() #This will be ySpeed(left and right)
-        ySpeed = (-self.ySpeedLimiter.calculate(wpimath.applyDeadband(self.leftX, 0.02)) * OP.max_speed)
+        ySpeed = (-self.ySpeedLimiter.calculate(wpimath.applyDeadband(self.leftX, 0.08)) * OP.max_speed)
         #ySpeed = -self.leftX * OP.max_speed
 
         self.rightX = XboxController(OP.driver_controller).getRightX()#This will be rotation(turn heading left and right)
-        rotationSpeed = (-self.rotateSpeedLimiter.calculate(wpimath.applyDeadband(self.rightX, 0.02)) * OP.max_speed)
+        rotationSpeed = (-self.rotateSpeedLimiter.calculate(wpimath.applyDeadband(self.rightX, 0.08)) * OP.max_turn_speed)
         #rotationSpeed = -self.rightX * OP.max_speed
 
         # self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed)
 
-        self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed, True, 0.02)
+        self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed, SW.field_relative, 0.02)
         self.drivetrainSub.showAbsoluteEncoderValues()
         self.drivetrainSub.showAbsoluteEncoderValuesInRadians()
         self.drivetrainSub.showSteeringSetpoint()
@@ -47,4 +47,4 @@ class driveWithJoystickCommand(commands2.Command):
         return False
     
     def end(self, interrupted):
-        self.drivetrainSub.drive(0,0,0,True,0.02)
+        self.drivetrainSub.drive(0,0,0,SW.field_relative,0.02)
