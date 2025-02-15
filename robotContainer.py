@@ -55,20 +55,24 @@ class RobotContainer:
         # self.OperatorController.rightBumper().whileTrue(CoralIntake(self.coralsub))
         # self.OperatorController.rightBumper().whileFalse(CoralStop(self.coralsub))
         
-        self.OperatorController.x().onTrue(AlgaeIntakeCommand(self.algaesub))
-        self.OperatorController.x().onFalse(AlgaeStop(self.algaesub))
+        # self.DriverController.x().onTrue(AlgaeIntakeCommand(self.algaesub))
+        # self.DriverController.x().onFalse(AlgaeStop(self.algaesub))
+        self.DriverController.leftBumper().onTrue(AlgaeIntakeCommand(self.algaesub))
+        self.DriverController.leftBumper().onFalse(AlgaeStop(self.algaesub))
         
         
-        self.OperatorController.y().onTrue(AlgaeOutakeCommand(self.algaesub))
-        self.OperatorController.y().onFalse(AlgaeStop(self.algaesub))
+        # self.DriverController.y().onTrue(AlgaeOutakeCommand(self.algaesub))
+        # self.DriverController.y().onFalse(AlgaeStop(self.algaesub))
+        self.DriverController.rightBumper().onTrue(AlgaeOutakeCommand(self.algaesub))
+        self.DriverController.rightBumper().onFalse(AlgaeStop(self.algaesub))
         
         # self.OperatorController.a().whileTrue(AlgaeWristToRobot(self.algaesub))
-        self.OperatorController.a().whileTrue(AlgaeWristForward(self.algaesub))
-        self.OperatorController.a().whileFalse(AlgaeWristStop(self.algaesub))
+        self.DriverController.a().whileTrue(AlgaeWristForward(self.algaesub))
+        self.DriverController.a().whileFalse(AlgaeWristStop(self.algaesub))
         
         # self.OperatorController.b().whileTrue(AlgaeWristToFloor(self.algaesub))
-        self.OperatorController.b().whileTrue(AlgaeWristBackwards(self.algaesub))
-        self.OperatorController.b().whileFalse(AlgaeWristStop(self.algaesub))
+        self.DriverController.b().whileTrue(AlgaeWristBackwards(self.algaesub))
+        self.DriverController.b().whileFalse(AlgaeWristStop(self.algaesub))
         
         # self.OperatorController.button(7).whileTrue(resetWristEncoder(self.algaesub))
 

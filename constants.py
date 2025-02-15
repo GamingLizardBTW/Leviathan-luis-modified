@@ -108,10 +108,10 @@ sw_data = {
 	# NOTE: when facing wheels "front", make sure that the bevel gears are all
 	# facing right.  Otherwise the wheel will run in reverse!
 	#
-	"lf_enc_zeropos":  0.01489,
-	"rf_enc_zeropos":  0.17205,
-	"lb_enc_zeropos":  0.70027,
-	"rb_enc_zeropos":  0.85221,
+	"lf_enc_zeropos":  0.85416,
+	"rf_enc_zeropos":  0.17716,
+	"lb_enc_zeropos":  0.69993,
+	"rb_enc_zeropos":  0.76076,
 
     "swerve_drive_kP": 1,
     "swerve_drive_kI": 0,
