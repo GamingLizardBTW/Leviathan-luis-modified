@@ -90,7 +90,7 @@ op_data = {
     #Swerve
     "max_steering_velocity": math.pi,
     "max_steering_acceleration": math.tau,
-    "max_speed": 5.0, #unit in meter per second
+    "max_speed": 4.0, #unit in meter per second
     "max_turn_speed": 8.0 #unit in radian per second
 
 }
@@ -107,10 +107,10 @@ sw_data = {
 	# NOTE: when facing wheels "front", make sure that the bevel gears are all
 	# facing right.  Otherwise the wheel will run in reverse!
 	#
-	"lf_enc_zeropos":  0.01489,
-	"rf_enc_zeropos":  0.17205,
-	"lb_enc_zeropos":  0.70027,
-	"rb_enc_zeropos":  0.85221,
+	"lf_enc_zeropos":  0.8531730213293255,
+	"rf_enc_zeropos":  0.17130400428260012,
+	"lb_enc_zeropos":  0.7030698675767467,
+	"rb_enc_zeropos":  0.6282770157069254,
 
     "swerve_drive_kP": 1,
     "swerve_drive_kI": 0,
