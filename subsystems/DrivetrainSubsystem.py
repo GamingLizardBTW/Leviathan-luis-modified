@@ -184,13 +184,13 @@ class drivetrainSubsystemClass(commands2.Subsystem):
         config = RobotConfig.fromGUISettings()
 
         AutoBuilder.configure(
-            self.odometry.getPose(),
-            self.odometry.resetPose(),
-            self.kinematics.toChassisSpeeds(self.frontLeftModule.getState(),
-                                            self.frontRightModule.getState(),
-                                            self.backLeftModule.getState(),
-                                            self.backRightModule.getState()),
-            self.driveRobotRelative(),
+            self.odometry.getPose,
+            self.odometry.resetPose,
+            lambda: self.kinematics.toChassisSpeeds(self.frontLeftModule.getState(),
+                                                    self.frontRightModule.getState(),
+                                                    self.backLeftModule.getState(),
+                                                    self.backRightModule.getState()),
+            self.driveRobotRelative,
             PPHolonomicDriveController(PIDConstants(1,0,0),
                                        PIDConstants(1,0,0)),
             config,
