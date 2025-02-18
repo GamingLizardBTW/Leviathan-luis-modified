@@ -25,7 +25,7 @@ class AlgaeWithTriggers(commands2.Command):
             self.algaesub.algaeoutake()
         else:
             self.algaesub.algaestop()
-        logger.info("x")
+        #logger.info("x")
 
     def isFinished(self):
         return False

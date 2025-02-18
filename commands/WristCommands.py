@@ -23,7 +23,7 @@ class WristWithJoysticks(commands2.Command):
             self.WristSub.wristwithjoystick(self.inputvalue)
         else:
             self.WristSub.wristmotorstop()
-        logging.info("Running motor")
+        #logging.info("Running motor")
 
     def isFinished(self):
         return False

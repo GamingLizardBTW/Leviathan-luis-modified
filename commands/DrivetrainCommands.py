@@ -42,6 +42,8 @@ class driveWithJoystickCommand(commands2.Command):
         self.drivetrainSub.showAbsoluteEncoderValuesInRadians()
         self.drivetrainSub.showSteeringSetpoint()
         self.drivetrainSub.showTurnMotorEncoderValues()
+        self.drivetrainSub.showDrivingSpeed()
+        self.drivetrainSub.showDesiredSpeed()
 
     def isFinished(self):
         return False
