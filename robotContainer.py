@@ -1,4 +1,5 @@
 from wpilib import XboxController
+from wpilib import SmartDashboard
 import subsystems.DrivetrainSubsystem
 import commands2
 
@@ -16,6 +17,12 @@ from commands.WristCommands import WristMotorStop, WristWithJoysticks
 from commands.CoralCommands import CoralIntake, CoralOuttake, CoralStop
 
 from commands.DrivetrainCommands import driveWithJoystickCommand
+from pathplannerlib.auto import AutoBuilder, PathPlannerAuto
+from pathplannerlib.path import PathPlannerPath
+
+import logging
+logger = logging.getLogger("RobotContainer")
+
 class RobotContainer:
     """
     This example robot container should serve as a demonstration for how to
@@ -25,6 +32,7 @@ class RobotContainer:
     """
 
     def __init__(self):
+        logger.info("Creating robot container")
         
         # Subsytems
         self.algaesub = subsystems.AlgaeSubsystem.AlgaeSubsystemClass()
@@ -38,9 +46,15 @@ class RobotContainer:
         
         # Configure Bindings
         self.configureButtonBindings()
+        self.autoChooser = AutoBuilder.buildAutoChooser()
+        SmartDashboard.putData("Auto Chooser", self.autoChooser)
+        logger.info("Robot container created")
     
     def get_autonomous_command(self):
-        pass
+        # return self.autoChooser.getSelected()
+
+    # Create a path following command using AutoBuilder. This will also trigger event markers.
+        return PathPlannerAuto('New Auto')
 
     def configureButtonBindings(self):
         

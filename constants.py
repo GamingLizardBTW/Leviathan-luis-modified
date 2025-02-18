@@ -15,6 +15,7 @@
 import math
 from collections import namedtuple
 import phoenix6
+from pathplannerlib.config import RobotConfig
 
 #Unit Conversions
 cvr_data = {
@@ -91,7 +92,7 @@ op_data = {
     #Swerve
     "max_steering_velocity": math.pi,
     "max_steering_acceleration": math.tau,
-    "max_speed": 5.0, #unit in meter per second
+    "max_speed": 4.0, #unit in meter per second
     "max_turn_speed": 8.0 #unit in radian per second
 
 }
@@ -108,15 +109,20 @@ sw_data = {
 	# NOTE: when facing wheels "front", make sure that the bevel gears are all
 	# facing right.  Otherwise the wheel will run in reverse!
 	#
-	"lf_enc_zeropos":  0.85416,
-	"rf_enc_zeropos":  0.17716,
-	"lb_enc_zeropos":  0.69993,
-	"rb_enc_zeropos":  0.76076,
+    "path_planner_config": RobotConfig.fromGUISettings(),
 
-    "swerve_drive_kP": 1,
+	"lf_enc_zeropos":  0.8208337705208443,
+	"rf_enc_zeropos":  0.17436037935900947,
+	"lb_enc_zeropos":  0.7046365676159142,
+	"rb_enc_zeropos":  0.7048532176213305,
+
+    "swerve_drive_kS": 0,
+    "swerve_drive_kV": 0.12,
+    "swerve_drive_kP": 0.13,
     "swerve_drive_kI": 0,
     "swerve_drive_kD": 0,
 
+    #"swerve_steer_kP": 0,
     "swerve_steer_kP": 1,
     "swerve_steer_kI": 0,
     "swerve_steer_kD": 0,
