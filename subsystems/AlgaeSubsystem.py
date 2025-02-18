@@ -72,10 +72,10 @@ class AlgaeSubsystemClass(commands2.Subsystem):
         self.algaeintakemotor.set(0)
         
     def wristForward(self):
-        self.wristMotor.set(-0.2)
+        self.wristMotor.set(0.2)
         
     def wristBackwards(self):
-        self.wristMotor.set(0.2)
+        self.wristMotor.set(-0.2)
         
     def algaeWristStop(self):
         self.wristMotor.set(0)

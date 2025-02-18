@@ -71,8 +71,8 @@ class RobotContainer:
         self.DriverController.a().whileFalse(AlgaeWristStop(self.algaesub))
         
         # self.OperatorController.b().whileTrue(AlgaeWristToFloor(self.algaesub))
-        self.DriverController.b().whileTrue(AlgaeWristBackwards(self.algaesub))
-        self.DriverController.b().whileFalse(AlgaeWristStop(self.algaesub))
+        self.DriverController.y().whileTrue(AlgaeWristBackwards(self.algaesub))
+        self.DriverController.y().whileFalse(AlgaeWristStop(self.algaesub))
         
         # self.OperatorController.button(7).whileTrue(resetWristEncoder(self.algaesub))
 
