@@ -70,8 +70,8 @@ elec_data = {
     #Algae
     "AlgaeWristMotor": 0,
     "AlgaeMotor": 9,
-    "algae_neutral_mode": 1,
-    "algae_speed": 0.2,
+    "AlgaeIntakeSpeed": .6,
+    "AlgaeOutakeSpeed": -1,
 
     #Coral
     "coral_leftmotor_CAN_ID": 13,
@@ -132,11 +132,10 @@ sw_data = {
     "kV": 0,
     "kA": 0,
     
-    # Algae spped & PID constants
-    "AlgaeIntakeSpeed": .6,
-    "AlgaeOutakeSpeed": -1,
-    
+    # Algae PID constants
     "AlgaeWristKp": 0.1,
+    "AlgaeWristOffset": 0,
+    
     
 }
 SW = namedtuple("Data", sw_data.keys())(**sw_data)
