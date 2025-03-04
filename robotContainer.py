@@ -10,11 +10,13 @@ from constants import OP
 import subsystems.AlgaeSubsystem
 import subsystems.WristSubsystem
 import subsystems.CoralSubsystem
+import subsystems.ElevatorSubystem
 
 # Commands
 from commands.AlgaeCommands import AlgaeIntakeCommand, AlgaeOutakeCommand, AlgaeStop, AlgaeWristForward, AlgaeWristBackwards, AlgaeWristStop, AlgaeWristToFloor, AlgaeWristToRobot
 from commands.WristCommands import WristMotorStop, WristWithJoysticks
 from commands.CoralCommands import CoralIntake, CoralOuttake, CoralStop
+from commands.ElevatorCommands import ElevatorWithJoysticks
 
 from commands.DrivetrainCommands import driveWithJoystickCommand
 from pathplannerlib.auto import AutoBuilder, PathPlannerAuto
@@ -35,9 +37,10 @@ class RobotContainer:
         logger.info("Creating robot container")
         
         # Subsytems
-        self.algaesub = subsystems.AlgaeSubsystem.AlgaeSubsystemClass()
+        # self.algaesub = subsystems.AlgaeSubsystem.AlgaeSubsystemClass()
         # self.wristsub = subsystems.WristSubsystem.WristSubsystemClass()
         # self.coralsub = subsystems.CoralSubsystem.CoralSubsystemClass()
+        self.elevatorsub = subsystems.ElevatorSubystem.ElevatorSubsystemClass()
         self.drivetrainSub = subsystems.DrivetrainSubsystem.drivetrainSubsystemClass()
         
         # Controllers
@@ -58,29 +61,29 @@ class RobotContainer:
 
     def configureButtonBindings(self):
         
-        # Dont Need
-        # self.algaesub.setDefaultCommand(AlgaeWithTriggers(self.algaesub))
+        # Default Commands
         # self.wristsub.setDefaultCommand(WristWithJoysticks(self.wristsub))
-        # self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub))
+        self.elevatorsub.setDefaultCommand(ElevatorWithJoysticks(self.elevatorsub))
+        self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub))
         
-        # Will re-add later on
+        # # Coral commands
         # self.OperatorController.leftBumper().whileTrue(CoralOuttake(self.coralsub))
         # self.OperatorController.leftBumper().whileFalse(CoralStop(self.coralsub))
         # self.OperatorController.rightBumper().whileTrue(CoralIntake(self.coralsub))
         # self.OperatorController.rightBumper().whileFalse(CoralStop(self.coralsub))
         
-        self.DriverController.leftBumper().onTrue(AlgaeIntakeCommand(self.algaesub))
-        self.DriverController.leftBumper().onFalse(AlgaeStop(self.algaesub))
-        
-        self.DriverController.rightBumper().onTrue(AlgaeOutakeCommand(self.algaesub))
-        self.DriverController.rightBumper().onFalse(AlgaeStop(self.algaesub))
+        # # Algae Commands
+        # self.DriverController.leftBumper().onTrue(AlgaeIntakeCommand(self.algaesub))
+        # self.DriverController.leftBumper().onFalse(AlgaeStop(self.algaesub))
+        # self.DriverController.rightBumper().onTrue(AlgaeOutakeCommand(self.algaesub))
+        # self.DriverController.rightBumper().onFalse(AlgaeStop(self.algaesub))
         
         # self.DriverController.b().onTrue(AlgaeWristToRobot(self.algaesub)) # Considering making it to "on true" to only have to press once
         
-        self.DriverController.a().whileTrue(AlgaeWristForward(self.algaesub))
-        self.DriverController.a().whileFalse(AlgaeWristStop(self.algaesub))
-        
         # self.DriverController.b().whileTrue(AlgaeWristToFloor(self.algaesub))
         
-        self.DriverController.y().whileTrue(AlgaeWristBackwards(self.algaesub))
-        self.DriverController.y().whileFalse(AlgaeWristStop(self.algaesub))
+        # Algae Wrist Commands
+        # self.DriverController.a().whileTrue(AlgaeWristForward(self.algaesub))
+        # self.DriverController.a().whileFalse(AlgaeWristStop(self.algaesub))
+        # self.DriverController.y().whileTrue(AlgaeWristBackwards(self.algaesub))
+        # self.DriverController.y().whileFalse(AlgaeWristStop(self.algaesub))

@@ -47,37 +47,43 @@ MECH = namedtuple("Data", mech_data.keys())(**mech_data)
 elec_data = {
 
     #SwerveDrive
-    "RF_steer_CAN_ID": 4,
-    "RF_drive_CAN_ID": 3,
-    "RF_encoder_DIO": 9,
-    "RB_steer_CAN_ID": 2,
+    "RF_steer_CAN_ID": 3,
+    "RF_drive_CAN_ID": 4,
+    "RF_encoder_DIO": 1,
+    "RB_steer_CAN_ID": 12,
     "RB_drive_CAN_ID": 1,
     "RB_encoder_DIO": 3,
     "LB_steer_CAN_ID": 8,
     "LB_drive_CAN_ID": 7,
-    "LB_encoder_DIO": 0,
-    "LF_steer_CAN_ID": 6,
+    "LB_encoder_DIO": 2,
+    "LF_steer_CAN_ID": 11,
     "LF_drive_CAN_ID": 5,
-    "LF_encoder_DIO": 6,  
+    "LF_encoder_DIO": 0,  
     "driveMotor_neutral": phoenix6.signals.NeutralModeValue(1),
     "steerMotor_neutral": phoenix6.signals.NeutralModeValue(1),
 
     #Wrist
-    "wrist_motor_CAN_ID": 10,
+    "wrist_motor_CAN_ID": 6,
     "wrist_neutral_mode": 1,
     "wrist_speed_multiplier": 0.5,
 
     #Algae
-    "AlgaeWristMotor": 0,
+    "AlgaeWristMotor": 16,
     "AlgaeMotor": 9,
     "AlgaeIntakeSpeed": .6,
     "AlgaeOutakeSpeed": -1,
 
     #Coral
-    "coral_leftmotor_CAN_ID": 13,
-    "coral_rightmotor_CAN_ID": 12,
+    "coral_leftmotor_CAN_ID": 2,
+    "coral_rightmotor_CAN_ID": 0,
     "coral_neutral_mode": 1,
     "coral_speed": 0.2,
+    
+    # Elevator
+    "TopElevatorMotor_ID": 18,
+    "BottomElevatorMotor_ID": 17,
+    "elevator_neutral_mode": 1,
+    "elevator_speed_multiplier": 0.65,
 
 }    
 ELEC = namedtuple("Data", elec_data.keys())(**elec_data)
