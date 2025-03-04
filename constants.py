@@ -134,7 +134,7 @@ sw_data = {
     
     # Algae PID constants
     "AlgaeWristKp": 0.1,
-    "AlgaeWristOffset": 0,
+    "AlgaeWristOffset": 0.5,
     
     
 }

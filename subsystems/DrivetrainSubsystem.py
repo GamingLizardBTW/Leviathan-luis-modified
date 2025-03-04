@@ -305,3 +305,36 @@ class drivetrainSubsystemClass(commands2.Subsystem):
         SmartDashboard.putNumber("RFdesiredSpeed", self.frontRightModule.getDesiredSpeed(self.swerveModuleState[1]))
         SmartDashboard.putNumber("LBdesiredSpeed", self.backLeftModule.getDesiredSpeed(self.swerveModuleState[2]))        
         SmartDashboard.putNumber("RBdesiredSpeed", self.backRightModule.getDesiredSpeed(self.swerveModuleState[3]))
+        
+    # def log(self):
+    #     table = "Drive/"
+
+    #     pose = self.odometry.getPose
+    #     wpilib.SmartDashboard.putNumber(table + "X", pose.X())
+    #     wpilib.SmartDashboard.putNumber(table + "Y", pose.Y())
+    #     wpilib.SmartDashboard.putNumber(table + "Heading", pose.rotation().degrees())
+
+    #     chassisSpeeds = self.getChassisSpeeds()
+    #     wpilib.SmartDashboard.putNumber(table + "VX", chassisSpeeds.vx)
+    #     wpilib.SmartDashboard.putNumber(table + "VY", chassisSpeeds.vy)
+    #     wpilib.SmartDashboard.putNumber(
+    #         table + "Omega Degrees", chassisSpeeds.omega_dps
+    #     )
+
+    #     wpilib.SmartDashboard.putNumber(
+    #         table + "Target VX", self.targetChassisSpeeds.vx
+    #     )
+    #     wpilib.SmartDashboard.putNumber(
+    #         table + "Target VY", self.targetChassisSpeeds.vy
+    #     )
+    #     wpilib.SmartDashboard.putNumber(
+    #         table + "Target Omega Degrees", self.targetChassisSpeeds.omega_dps
+    #     )
+
+    #     self.frontLeft.log()
+    #     self.frontRight.log()
+    #     self.backLeft.log()
+    #     self.backRight.log()
+
+    #     self.debugField.getRobotObject().setPose(self.poseEst.getEstimatedPosition())
+    #     self.debugField.getObject("SwerveModules").setPoses(self.getModulePoses())

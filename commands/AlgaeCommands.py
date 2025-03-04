@@ -4,35 +4,11 @@ from subsystems.AlgaeSubsystem import AlgaeSubsystemClass
 import logging
 logger = logging.getLogger("algaesubsystemlogger")
 from wpilib import XboxController
-import phoenix6
 from constants import OP
+import time
 
-class AlgaeWithTriggers(commands2.Command):
-    def __init__(self, algaesubsystem: AlgaeSubsystemClass) -> None:
-        self.addRequirements(algaesubsystem)
-        self.algaesub = algaesubsystem
 
-    def initialize(self):
-        logger.info("algae intake command initialized")
-
-    def execute(self):
-        self.lefttrigger = XboxController(OP.operator_controller).getLeftTriggerAxis()
-        self.righttrigger = XboxController(OP.operator_controller).getRightTriggerAxis()
-        self.calculated_input = self.righttrigger - self.lefttrigger
-        if self.calculated_input >= 0.05:
-            self.algaesub.algaeintake()
-        elif self.calculated_input <= -0.05:
-            self.algaesub.algaeoutake()
-        else:
-            self.algaesub.algaestop()
-        #logger.info("x")
-
-    def isFinished(self):
-        return False
-   
-    def end(self, interrupted):
-        self.algaesub.algaestop()
-
+# Intake Commands
 class AlgaeIntakeCommand(commands2.Command):
     def __init__(self, algaesubsystem: AlgaeSubsystemClass) -> None:
         self.algaesub = algaesubsystem
@@ -66,6 +42,8 @@ class AlgaeStop(commands2.Command):
     def isFinished(self):
         return True
 
+
+# Wrist Commands
 class AlgaeWristForward(commands2.Command):
     def __init__(self, algaesubsystem: AlgaeSubsystemClass) -> None:
         self.algaesub = algaesubsystem
@@ -124,8 +102,6 @@ class AlgaeWristToFloor(commands2.Command):
 
     def execute(self):
         self.algaesub.wristToFloor()
-        if self.algaesub.wristToFloor():
-            self.algaesub.algaeintake()
 
     def isFinished(self):
         return False
@@ -145,23 +121,29 @@ class AlgaeWristToRobot(commands2.Command):
         self.algaesub.wristToRobot()
 
     def isFinished(self):
+        if self.algaesub.wristPID.atSetpoint():
+            return True
         return False
    
     def end(self, interrupted):
         self.algaesub.algaeWristStop()
-
-class resetWristEncoder(commands2.Command):
+        
+class AlgaeWristToProccesor(commands2.Command):
     def __init__(self, algaesubsystem: AlgaeSubsystemClass) -> None:
         self.algaesub = algaesubsystem
 
     def initialize(self):
-        logger.info("Wrist PID offset reset")
+        logger.info("algae wrist to proccesor")
 
     def execute(self):
-        self.algaesub.resetPIDOffset()
+        self.algaesub.wristToProcesor()
 
     def isFinished(self):
+        if self.algaesub.wristPID.atSetpoint():
+            return True
         return False
    
     def end(self, interrupted):
-        self.algaesub.resetPIDOffset()
+        XboxController(OP.driver_controller).setRumble(XboxController.RumbleType(2), 0.8)
+        time.sleep(.3)
+        self.algaesub.algaeWristStop()
