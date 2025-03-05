@@ -47,9 +47,9 @@ MECH = namedtuple("Data", mech_data.keys())(**mech_data)
 elec_data = {
 
     #SwerveDrive
-    "RF_steer_CAN_ID": 3,
-    "RF_drive_CAN_ID": 4,
-    "RF_encoder_DIO": 1,
+    "RF_steer_CAN_ID": 20,
+    "RF_drive_CAN_ID": 3,
+    "RF_encoder_DIO": 7,
     "RB_steer_CAN_ID": 12,
     "RB_drive_CAN_ID": 1,
     "RB_encoder_DIO": 3,
@@ -58,7 +58,7 @@ elec_data = {
     "LB_encoder_DIO": 2,
     "LF_steer_CAN_ID": 11,
     "LF_drive_CAN_ID": 5,
-    "LF_encoder_DIO": 0,  
+    "LF_encoder_DIO": 6,  
     "driveMotor_neutral": phoenix6.signals.NeutralModeValue(1),
     "steerMotor_neutral": phoenix6.signals.NeutralModeValue(1),
 

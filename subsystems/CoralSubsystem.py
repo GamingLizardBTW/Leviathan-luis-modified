@@ -4,8 +4,8 @@ import commands2
 from constants import ELEC
 class CoralSubsystemClass(commands2.Subsystem):
     def __init__(self) -> None:
-        self.coralintakeleftmotor = phoenix6.hardware.TalonFX(ELEC.coral_leftmotor_CAN_ID)
-        self.coralintakerightmotor = phoenix6.hardware.TalonFX(ELEC.coral_rightmotor_CAN_ID)
+        self.coralintakeleftmotor = phoenix6.hardware.TalonFX(0)
+        self.coralintakerightmotor = phoenix6.hardware.TalonFX(2)
         self.breakmode = phoenix6.signals.NeutralModeValue(ELEC.coral_neutral_mode)
         self.coralintakeleftmotor.setNeutralMode(self.breakmode)
         self.coralintakerightmotor.setNeutralMode(self.breakmode)
