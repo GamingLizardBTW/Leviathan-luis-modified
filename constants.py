@@ -47,9 +47,9 @@ MECH = namedtuple("Data", mech_data.keys())(**mech_data)
 elec_data = {
 
     #SwerveDrive
-    "RF_steer_CAN_ID": 3,
-    "RF_drive_CAN_ID": 4,
-    "RF_encoder_DIO": 1,
+    "RF_drive_CAN_ID": 3,
+    "RF_steer_CAN_ID": 20,
+    "RF_encoder_DIO": 7,
     "RB_steer_CAN_ID": 12,
     "RB_drive_CAN_ID": 1,
     "RB_encoder_DIO": 3,
@@ -58,7 +58,7 @@ elec_data = {
     "LB_encoder_DIO": 2,
     "LF_steer_CAN_ID": 11,
     "LF_drive_CAN_ID": 5,
-    "LF_encoder_DIO": 0,  
+    "LF_encoder_DIO": 6,  
     "driveMotor_neutral": phoenix6.signals.NeutralModeValue(1),
     "steerMotor_neutral": phoenix6.signals.NeutralModeValue(1),
 
@@ -74,8 +74,8 @@ elec_data = {
     "AlgaeOutakeSpeed": -1,
 
     #Coral
-    "coral_leftmotor_CAN_ID": 2,
-    "coral_rightmotor_CAN_ID": 0,
+    "coral_leftmotor_CAN_ID": 0,
+    "coral_rightmotor_CAN_ID": 2,
     "coral_neutral_mode": 1,
     "coral_speed": 0.2,
     
@@ -83,7 +83,7 @@ elec_data = {
     "TopElevatorMotor_ID": 18,
     "BottomElevatorMotor_ID": 17,
     "elevator_neutral_mode": 1,
-    "elevator_speed_multiplier": 0.65,
+    "elevator_speed_multiplier": -0.65,
 
 }    
 ELEC = namedtuple("Data", elec_data.keys())(**elec_data)
@@ -117,10 +117,10 @@ sw_data = {
 	#
     "path_planner_config": RobotConfig.fromGUISettings(),
 
-	"lf_enc_zeropos":  0.8208337705208443,
-	"rf_enc_zeropos":  0.17436037935900947,
-	"lb_enc_zeropos":  0.7046365676159142,
-	"rb_enc_zeropos":  0.7048532176213305,
+	"lf_enc_zeropos":  0.19358712983967824,
+	"rf_enc_zeropos":  0.16905120422628012,
+	"lb_enc_zeropos":  0.7013860175346505,
+	"rb_enc_zeropos":  0.5610728640268215,
 
     "swerve_drive_kS": 0,
     "swerve_drive_kV": 0.12,
@@ -128,7 +128,7 @@ sw_data = {
     "swerve_drive_kI": 0,
     "swerve_drive_kD": 0,
 
-    #"swerve_steer_kP": 0,
+    # "swerve_steer_kP": 0,
     "swerve_steer_kP": 1,
     "swerve_steer_kI": 0,
     "swerve_steer_kD": 0,

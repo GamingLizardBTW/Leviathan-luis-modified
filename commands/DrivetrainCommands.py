@@ -37,13 +37,14 @@ class driveWithJoystickCommand(commands2.Command):
 
         # self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed)
 
-        self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed, SW.field_relative, 0.02)
+        self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed, SW.field_relative, 0.02, XboxController(OP.driver_controller).getRawButtonPressed(8))
         self.drivetrainSub.showAbsoluteEncoderValues()
         self.drivetrainSub.showAbsoluteEncoderValuesInRadians()
         self.drivetrainSub.showSteeringSetpoint()
         self.drivetrainSub.showTurnMotorEncoderValues()
         self.drivetrainSub.showDrivingSpeed()
         self.drivetrainSub.showDesiredSpeed()
+        # self.drivetrainSub.showHeading()
 
     def isFinished(self):
         return False

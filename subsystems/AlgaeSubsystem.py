@@ -15,8 +15,8 @@ class AlgaeSubsystemClass(commands2.Subsystem):
         self.wristEncoder = wpilib.DutyCycleEncoder(22, 1, SW.AlgaeWristOffset)
         
         # Motors for AlageSubsystem
-        self.wristMotor = phoenix6.hardware.TalonFX(0)
-        self.algaeintakemotor = phoenix6.hardware.TalonFX(9)
+        self.wristMotor = phoenix6.hardware.TalonFX(ELEC.AlgaeWristMotor)
+        self.algaeintakemotor = phoenix6.hardware.TalonFX(ELEC.AlgaeMotor)
         
         # Settings for motors
         self.brakMode = phoenix6.signals.NeutralModeValue(1)
@@ -25,8 +25,9 @@ class AlgaeSubsystemClass(commands2.Subsystem):
         
         # Pid settings for the wrist
         self.wristPID = wpimath.controller.PIDController(SW.AlgaeWristKp, 0, 0)
+        self.wristPID.enableContinuousInput(0, 1)
         self.wristPID.setTolerance(.3)
-        self.wristPID.setIntegratorRange(-0.5, 0.5)
+        self.wristPID.setIntegratorRange(-0.7, 0.7)
 
     def periodic(self) -> None:
         

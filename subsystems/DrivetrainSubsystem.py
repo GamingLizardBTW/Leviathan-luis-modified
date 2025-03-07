@@ -16,7 +16,7 @@ from wpimath.kinematics import (
 )
 from navx import AHRS
 from wpilib import SPI
-from wpilib import SmartDashboard
+from wpilib import SmartDashboard, shuffleboard
 import wpimath.trajectory
 
 import constants
@@ -210,7 +210,8 @@ class drivetrainSubsystemClass(commands2.Subsystem):
               ySpeed: float, 
               rotation: float, 
               fieldRelative: bool, 
-              periodSeconds: float):
+              periodSeconds: float,
+              resetGyro: bool):
 
         self.swerveModuleState = self.kinematics.toSwerveModuleStates(
             ChassisSpeeds.discretize(
@@ -230,6 +231,9 @@ class drivetrainSubsystemClass(commands2.Subsystem):
         self.frontRightModule.setDesiredState(self.swerveModuleState[1])
         self.backLeftModule.setDesiredState(self.swerveModuleState[2])
         self.backRightModule.setDesiredState(self.swerveModuleState[3])
+        
+        if resetGyro == True:
+            self.gyro.reset()
 
     def driveRobotRelative(self, robotRelativeSpeed: ChassisSpeeds, feedForward) -> None:
         swerveModuleState = self.kinematics.toSwerveModuleStates(ChassisSpeeds.discretize(robotRelativeSpeed, 0.02))
@@ -305,6 +309,9 @@ class drivetrainSubsystemClass(commands2.Subsystem):
         SmartDashboard.putNumber("RFdesiredSpeed", self.frontRightModule.getDesiredSpeed(self.swerveModuleState[1]))
         SmartDashboard.putNumber("LBdesiredSpeed", self.backLeftModule.getDesiredSpeed(self.swerveModuleState[2]))        
         SmartDashboard.putNumber("RBdesiredSpeed", self.backRightModule.getDesiredSpeed(self.swerveModuleState[3]))
+        
+    # def showHeading(self) -> None:
+    #     shuffleboard.Shuffleboard.getTab("Heading").add(self.gyro)
         
     # def log(self):
     #     table = "Drive/"
