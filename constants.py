@@ -63,27 +63,22 @@ elec_data = {
     "steerMotor_neutral": phoenix6.signals.NeutralModeValue(1),
 
     #Wrist
-    "wrist_motor_CAN_ID": 6,
+    "WristMotor_ID": 16,
     "wrist_neutral_mode": 1,
     "wrist_speed_multiplier": 0.5,
 
-    #Algae
-    "AlgaeWristMotor": 16,
-    "AlgaeMotor": 9,
-    "AlgaeIntakeSpeed": .6,
-    "AlgaeOutakeSpeed": -1,
-
-    #Coral
-    "coral_leftmotor_CAN_ID": 0,
-    "coral_rightmotor_CAN_ID": 2,
-    "coral_neutral_mode": 1,
-    "coral_speed": 0.2,
+    #Intake
+    "IntakeMotor_ID": 9,
+    "IntakeSpeed": 1,
+    "OutakeSpeed": -1,
     
     # Elevator
     "TopElevatorMotor_ID": 18,
     "BottomElevatorMotor_ID": 17,
     "elevator_neutral_mode": 1,
     "elevator_speed_multiplier": -0.65,
+    "BottomLimitSwitch": 0,
+    "TopLimitSwitch": 11,
 
 }    
 ELEC = namedtuple("Data", elec_data.keys())(**elec_data)
@@ -138,10 +133,17 @@ sw_data = {
     "kV": 0,
     "kA": 0,
     
-    # Algae PID constants
-    "AlgaeWristKp": 0.1,
-    "AlgaeWristOffset": 0.5,
+    # Wrist PID constants
+    "WristKp": 0.1,
+    "WristKi": 0, 
+    "WristKd": 0,
+    "WristOffset": 0.5,
     
+    # Elevator PID Constats
+    "Elevatorkp": 1,
+    "Elevatorki": 0,
+    "Elevatorkd": 0,
+    "ElevatorTolerance": 0.3,
     
 }
 SW = namedtuple("Data", sw_data.keys())(**sw_data)

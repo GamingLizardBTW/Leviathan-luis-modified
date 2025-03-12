@@ -3,17 +3,22 @@ import wpimath
 import commands2
 import wpimath.filter
 from subsystems.DrivetrainSubsystem import drivetrainSubsystemClass
+from subsystems.VisionSubsystem import visionSubsystem
 import logging
 logger = logging.getLogger("Drivetrain Logger")
 from wpilib import XboxController
 from constants import OP, PHYS, SW
 
+VISION_TURN_kP = 0.01
+
 class driveWithJoystickCommand(commands2.Command):
-    def __init__(self, drivetrainSubsystem: drivetrainSubsystemClass) -> None :
+    def __init__(self, drivetrainSubsystem: drivetrainSubsystemClass, visionSubsystem: visionSubsystem) -> None :
         self.drivetrainSub = drivetrainSubsystem
+        self.visionSub = visionSubsystem
         self.xSpeedLimiter = wpimath.filter.SlewRateLimiter(3)
         self.ySpeedLimiter = wpimath.filter.SlewRateLimiter(3)
         self.rotateSpeedLimiter = wpimath.filter.SlewRateLimiter(3)
+        self.controller = wpilib.XboxController(OP.driver_controller)
         self.addRequirements(drivetrainSubsystem)
         logger.info("driveWithJoystick constructor")
     
@@ -34,10 +39,18 @@ class driveWithJoystickCommand(commands2.Command):
         self.rightX = XboxController(OP.driver_controller).getRightX()#This will be rotation(turn heading left and right)
         rotationSpeed = (-self.rotateSpeedLimiter.calculate(wpimath.applyDeadband(self.rightX, 0.08)) * OP.max_turn_speed)
         #rotationSpeed = -self.rightX * OP.max_speed
+        
+        # Create Auto Target
+        targetYaw = 0.0
+        targetVisible = self.visionSub.hasTargets
+
+        if self.controller.getAButton() and targetVisible:
+            targetYaw = self.visionSub.getClosestData("Z-Rot")
+            rotationSpeed = (-1.0 * targetYaw * OP.max_turn_speed)
 
         # self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed)
 
-        self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed, SW.field_relative, 0.02, XboxController(OP.driver_controller).getRawButtonPressed(8))
+        self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed, SW.field_relative, 0.02, self.controller.getRawButtonPressed(8))
         self.drivetrainSub.showAbsoluteEncoderValues()
         self.drivetrainSub.showAbsoluteEncoderValuesInRadians()
         self.drivetrainSub.showSteeringSetpoint()
@@ -50,4 +63,4 @@ class driveWithJoystickCommand(commands2.Command):
         return False
     
     def end(self, interrupted):
-        self.drivetrainSub.drive(0,0,0,SW.field_relative,0.02)
+        self.drivetrainSub.drive(0,0,0,SW.field_relative,0.02, self.controller.getRawButtonPressed(8))

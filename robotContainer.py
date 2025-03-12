@@ -7,16 +7,15 @@ import commands2
 from constants import OP
 
 # Subsystems
-import subsystems.AlgaeSubsystem
+import subsystems.IntakeSubsystem
 import subsystems.WristSubsystem
-import subsystems.CoralSubsystem
 import subsystems.ElevatorSubystem
+import subsystems.VisionSubsystem
 
 # Commands
-from commands.AlgaeCommands import AlgaeIntakeCommand, AlgaeOutakeCommand, AlgaeStop, AlgaeWristForward, AlgaeWristBackwards, AlgaeWristStop, AlgaeWristToFloor, AlgaeWristToRobot
-from commands.WristCommands import WristMotorStop, WristWithJoysticks
-from commands.CoralCommands import CoralIntake, CoralOuttake, CoralStop
-from commands.ElevatorCommands import ElevatorWithJoysticks
+from commands.IntakeCommands import IntakeCommand, OutakeCommand, IntakeStop
+from commands.WristCommands import WristForward, WristBackwards, WristStop, WristL2, WristL3, WristL4
+from commands.ElevatorCommands import ElevatorWithJoysticks, ElevatorPID1, ElevatorPID2, ElevatorPID3, ElevatorPID4
 
 from commands.DrivetrainCommands import driveWithJoystickCommand
 from pathplannerlib.auto import AutoBuilder, PathPlannerAuto
@@ -37,9 +36,9 @@ class RobotContainer:
         logger.info("Creating robot container")
         
         # Subsytems
-        self.algaesub = subsystems.AlgaeSubsystem.AlgaeSubsystemClass()
-        self.wristsub = subsystems.WristSubsystem.WristSubsystemClass()
-        self.coralsub = subsystems.CoralSubsystem.CoralSubsystemClass()
+        self.visionSub = subsystems.VisionSubsystem.visionSubsystem()
+        # self.Intakesub = subsystems.IntakeSubsystem.IntakeSubsystemClass()
+        # self.wristsub = subsystems.WristSubsystem.WristSubsystemClass()
         self.elevatorsub = subsystems.ElevatorSubystem.ElevatorSubsystemClass()
         self.drivetrainSub = subsystems.DrivetrainSubsystem.drivetrainSubsystemClass()
         
@@ -60,30 +59,31 @@ class RobotContainer:
         return PathPlannerAuto('New Auto')
 
     def configureButtonBindings(self):
+        pass
         
         # Default Commands
-        self.wristsub.setDefaultCommand(WristWithJoysticks(self.wristsub))
-        self.elevatorsub.setDefaultCommand(ElevatorWithJoysticks(self.elevatorsub))
-        self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub))
+        # self.elevatorsub.setDefaultCommand(ElevatorWithJoysticks(self.elevatorsub))
+        # self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub)) # Additional Buttons used: A
         
-        # # Coral commands
-        self.OperatorController.leftBumper().whileTrue(CoralOuttake(self.coralsub))
-        self.OperatorController.leftBumper().whileFalse(CoralStop(self.coralsub))
-        self.OperatorController.rightBumper().whileTrue(CoralIntake(self.coralsub))
-        self.OperatorController.rightBumper().whileFalse(CoralStop(self.coralsub))
+        # Intake Intake Commands
+        # self.DriverController.leftBumper().onTrue(IntakeCommand(self.Intakesub))
+        # self.DriverController.leftBumper().onFalse(IntakeStop(self.Intakesub))
+        # self.DriverController.rightBumper().onTrue(OutakeCommand(self.Intakesub))
+        # self.DriverController.rightBumper().onFalse(IntakeStop(self.Intakesub))
         
-        # # Algae Commands
-        self.DriverController.leftBumper().onTrue(AlgaeIntakeCommand(self.algaesub))
-        self.DriverController.leftBumper().onFalse(AlgaeStop(self.algaesub))
-        self.DriverController.rightBumper().onTrue(AlgaeOutakeCommand(self.algaesub))
-        self.DriverController.rightBumper().onFalse(AlgaeStop(self.algaesub))
+        # Intake Wrist PID Commands
+        # self.DriverController.x().whileTrue(WristL2(self.Intakesub)) # Considering making it to "on true" to only have to press once
+        # self.DriverController.b().whileTrue(WristL3(self.Intakesub))
+        # self.DriverController.a().whileTrue(WristL4(self.Intakesub))
         
-        # self.DriverController.b().onTrue(AlgaeWristToRobot(self.algaesub)) # Considering making it to "on true" to only have to press once
+        # Intake Wrist Manual Commands
+        # self.DriverController.a().whileTrue(WristForward(self.Intakesub))
+        # self.DriverController.a().whileFalse(WristStop(self.Intakesub))
+        # self.DriverController.y().whileTrue(WristBackwards(self.Intakesub))
+        # self.DriverController.y().whileFalse(WristStop(self.Intakesub))
         
-        # self.DriverController.b().whileTrue(AlgaeWristToFloor(self.algaesub))
-        
-        # Algae Wrist Commands
-        self.DriverController.a().whileTrue(AlgaeWristForward(self.algaesub))
-        self.DriverController.a().whileFalse(AlgaeWristStop(self.algaesub))
-        self.DriverController.y().whileTrue(AlgaeWristBackwards(self.algaesub))
-        self.DriverController.y().whileFalse(AlgaeWristStop(self.algaesub))
+        # Elevator PID Commands
+        # self.OperatorController.y().whileTrue(ElevatorPID1(self.elevatorsub))
+        # self.OperatorController.a().whileTrue(ElevatorPID2(self.elevatorsub))
+        self.OperatorController.y().whileTrue(ElevatorPID3(self.elevatorsub))
+        self.OperatorController.a().whileTrue(ElevatorPID4(self.elevatorsub))

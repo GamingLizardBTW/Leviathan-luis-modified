@@ -3,10 +3,12 @@ import commands2
 import photonlibpy
 import logging
 import wpinet
+# from wpilib import SmartDashboard, Field2d
+from constants import OP
+import time
+
+# Math
 import wpimath.geometry
-
-logger = logging.getLogger("Vision")
-
 from wpimath.geometry import Pose3d, Transform3d, Translation3d
 from wpimath.units import metersToFeet, metersToInches, inchesToMeters
 
@@ -15,13 +17,15 @@ from photonlibpy import PhotonCamera, PhotonPoseEstimator, PoseStrategy
 from robotpy_apriltag import AprilTagField, AprilTagFieldLayout
 
 # Might Use
-from photonlibpy import estimation
-from photonlibpy import generated
-from photonlibpy import networktables
-from photonlibpy import packet
-from photonlibpy import simulation
-from photonlibpy import targeting
-from photonlibpy import estimatedRobotPose
+# from photonlibpy import estimation
+# from photonlibpy import generated
+# from photonlibpy import networktables
+# from photonlibpy import packet
+# from photonlibpy import simulation
+# from photonlibpy import targeting
+# from photonlibpy import estimatedRobotPose
+
+logger = logging.getLogger("Vision")
 
 # Measurement from center of robot to cam
 kRobotToCam = wpimath.geometry.Transform3d(
@@ -29,39 +33,42 @@ kRobotToCam = wpimath.geometry.Transform3d(
     wpimath.geometry.Rotation3d.fromDegrees(0.0, 0, 0.0),
 )
 
-from wpilib import SmartDashboard, Field2d
-from constants import OP
-
-import DrivetrainSubsystem
-
 class visionSubsystem(commands2.Subsystem):
     
     def __init__(self) -> None:
         
-        # Define camera
+        # Create coral camera instance
         self.camera = PhotonCamera("Coral_Cam")
         
-        # gets latest result from camera
+        # gets latest result from coral camera
         self.result = self.camera.getLatestResult()
         
-        # Checks if camera detects targets
+        # Checks if coral camera detects targets
         self.hasTargets = self.result.hasTargets()
         
-        # Recieves the latest targets seen by the camera
+        # Recieves the latest targets seen by the coral camera
         self.targets = self.result.getTargets()
         
         # Pose Estimation
-        # self.swerve = DrivetrainSubsystem.drivetrainSubsystemClass()
-        self.cam = PhotonCamera("YOUR CAMERA NAME")
         self.camPoseEst = PhotonPoseEstimator(                            # Create PoseEstimation based off cam 
             AprilTagFieldLayout.loadField(AprilTagField.kDefaultField),
             PoseStrategy.LOWEST_AMBIGUITY,
-            self.cam,
+            self.camera,
             kRobotToCam,
         )
         
         # Booleans used for vision
         self.targetVisible = False
+        
+    def periodic(self) -> None:
+        
+        # Update Vision Data
+        self.result = self.camera.getLatestResult()
+        self.hasTargets = self.result.hasTargets()
+        self.targets = self.result.getTargets()
+        
+        # Print Values
+        self.printData()
         
     def getTargetIDs(self, id: int): # Return a list of tags beeing seen (untested)
         """
@@ -89,7 +96,7 @@ class visionSubsystem(commands2.Subsystem):
                 self.targetVisible = True
                 # Return the desired type of data
                 if dataType == "Yaw":
-                    Data = target.getYaw()
+                    Data = target.getYaw() # Use this if you want the yaw to zero by pointing at tag
                 elif dataType == "Pitch":
                     Data = target.getPitch()
                 elif dataType == "Skew":
@@ -102,10 +109,15 @@ class visionSubsystem(commands2.Subsystem):
                     Data = target.getBestCameraToTarget().Y()
                 elif dataType == "Z-Dist":
                     Data = target.getBestCameraToTarget().Z()
+                elif dataType == "X-Rot":
+                    Data = target.getBestCameraToTarget().rotation().X()
+                elif dataType == "Y-Rot":
+                    Data = target.getBestCameraToTarget().rotation().Y()
+                elif dataType == "Z-Rot":
+                    Data = target.getBestCameraToTarget().rotation().Z() # Use this if you want it to zero when perpendicular to tag
                 elif dataType == "ID":
                     Data = target.getFiducialId()
-                    
-        logger.info(f"target {dataType}: {Data} ")
+        # logger.info(f"target {dataType}: {Data} ")
         return Data
         
 
@@ -179,24 +191,26 @@ class visionSubsystem(commands2.Subsystem):
                     # return 0
                     continue
         return Data
-
-    # def robotPeriodic(self) -> None:
-        camEstPose = self.camPoseEst.update()
-        if camEstPose:
-            self.swerve.addVisionPoseEstimate(
-                camEstPose.estimatedPose, camEstPose.timestampSeconds
-            )
-
-        self.swerve.updateOdometry()
-        # self.swerve.log()
         
-    def periodic(self) -> None:
+    def printData(self): # Using this to test getting target Data
         
-        # Update Vision Data
-        self.result = self.camera.getLatestResult()
-        self.hasTargets = self.result.hasTargets()
-        self.targets = self.result.getTargets()
+        # logger.info(f" Target ID: {self.getClosestData("ID")}")
+        # logger.info(f" Target Yaw: {self.getClosestData("Yaw")}")
+        # logger.info(f" Target Skew: {self.getClosestData("Skew")}")
+        # logger.info(f" Target Pitch: {self.getClosestData("Pitch")}")
+        # logger.info(f" Target X: {self.getClosestData("X-Dist")}")
+        # logger.info(f" Target Y: {self.getClosestData("Y-Dist")}")
+        # logger.info(f" Target Z: {self.getClosestData("Z-Dist")}")
+        # logger.info(f"Target Amount: {len(self.targets)}")
         
-        # # Using this to test the getTargetData method
-        logger.info(f"{self.getTragetData2(4, "X-Dist")} data value")
-        # logger.info(f"{len(self.targets)} target amount?")
+        wpilib.SmartDashboard.putNumber("X-Dist", self.getClosestData("X-Dist"))
+        wpilib.SmartDashboard.putNumber("Y-Dist", self.getClosestData("Y-Dist"))
+        wpilib.SmartDashboard.putNumber("Z-Dist", self.getClosestData("Z-Dist"))
+        wpilib.SmartDashboard.putNumber("Yaw", self.getClosestData("Yaw"))
+        wpilib.SmartDashboard.putNumber("Skew", self.getClosestData("Skew"))
+        wpilib.SmartDashboard.putNumber("Pitch", self.getClosestData("Pitch"))
+        wpilib.SmartDashboard.putNumber("X-Rot", self.getClosestData("X-Dist"))
+        wpilib.SmartDashboard.putNumber("Y-Rot", self.getClosestData("X-Dist"))
+        wpilib.SmartDashboard.putNumber("Z-Rot", self.getClosestData("X-Dist"))
+        
+        # time.sleep(.25) # Limit the print values
