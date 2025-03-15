@@ -92,8 +92,6 @@ class WristL2(commands2.Command):
         self.WristSub.writPID(SW.Wrist_L2_Setpoint)
 
     def isFinished(self):
-        if self.WristSub.wristPID.atSetpoint():
-            return True
         return False
    
     def end(self, interrupted):
@@ -110,8 +108,6 @@ class WristL3(commands2.Command):
         self.WristSub.writPID(SW.Wrist_L3_Setpoint)
 
     def isFinished(self):
-        if self.WristSub.wristPID.atSetpoint():
-            return True
         return False
    
     def end(self, interrupted):
@@ -130,6 +126,60 @@ class WristL4(commands2.Command):
         self.WristSub.writPID(SW.Wrist_L4_Setpoint)
 
     def isFinished(self):
+        return False
+   
+    def end(self, interrupted):
+        self.WristSub.WristStop()
+        
+class AutoWristL2(commands2.Command):
+    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.WristSub = WristSubsytem
+
+    def initialize(self):
+        logger.info(" wrist to robot")
+
+    def execute(self):
+        self.WristSub.writPID(SW.Wrist_L2_Setpoint)
+
+    def isFinished(self):
+        if self.WristSub.wristPID.atSetpoint():
+            return True
+        return False
+   
+    def end(self, interrupted):
+        self.WristSub.WristStop()
+        
+class AutoWristL3(commands2.Command):
+    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.WristSub = WristSubsytem
+
+    def initialize(self):
+        logger.info(" wrist to proccesor")
+
+    def execute(self):
+        self.WristSub.writPID(SW.Wrist_L3_Setpoint)
+
+    def isFinished(self):
+        if self.WristSub.wristPID.atSetpoint():
+            return True
+        return False
+   
+    def end(self, interrupted):
+        self.WristSub.WristStop()
+
+class AutoWristL4(commands2.Command):
+    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.WristSub = WristSubsytem
+
+    def initialize(self):
+        logger.info(" wrist to floor")
+
+    def execute(self):
+        self.WristSub.writPID(SW.Wrist_L4_Setpoint)
+
+    def isFinished(self):
+        if self.WristSub.wristPID.atSetpoint():
+            return True
         return False
    
     def end(self, interrupted):

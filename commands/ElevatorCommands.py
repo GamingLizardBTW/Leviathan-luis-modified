@@ -83,15 +83,15 @@ class ElevatorL4(commands2.Command):
         logger.info("Elevaotr to L4 initialize")
 
     def execute(self):
-        self.ElevatorSub.normalPID()
+        self.ElevatorSub.normalPID(SW.L4_Setpoint)
 
     def isFinished(self):
-        # return False
-        if self.ElevatorSub.bottomOveride is False:
-            return True
+        return False
+        # if self.ElevatorSub.bottomOveride is False:
+        #     return True
     
     def end(self, interrupted):
-        self.ElevatorSub.elevatorMotorStop(SW.L4_Setpoint)
+        self.ElevatorSub.elevatorMotorStop()
         
 class ElevatorHome(commands2.Command):
 
@@ -108,7 +108,76 @@ class ElevatorHome(commands2.Command):
         self.ElevatorSub.homeElevator()
 
     def isFinished(self):
-        return self.ElevatorSub.topOveride
+        return self.ElevatorSub.bottomOveride
+    
+    def end(self, interrupted):
+        self.ElevatorSub.elevatorMotorStop()
+        
+class AutoElevatorL2(commands2.Command):
+
+    def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
+        self.addRequirements(ElevSub)
+        self.ElevatorSub = ElevSub
+        logger.info("Elevator constructor")
+
+    
+    def initialize(self):
+        logger.info("Elevaotr to L2 initialize")
+
+    def execute(self):
+        self.ElevatorSub.normalPID(SW.L2_Setpoint)
+
+    def isFinished(self):
+        if self.ElevatorSub.encoder == SW.L2_Setpoint:
+            return True
+        else:
+            return False
+    
+    def end(self, interrupted):
+        self.ElevatorSub.elevatorMotorStop()
+        
+class AutoElevatorL3(commands2.Command):
+
+    def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
+        self.addRequirements(ElevSub)
+        self.ElevatorSub = ElevSub
+        logger.info("Elevator constructor")
+
+    
+    def initialize(self):
+        logger.info("Elevaotr to L3 initialize")
+
+    def execute(self):
+        self.ElevatorSub.normalPID(SW.L3_Setpoint)
+
+    def isFinished(self):
+        if self.ElevatorSub.encoder == SW.L3_Setpoint:
+            return True
+        else:
+            return False
+    
+    def end(self, interrupted):
+        self.ElevatorSub.elevatorMotorStop()
+        
+class AutoElevatorL4(commands2.Command):
+
+    def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
+        self.addRequirements(ElevSub)
+        self.ElevatorSub = ElevSub
+        logger.info("Elevator constructor")
+
+    
+    def initialize(self):
+        logger.info("Elevaotr to L4 initialize")
+
+    def execute(self):
+        self.ElevatorSub.normalPID(SW.L4_Setpoint)
+
+    def isFinished(self):
+        if self.ElevatorSub.encoder == SW.L4_Setpoint:
+            return True
+        else:
+            return False
     
     def end(self, interrupted):
         self.ElevatorSub.elevatorMotorStop()

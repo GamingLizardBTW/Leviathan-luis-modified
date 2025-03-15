@@ -15,13 +15,13 @@ import subsystems.HangSubsystem
 
 # Commands
 from commands.IntakeCommands import IntakeCommand, OutakeCommand, IntakeStop
-from commands.WristCommands import wristWithJoystick, WristForward, WristBackwards, WristStop, WristL2, WristL3, WristL4
-from commands.ElevatorCommands import ElevatorWithJoysticks, ElevatorL2, ElevatorL3, ElevatorL4, ElevatorHome
+from commands.WristCommands import wristWithJoystick, WristForward, WristBackwards, WristStop, WristL2, WristL3, WristL4, AutoWristL2, AutoWristL3, AutoWristL4
+from commands.ElevatorCommands import ElevatorWithJoysticks, ElevatorL2, ElevatorL3, ElevatorL4, ElevatorHome, AutoElevatorL2, AutoElevatorL3, AutoElevatorL4
 from commands.HangCommands import hangBackwards, hangForward, hangStop
 from commands.ReefScoringCommand import ScoringL2
 
 from commands.DrivetrainCommands import driveWithJoystickCommand
-from pathplannerlib.auto import AutoBuilder, PathPlannerAuto
+from pathplannerlib.auto import AutoBuilder, PathPlannerAuto, NamedCommands
 from pathplannerlib.path import PathPlannerPath
 
 import logging
@@ -54,6 +54,13 @@ class RobotContainer:
         self.teleopL2 = commands2.ParallelCommandGroup(WristL2, ElevatorL2)
         self.teleopL3 = commands2.ParallelCommandGroup(WristL3, ElevatorL3)
         self.teleopL4 = commands2.ParallelCommandGroup(WristL4, ElevatorL4)
+        #Auto command groups
+        self.autoL2 = commands2.ParallelCommandGroup(AutoWristL2, AutoElevatorL2)
+        self.autoL3 = commands2.ParallelCommandGroup(AutoWristL3, AutoElevatorL3)
+        self.autoL4 = commands2.ParallelCommandGroup(AutoWristL4, AutoElevatorL4)
+        NamedCommands.registerCommand("autoL2", self.autoL2)
+        NamedCommands.registerCommand("autoL3", self.autoL3)
+        NamedCommands.registerCommand("autoL4", self.autoL4)
         
         # Configure Bindings
         self.configureButtonBindings()

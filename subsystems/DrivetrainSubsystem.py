@@ -244,7 +244,8 @@ class drivetrainSubsystemClass(commands2.Subsystem):
         self.backRightModule.setDesiredState(swerveModuleState[3])
 
     def shouldFlipPath(self) -> bool:
-        return DriverStation.getAlliance() == DriverStation.Alliance.kRed
+        # return DriverStation.getAlliance() == DriverStation.Alliance.kRed
+        return False
 
 
     def updateOdometry(self) -> None:
