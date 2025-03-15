@@ -15,10 +15,10 @@ import subsystems.HangSubsystem
 
 # Commands
 from commands.IntakeCommands import IntakeCommand, OutakeCommand, IntakeStop
-from commands.WristCommands import WristForward, WristBackwards, WristStop, WristL2, WristL3, WristL4
+from commands.WristCommands import WristForward, WristBackwards, WristStop, WristL2, WristL3, WristL4, WristWithJoysticks
 from commands.ElevatorCommands import ElevatorWithJoysticks, ElevatorL2, ElevatorL3, ElevatorL4, ElevatorHome
 from commands.HangCommands import hangBackwards, hangForward, hangStop
-from commands.ReefScoringCommand import ScoringL2
+from commands.ReefScoringCommand import ScoringL2, ScoringL3, ScoringL4, BargeScoring
 
 from commands.DrivetrainCommands import driveWithJoystickCommand
 from pathplannerlib.auto import AutoBuilder, PathPlannerAuto
@@ -66,6 +66,7 @@ class RobotContainer:
         pass
         
         # Default Commands
+        self.wristsub.setDefaultCommand(WristWithJoysticks(self.wristsub))
         self.elevatorsub.setDefaultCommand(ElevatorWithJoysticks(self.elevatorsub))
         self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub, self.visionSub)) # Additional Buttons used: A
         
@@ -76,27 +77,28 @@ class RobotContainer:
         self.OperatorController.rightBumper().onFalse(IntakeStop(self.Intakesub))
         
         # Intake Wrist PID Commands
-        # self.OperatorController.x().whileTrue(WristL2(self.Intakesub)) # Considering making it to "on true" to only have to press once
-        # self.OperatorController.b().whileTrue(WristL3(self.Intakesub))
-        # self.OperatorController.a().whileTrue(WristL4(self.Intakesub))
+        # self.OperatorController.a().whileTrue(WristL2(self.Intakesub)) # Considering making it to "on true" to only have to press once
+        # self.OperatorController.x().whileTrue(WristL3(self.Intakesub))
+        # self.OperatorController.y().whileTrue(WristL4(self.Intakesub))
         
-        # Intake Wrist Manual Commands
-        self.OperatorController.a().whileTrue(WristForward(self.wristsub))
-        self.OperatorController.a().whileFalse(WristStop(self.wristsub))
-        self.OperatorController.y().whileTrue(WristBackwards(self.wristsub))
-        self.OperatorController.y().whileFalse(WristStop(self.wristsub))
+        # Intake Wrist Manual Commands (Dont need this anymore)
+        # self.OperatorController.a().whileTrue(WristForward(self.wristsub))
+        # self.OperatorController.a().whileFalse(WristStop(self.wristsub))
+        # self.OperatorController.y().whileTrue(WristBackwards(self.wristsub))
+        # self.OperatorController.y().whileFalse(WristStop(self.wristsub))
         
         # Elevator PID Commands
+        self.OperatorController.a().whileTrue(ElevatorL2(self.elevatorsub))
+        # self.OperatorController.x().whileTrue(ElevatorL3(self.elevatorsub))
         # self.OperatorController.y().whileTrue(ElevatorL4(self.elevatorsub))
-        # self.OperatorController.a().whileTrue(ElevatorL3(self.elevatorsub))
-        self.OperatorController.b().whileTrue(ElevatorL2(self.elevatorsub))
-        # self.OperatorController.a().whileTrue(ElevatorHome(self.elevatorsub))
+        # self.OperatorController.b().whileTrue(ElevatorHome(self.elevatorsub))
         
         self.DriverController.a().whileTrue(hangBackwards(self.hangSub))
         self.DriverController.a().whileFalse(hangStop(self.hangSub))
         self.DriverController.y().whileTrue(hangForward(self.hangSub))
         self.DriverController.y().whileFalse(hangStop(self.hangSub))
         
-        self.OperatorController.x().whileTrue(ScoringL2(self.elevatorsub, self.wristsub))
-        # self.OperatorController.b().whileTrue(ScoringL3(self.Intakesub))
-        # self.OperatorController.a().whileTrue(ScoringL4(self.Intakesub))
+        # self.OperatorController.a().whileTrue(ScoringL2(self.elevatorsub, self.wristsub))
+        # self.OperatorController.x().whileTrue(ScoringL3(self.elevatorsub, self.wristsub))
+        # self.OperatorController.y().whileTrue(ScoringL4(self.elevatorsub, self.wristsub))
+        # self.OperatorController.b().whileTrue(BargeScoring(self.elevatorsub, self.wristsub))

@@ -31,6 +31,10 @@ class WristSubsystemClass(commands2.Subsystem):
         # Display Values onto the Dashboard
         wpilib.SmartDashboard.putBoolean("Wrist PID at setpoint", self.wristPID.atSetpoint())
         wpilib.SmartDashboard.putNumber("Wrist Encoder Value", self.wristEncoder.get())
+
+    def wristwithjoystick(self, joystickinput):
+        calculatedinput = joystickinput * ELEC.elevator_speed_multiplier
+        self.wristMotor.set(calculatedinput)
         
     def wristForward(self):
         self.wristMotor.set(0.25)

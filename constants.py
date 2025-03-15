@@ -144,19 +144,23 @@ sw_data = {
     "WristKd": 0,
     "WristOffset": 0,
     
+    # Wrist PID Setpoints
     "Wrist_L2_Setpoint": 0.101,
     "Wrist_L3_Setpoint": 0.131,
     "Wrist_L4_Setpoint": 0.151,
+    "Wrist_Barge_Setpoint": 0.141,
     
     # Elevator PID Constats
     "Elevatorkp": 0.11,
-    "Elevatorki": 0.01,
-    "Elevatorkd": 0,
+    "Elevatorki": 0.05,
+    "Elevatorkd": 0.05,
     "ElevatorTolerance": 0.9,
     
+    # Elevator PID Setpoints
     "L2_Setpoint": 71.001,
     "L3_Setpoint": 91.001,
     "L4_Setpoint": 110.001,
+    "Barge_Setpoint": 120.001,
     
 }
 SW = namedtuple("Data", sw_data.keys())(**sw_data)

@@ -6,10 +6,35 @@ logger = logging.getLogger("WristSubsystem Logger")
 from wpilib import XboxController
 from constants import OP, SW
 import time
+
+class WristWithJoysticks(commands2.Command):
+
+    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.addRequirements(WristSubsytem)
+        self.WristSub = WristSubsytem
+        logger.info("Wrist constructor")
+
+    
+    def initialize(self):
+        logger.info("Wrist with joystick initialize")
+
+    def execute(self):
+        self.inputvalue = XboxController(OP.operator_controller).getRightY()
+        if self.inputvalue > 0.1 or self.inputvalue < -0.1:
+            self.WristSub.wristwithjoystick(self.inputvalue)
+        else:
+            self.WristSub.WristStop()
+
+    def isFinished(self):
+        return False
+    
+    def end(self, interrupted):
+        self.WristSub.WristStop()
         
 # Wrist Manual Commands
 class WristForward(commands2.Command):
     def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.addRequirements(WristSubsytem)
         self.WristSub = WristSubsytem
 
     def initialize(self):
