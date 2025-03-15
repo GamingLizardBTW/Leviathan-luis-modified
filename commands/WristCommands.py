@@ -8,6 +8,29 @@ from constants import OP, SW
 import time
         
 # Wrist Manual Commands
+
+class wristWithJoystick(commands2.Command):
+    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.WristSub = WristSubsytem
+
+    def initialize(self):
+        logger.info(" wrist initialized")
+
+    def execute(self):
+        self.inputvalue = XboxController(OP.operator_controller).getRightY()
+        if self.inputvalue > 0.1 or self.inputvalue < -0.1:
+            self.WristSub.wristWithJoystick(self.inputvalue)
+        else:
+            self.WristSub.WristStop()
+
+    def isFinished(self):
+        return False
+   
+    def end(self, interrupted):
+        self.WristSub.WristStop()
+    
+    
+    
 class WristForward(commands2.Command):
     def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
         self.WristSub = WristSubsytem

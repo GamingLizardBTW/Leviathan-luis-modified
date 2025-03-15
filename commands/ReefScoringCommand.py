@@ -5,7 +5,7 @@ logger = logging.getLogger("WristSubsystem Logger")
 from wpilib import XboxController
 from constants import OP, SW
 
-from subsystems.ElevatorSubystem import ElevatorSubsystemClass
+from subsystems.ElevatorSubsystem import ElevatorSubsystemClass
 from subsystems.WristSubsystem import WristSubsystemClass
 
 class ScoringL2(commands2.Command):

@@ -1,8 +1,8 @@
 import wpilib
 import commands2
-from subsystems.ElevatorSubystem import ElevatorSubsystemClass
+from subsystems.ElevatorSubsystem import ElevatorSubsystemClass
 import logging
-logger = logging.getLogger("WristSubsystem Logger")
+logger = logging.getLogger("elevator Subsystem Logger")
 from wpilib import XboxController
 from constants import OP, SW
 
@@ -20,7 +20,7 @@ class ElevatorWithJoysticks(commands2.Command):
     def execute(self):
         self.inputvalue = XboxController(OP.operator_controller).getLeftY()
         if self.inputvalue > 0.1 or self.inputvalue < -0.1:
-            self.ElevatorSub.wristwithjoystick(self.inputvalue)
+            self.ElevatorSub.elevatorWithjoystick(self.inputvalue)
         else:
             self.ElevatorSub.elevatorMotorStop()
         #logging.info("Running motor")

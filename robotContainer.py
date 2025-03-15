@@ -9,13 +9,13 @@ from constants import OP
 # Subsystems
 import subsystems.IntakeSubsystem
 import subsystems.WristSubsystem
-import subsystems.ElevatorSubystem
+import subsystems.ElevatorSubsystem
 import subsystems.VisionSubsystem
 import subsystems.HangSubsystem
 
 # Commands
 from commands.IntakeCommands import IntakeCommand, OutakeCommand, IntakeStop
-from commands.WristCommands import WristForward, WristBackwards, WristStop, WristL2, WristL3, WristL4
+from commands.WristCommands import wristWithJoystick, WristForward, WristBackwards, WristStop, WristL2, WristL3, WristL4
 from commands.ElevatorCommands import ElevatorWithJoysticks, ElevatorL2, ElevatorL3, ElevatorL4, ElevatorHome
 from commands.HangCommands import hangBackwards, hangForward, hangStop
 from commands.ReefScoringCommand import ScoringL2
@@ -42,13 +42,18 @@ class RobotContainer:
         self.visionSub = subsystems.VisionSubsystem.visionSubsystem()
         self.Intakesub = subsystems.IntakeSubsystem.IntakeSubsystemClass()
         self.wristsub = subsystems.WristSubsystem.WristSubsystemClass()
-        self.elevatorsub = subsystems.ElevatorSubystem.ElevatorSubsystemClass()
+        self.elevatorsub = subsystems.ElevatorSubsystem.ElevatorSubsystemClass()
         self.drivetrainSub = subsystems.DrivetrainSubsystem.drivetrainSubsystemClass()
         self.hangSub = subsystems.HangSubsystem.HangSubsystem()
         
         # Controllers
         self.DriverController = commands2.button.CommandXboxController(OP.driver_controller)
         self.OperatorController = commands2.button.CommandXboxController(OP.operator_controller)
+        
+        #Command groups
+        self.teleopL2 = commands2.ParallelCommandGroup(WristL2, ElevatorL2)
+        self.teleopL3 = commands2.ParallelCommandGroup(WristL3, ElevatorL3)
+        self.teleopL4 = commands2.ParallelCommandGroup(WristL4, ElevatorL4)
         
         # Configure Bindings
         self.configureButtonBindings()
@@ -67,6 +72,7 @@ class RobotContainer:
         
         # Default Commands
         self.elevatorsub.setDefaultCommand(ElevatorWithJoysticks(self.elevatorsub))
+        self.wristsub.setDefaultCommand(wristWithJoystick(self.wristsub))
         self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub, self.visionSub)) # Additional Buttons used: A
         
         # Intake Intake Commands
@@ -75,21 +81,21 @@ class RobotContainer:
         self.OperatorController.rightBumper().onTrue(OutakeCommand(self.Intakesub))
         self.OperatorController.rightBumper().onFalse(IntakeStop(self.Intakesub))
         
-        # Intake Wrist PID Commands
-        # self.OperatorController.x().whileTrue(WristL2(self.Intakesub)) # Considering making it to "on true" to only have to press once
-        # self.OperatorController.b().whileTrue(WristL3(self.Intakesub))
-        # self.OperatorController.a().whileTrue(WristL4(self.Intakesub))
+        # Elevator and Wrist Teleop PID Commands
+        self.OperatorController.y().whileTrue(self.teleopL4) # Considering making it to "on true" to only have to press once
+        self.OperatorController.x().whileTrue(self.teleopL3)
+        self.OperatorController.b().whileTrue(self.teleopL2)
         
         # Intake Wrist Manual Commands
-        self.OperatorController.a().whileTrue(WristForward(self.wristsub))
-        self.OperatorController.a().whileFalse(WristStop(self.wristsub))
-        self.OperatorController.y().whileTrue(WristBackwards(self.wristsub))
-        self.OperatorController.y().whileFalse(WristStop(self.wristsub))
+        # self.OperatorController.a().whileTrue(WristForward(self.wristsub))
+        # self.OperatorController.a().whileFalse(WristStop(self.wristsub))
+        # self.OperatorController.y().whileTrue(WristBackwards(self.wristsub))
+        # self.OperatorController.y().whileFalse(WristStop(self.wristsub))
         
         # Elevator PID Commands
         # self.OperatorController.y().whileTrue(ElevatorL4(self.elevatorsub))
         # self.OperatorController.a().whileTrue(ElevatorL3(self.elevatorsub))
-        self.OperatorController.b().whileTrue(ElevatorL2(self.elevatorsub))
+        # self.OperatorController.b().whileTrue(ElevatorL2(self.elevatorsub))
         # self.OperatorController.a().whileTrue(ElevatorHome(self.elevatorsub))
         
         self.DriverController.a().whileTrue(hangBackwards(self.hangSub))
@@ -97,6 +103,6 @@ class RobotContainer:
         self.DriverController.y().whileTrue(hangForward(self.hangSub))
         self.DriverController.y().whileFalse(hangStop(self.hangSub))
         
-        self.OperatorController.x().whileTrue(ScoringL2(self.elevatorsub, self.wristsub))
+        # self.OperatorController.x().whileTrue(ScoringL2(self.elevatorsub, self.wristsub))
         # self.OperatorController.b().whileTrue(ScoringL3(self.Intakesub))
         # self.OperatorController.a().whileTrue(ScoringL4(self.Intakesub))

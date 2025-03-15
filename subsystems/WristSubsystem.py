@@ -38,6 +38,10 @@ class WristSubsystemClass(commands2.Subsystem):
     def wristBackwards(self):
         self.wristMotor.set(-0.4)
         
+    def wristWithJoystick(self, joystickInput):
+        motorOutput = joystickInput * ELEC.wrist_speed_multiplier
+        self.wristMotor.set(motorOutput)
+        
     def WristStop(self):
         self.wristMotor.set(0)
         

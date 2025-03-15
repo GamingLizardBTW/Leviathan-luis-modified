@@ -132,11 +132,6 @@ sw_data = {
     "swerve_steer_kP": 1,
     "swerve_steer_kI": 0,
     "swerve_steer_kD": 0,
-
-    # Constants for feed-forward of propulsion motors
-    "kS": 0,
-    "kV": 0,
-    "kA": 0,
     
     # Wrist PID constants
     "WristKp": 0.1,
