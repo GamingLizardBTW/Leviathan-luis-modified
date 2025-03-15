@@ -10,7 +10,7 @@ class WristSubsystemClass(commands2.Subsystem):
 
     def __init__(self) -> None:
         # Dio Sensors for Intake Subsystem
-        self.wristEncoder = wpilib.DutyCycleEncoder(22, 1, SW.WristOffset)
+        self.wristEncoder = wpilib.DutyCycleEncoder(ELEC.Wrist_Encoder_DIO, 1, SW.WristOffset)
         
         # Motors for Intake Subsystem
         self.wristMotor = phoenix6.hardware.TalonFX(ELEC.WristMotor_ID)
@@ -29,8 +29,8 @@ class WristSubsystemClass(commands2.Subsystem):
         self.wristsEncoderVal = self.wristEncoder.get()
         
         # Display Values onto the Dashboard
-        wpilib.SmartDashboard.putBoolean("Arm PID at setpoint", self.wristPID.atSetpoint())
-        wpilib.SmartDashboard.putNumber("Encoder Value", self.wristsEncoderVal)
+        wpilib.SmartDashboard.putBoolean("Wrist PID at setpoint", self.wristPID.atSetpoint())
+        wpilib.SmartDashboard.putNumber("Wrist Encoder Value", self.wristEncoder.get())
         
     def wristForward(self):
         self.wristMotor.set(0.25)
@@ -40,6 +40,9 @@ class WristSubsystemClass(commands2.Subsystem):
         
     def WristStop(self):
         self.wristMotor.set(0)
+        
+    def writPID(self, target):
+        self.wristMotor.set(self.wristPID.calculate(self.wristsEncoderVal, target))
         
     def WristL2(self):
         self.wristMotor.set(self.wristPID.calculate(self.wristsEncoderVal, 0))

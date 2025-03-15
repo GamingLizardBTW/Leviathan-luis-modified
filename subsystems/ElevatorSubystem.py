@@ -55,23 +55,23 @@ class ElevatorSubsystemClass(commands2.Subsystem):
         wpilib.SmartDashboard.putNumber("Bottom Motor Encoder", self.bottoMmotor.get_rotor_position().value)
         wpilib.SmartDashboard.putNumber("Average Motor Encoder", self.encoder)
         
-        wpilib.SmartDashboard.putBoolean("Top Limit Switch", not self.topSwitch.get())
-        wpilib.SmartDashboard.putBoolean("Bottom Limit Switch", not self.bottomSwitch.get())
+        wpilib.SmartDashboard.putBoolean("Top Limit Switch", self.topSwitch.get())
+        wpilib.SmartDashboard.putBoolean("Bottom Limit Switch", self.bottomSwitch.get())
         
         # This is used to force stop any elevator commands if limit switch is hit
         self.topOveride = not self.topSwitch.get()
         self.bottomOveride = not self.bottomSwitch.get()
         
-        if self.topOveride:
-            self.topMotor.configurator.set_position(0)
-            self.bottoMmotor.configurator.set_position(0)
+        # if self.bottomOveride is False:
+        #     self.topMotor.configurator.set_position(0)
+        #     self.bottoMmotor.configurator.set_position(0)
 
     def wristwithjoystick(self, joystickinput):
         calculatedinput = joystickinput * ELEC.elevator_speed_multiplier
-        if self.bottomOveride and joystickinput > 0:
+        if self.bottomOveride is False and joystickinput > 0:
             self.topMotor.set(0)
             self.bottoMmotor.set(0)
-        elif self.topOveride and joystickinput < 0:
+        elif self.topOveride is False and joystickinput < 0:
             self.topMotor.set(0)
             self.bottoMmotor.set(0)
         else:
@@ -82,11 +82,21 @@ class ElevatorSubsystemClass(commands2.Subsystem):
         self.topMotor.set(0)
         self.bottoMmotor.set(0)
         
-    def trapezoidPID(self):
-        self.topMotor.set(self.controller.calculate(self.encoder, 0))
-        self.bottoMmotor.set(self.controller.calculate(self.encoder, 1))
+    # def trapezoidPID(self):
+    #     self.topMotor.set(self.controller.calculate(self.encoder, 0))
+    #     self.bottoMmotor.set(self.controller.calculate(self.encoder, 1))
         
-    def normalPID(self):
+    def normalPID(self, target):
+        if self.topOveride:
+            setpoint = self.elevatorPID.calculate(self.encoder, target)
+            self.topMotor.set(setpoint)
+            self.bottoMmotor.set(setpoint)
+        # setpoint = self.elevatorPID.calculate(self.encoder, target)
+        # self.topMotor.set(setpoint)
+        # self.bottoMmotor.set(setpoint)
+        
+    def homeElevator(self):
         if self.bottomOveride:
-            self.topMotor.set(self.elevatorPID.calculate(self.encoder, 1))
-            self.bottoMmotor.set(self.elevatorPID.calculate(self.encoder, 1))
+            setpoint = self.elevatorPID.calculate(self.encoder, 0)
+            self.topMotor.set(setpoint)
+            self.bottoMmotor.set(setpoint)

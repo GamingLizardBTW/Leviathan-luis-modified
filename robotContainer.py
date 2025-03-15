@@ -11,11 +11,14 @@ import subsystems.IntakeSubsystem
 import subsystems.WristSubsystem
 import subsystems.ElevatorSubystem
 import subsystems.VisionSubsystem
+import subsystems.HangSubsystem
 
 # Commands
 from commands.IntakeCommands import IntakeCommand, OutakeCommand, IntakeStop
 from commands.WristCommands import WristForward, WristBackwards, WristStop, WristL2, WristL3, WristL4
-from commands.ElevatorCommands import ElevatorWithJoysticks, ElevatorPID1, ElevatorPID2, ElevatorPID3, ElevatorPID4
+from commands.ElevatorCommands import ElevatorWithJoysticks, ElevatorL2, ElevatorL3, ElevatorL4, ElevatorHome
+from commands.HangCommands import hangBackwards, hangForward, hangStop
+from commands.ReefScoringCommand import ScoringL2
 
 from commands.DrivetrainCommands import driveWithJoystickCommand
 from pathplannerlib.auto import AutoBuilder, PathPlannerAuto
@@ -37,10 +40,11 @@ class RobotContainer:
         
         # Subsytems
         self.visionSub = subsystems.VisionSubsystem.visionSubsystem()
-        # self.Intakesub = subsystems.IntakeSubsystem.IntakeSubsystemClass()
-        # self.wristsub = subsystems.WristSubsystem.WristSubsystemClass()
+        self.Intakesub = subsystems.IntakeSubsystem.IntakeSubsystemClass()
+        self.wristsub = subsystems.WristSubsystem.WristSubsystemClass()
         self.elevatorsub = subsystems.ElevatorSubystem.ElevatorSubsystemClass()
         self.drivetrainSub = subsystems.DrivetrainSubsystem.drivetrainSubsystemClass()
+        self.hangSub = subsystems.HangSubsystem.HangSubsystem()
         
         # Controllers
         self.DriverController = commands2.button.CommandXboxController(OP.driver_controller)
@@ -62,28 +66,37 @@ class RobotContainer:
         pass
         
         # Default Commands
-        # self.elevatorsub.setDefaultCommand(ElevatorWithJoysticks(self.elevatorsub))
-        # self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub)) # Additional Buttons used: A
+        self.elevatorsub.setDefaultCommand(ElevatorWithJoysticks(self.elevatorsub))
+        self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub, self.visionSub)) # Additional Buttons used: A
         
         # Intake Intake Commands
-        # self.DriverController.leftBumper().onTrue(IntakeCommand(self.Intakesub))
-        # self.DriverController.leftBumper().onFalse(IntakeStop(self.Intakesub))
-        # self.DriverController.rightBumper().onTrue(OutakeCommand(self.Intakesub))
-        # self.DriverController.rightBumper().onFalse(IntakeStop(self.Intakesub))
+        self.OperatorController.leftBumper().onTrue(IntakeCommand(self.Intakesub))
+        self.OperatorController.leftBumper().onFalse(IntakeStop(self.Intakesub))
+        self.OperatorController.rightBumper().onTrue(OutakeCommand(self.Intakesub))
+        self.OperatorController.rightBumper().onFalse(IntakeStop(self.Intakesub))
         
         # Intake Wrist PID Commands
-        # self.DriverController.x().whileTrue(WristL2(self.Intakesub)) # Considering making it to "on true" to only have to press once
-        # self.DriverController.b().whileTrue(WristL3(self.Intakesub))
-        # self.DriverController.a().whileTrue(WristL4(self.Intakesub))
+        # self.OperatorController.x().whileTrue(WristL2(self.Intakesub)) # Considering making it to "on true" to only have to press once
+        # self.OperatorController.b().whileTrue(WristL3(self.Intakesub))
+        # self.OperatorController.a().whileTrue(WristL4(self.Intakesub))
         
         # Intake Wrist Manual Commands
-        # self.DriverController.a().whileTrue(WristForward(self.Intakesub))
-        # self.DriverController.a().whileFalse(WristStop(self.Intakesub))
-        # self.DriverController.y().whileTrue(WristBackwards(self.Intakesub))
-        # self.DriverController.y().whileFalse(WristStop(self.Intakesub))
+        self.OperatorController.a().whileTrue(WristForward(self.wristsub))
+        self.OperatorController.a().whileFalse(WristStop(self.wristsub))
+        self.OperatorController.y().whileTrue(WristBackwards(self.wristsub))
+        self.OperatorController.y().whileFalse(WristStop(self.wristsub))
         
         # Elevator PID Commands
-        # self.OperatorController.y().whileTrue(ElevatorPID1(self.elevatorsub))
-        # self.OperatorController.a().whileTrue(ElevatorPID2(self.elevatorsub))
-        self.OperatorController.y().whileTrue(ElevatorPID3(self.elevatorsub))
-        self.OperatorController.a().whileTrue(ElevatorPID4(self.elevatorsub))
+        # self.OperatorController.y().whileTrue(ElevatorL4(self.elevatorsub))
+        # self.OperatorController.a().whileTrue(ElevatorL3(self.elevatorsub))
+        self.OperatorController.b().whileTrue(ElevatorL2(self.elevatorsub))
+        # self.OperatorController.a().whileTrue(ElevatorHome(self.elevatorsub))
+        
+        self.DriverController.a().whileTrue(hangBackwards(self.hangSub))
+        self.DriverController.a().whileFalse(hangStop(self.hangSub))
+        self.DriverController.y().whileTrue(hangForward(self.hangSub))
+        self.DriverController.y().whileFalse(hangStop(self.hangSub))
+        
+        self.OperatorController.x().whileTrue(ScoringL2(self.elevatorsub, self.wristsub))
+        # self.OperatorController.b().whileTrue(ScoringL3(self.Intakesub))
+        # self.OperatorController.a().whileTrue(ScoringL4(self.Intakesub))

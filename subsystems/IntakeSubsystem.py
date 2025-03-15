@@ -16,11 +16,11 @@ class IntakeSubsystemClass(commands2.Subsystem):
     
     def Outake(self):
         print("outake")
-        self.Intakeintakemotor.set(SW.IntakeSpeed)
+        self.Intakeintakemotor.set(ELEC.IntakeSpeed)
         
     def Intake(self):
         print("Intake")
-        self.Intakeintakemotor.set(SW.OutakeSpeed)
+        self.Intakeintakemotor.set(ELEC.OutakeSpeed)
     
     def Stop(self):
         self.Intakeintakemotor.set(0)

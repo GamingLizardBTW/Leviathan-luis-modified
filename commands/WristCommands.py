@@ -4,7 +4,7 @@ from subsystems.WristSubsystem import WristSubsystemClass
 import logging
 logger = logging.getLogger("WristSubsystem Logger")
 from wpilib import XboxController
-from constants import OP
+from constants import OP, SW
 import time
         
 # Wrist Manual Commands
@@ -66,7 +66,7 @@ class WristL2(commands2.Command):
         logger.info(" wrist to robot")
 
     def execute(self):
-        self.WristSub.WristL2()
+        self.WristSub.writPID(SW.Wrist_L2_Setpoint)
 
     def isFinished(self):
         if self.WristSub.wristPID.atSetpoint():
@@ -84,7 +84,7 @@ class WristL3(commands2.Command):
         logger.info(" wrist to proccesor")
 
     def execute(self):
-        self.WristSub.WristL3()
+        self.WristSub.writPID(SW.Wrist_L3_Setpoint)
 
     def isFinished(self):
         if self.WristSub.wristPID.atSetpoint():
@@ -104,7 +104,7 @@ class WristL4(commands2.Command):
         logger.info(" wrist to floor")
 
     def execute(self):
-        self.WristSub.WristL4()
+        self.WristSub.writPID(SW.Wrist_L4_Setpoint)
 
     def isFinished(self):
         return False

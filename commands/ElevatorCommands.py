@@ -4,7 +4,7 @@ from subsystems.ElevatorSubystem import ElevatorSubsystemClass
 import logging
 logger = logging.getLogger("WristSubsystem Logger")
 from wpilib import XboxController
-from constants import OP
+from constants import OP, SW
 
 class ElevatorWithJoysticks(commands2.Command):
 
@@ -31,7 +31,7 @@ class ElevatorWithJoysticks(commands2.Command):
     def end(self, interrupted):
         self.ElevatorSub.elevatorMotorStop()
         
-class ElevatorPID1(commands2.Command):
+class ElevatorL2(commands2.Command):
 
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
         self.addRequirements(ElevSub)
@@ -40,10 +40,10 @@ class ElevatorPID1(commands2.Command):
 
     
     def initialize(self):
-        logger.info("Elevaotr with Trapezoid PID initialize")
+        logger.info("Elevaotr to L2 initialize")
 
     def execute(self):
-        self.ElevatorSub.trapezoidPID()
+        self.ElevatorSub.normalPID(SW.L2_Setpoint)
 
     def isFinished(self):
         return False
@@ -51,7 +51,7 @@ class ElevatorPID1(commands2.Command):
     def end(self, interrupted):
         self.ElevatorSub.elevatorMotorStop()
         
-class ElevatorPID2(commands2.Command):
+class ElevatorL3(commands2.Command):
 
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
         self.addRequirements(ElevSub)
@@ -60,10 +60,10 @@ class ElevatorPID2(commands2.Command):
 
     
     def initialize(self):
-        logger.info("Elevaotr Trapezoid with PID initialize")
+        logger.info("Elevaotr to L3 initialize")
 
     def execute(self):
-        self.ElevatorSub.trapezoidPID()
+        self.ElevatorSub.normalPID(SW.L3_Setpoint)
 
     def isFinished(self):
         return False
@@ -71,7 +71,7 @@ class ElevatorPID2(commands2.Command):
     def end(self, interrupted):
         self.ElevatorSub.elevatorMotorStop()
         
-class ElevatorPID3(commands2.Command):
+class ElevatorL4(commands2.Command):
 
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
         self.addRequirements(ElevSub)
@@ -80,19 +80,20 @@ class ElevatorPID3(commands2.Command):
 
     
     def initialize(self):
-        logger.info("Elevaotr with PID initialize")
+        logger.info("Elevaotr to L4 initialize")
 
     def execute(self):
         self.ElevatorSub.normalPID()
 
     def isFinished(self):
-        if self.ElevatorSub.bottomOveride:
+        # return False
+        if self.ElevatorSub.bottomOveride is False:
             return True
     
     def end(self, interrupted):
-        self.ElevatorSub.elevatorMotorStop()
+        self.ElevatorSub.elevatorMotorStop(SW.L4_Setpoint)
         
-class ElevatorPID4(commands2.Command):
+class ElevatorHome(commands2.Command):
 
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
         self.addRequirements(ElevSub)
@@ -104,7 +105,7 @@ class ElevatorPID4(commands2.Command):
         logger.info("Elevaotr with PID initialize")
 
     def execute(self):
-        self.ElevatorSub.normalPID()
+        self.ElevatorSub.homeElevator()
 
     def isFinished(self):
         return self.ElevatorSub.topOveride

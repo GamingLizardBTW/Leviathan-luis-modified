@@ -49,26 +49,27 @@ elec_data = {
     #SwerveDrive
     "RF_drive_CAN_ID": 3,
     "RF_steer_CAN_ID": 20,
-    "RF_encoder_DIO": 7,
+    "RF_encoder_DIO": 8,
     "RB_steer_CAN_ID": 12,
     "RB_drive_CAN_ID": 1,
-    "RB_encoder_DIO": 3,
+    "RB_encoder_DIO": 7,
     "LB_steer_CAN_ID": 8,
     "LB_drive_CAN_ID": 7,
-    "LB_encoder_DIO": 2,
+    "LB_encoder_DIO": 9,
     "LF_steer_CAN_ID": 11,
     "LF_drive_CAN_ID": 5,
-    "LF_encoder_DIO": 6,  
+    "LF_encoder_DIO": 0,  
     "driveMotor_neutral": phoenix6.signals.NeutralModeValue(1),
     "steerMotor_neutral": phoenix6.signals.NeutralModeValue(1),
 
     #Wrist
-    "WristMotor_ID": 16,
+    "WristMotor_ID": 9,
     "wrist_neutral_mode": 1,
     "wrist_speed_multiplier": 0.5,
+    "Wrist_Encoder_DIO": 6,
 
     #Intake
-    "IntakeMotor_ID": 9,
+    "IntakeMotor_ID": 6,
     "IntakeSpeed": 1,
     "OutakeSpeed": -1,
     
@@ -77,8 +78,12 @@ elec_data = {
     "BottomElevatorMotor_ID": 17,
     "elevator_neutral_mode": 1,
     "elevator_speed_multiplier": -0.65,
-    "BottomLimitSwitch": 0,
-    "TopLimitSwitch": 11,
+    "BottomLimitSwitch": 5,
+    "TopLimitSwitch": 4,
+    
+    # Hang
+    "Hang_Motor_ID": 16,
+    "Hang_Neutal_Mode": 1,
 
 }    
 ELEC = namedtuple("Data", elec_data.keys())(**elec_data)
@@ -112,10 +117,10 @@ sw_data = {
 	#
     "path_planner_config": RobotConfig.fromGUISettings(),
 
-	"lf_enc_zeropos":  0.19358712983967824,
-	"rf_enc_zeropos":  0.16905120422628012,
-	"lb_enc_zeropos":  0.7013860175346505,
-	"rb_enc_zeropos":  0.5610728640268215,
+	"lf_enc_zeropos":  0.2598246064956152,
+	"rf_enc_zeropos":  0.17214727930368198,
+	"lb_enc_zeropos":  0.7089264177231605,
+	"rb_enc_zeropos":  0.9897122247428056,
 
     "swerve_drive_kS": 0,
     "swerve_drive_kV": 0.12,
@@ -137,13 +142,21 @@ sw_data = {
     "WristKp": 0.1,
     "WristKi": 0, 
     "WristKd": 0,
-    "WristOffset": 0.5,
+    "WristOffset": 0,
+    
+    "Wrist_L2_Setpoint": 0.101,
+    "Wrist_L3_Setpoint": 0.131,
+    "Wrist_L4_Setpoint": 0.151,
     
     # Elevator PID Constats
-    "Elevatorkp": 1,
-    "Elevatorki": 0,
+    "Elevatorkp": 0.11,
+    "Elevatorki": 0.01,
     "Elevatorkd": 0,
-    "ElevatorTolerance": 0.3,
+    "ElevatorTolerance": 0.9,
+    
+    "L2_Setpoint": 71.001,
+    "L3_Setpoint": 91.001,
+    "L4_Setpoint": 110.001,
     
 }
 SW = namedtuple("Data", sw_data.keys())(**sw_data)
