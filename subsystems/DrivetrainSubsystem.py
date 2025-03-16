@@ -16,7 +16,7 @@ from wpimath.kinematics import (
 )
 from navx import AHRS
 from wpilib import SPI
-from wpilib import SmartDashboard, shuffleboard
+from wpilib import SmartDashboard, shuffleboard, Field2d
 import wpimath.trajectory
 
 import constants
@@ -190,15 +190,15 @@ class drivetrainSubsystemClass(commands2.Subsystem):
         if not AutoBuilder.isConfigured():
             logger.info("About to configure AutoBuilder...")
             AutoBuilder.configure(
-                self.odometry.getPose,
+                self.getRobotPose,
                 self.odometry.resetPose,
                 lambda: self.kinematics.toChassisSpeeds((self.frontLeftModule.getState(),
                                                         self.frontRightModule.getState(),
                                                         self.backLeftModule.getState(),
                                                         self.backRightModule.getState())),
                 self.driveRobotRelative,
-                PPHolonomicDriveController(PIDConstants(5,0,0),
-                                        PIDConstants(5,0,0)),
+                PPHolonomicDriveController(PIDConstants(2,0,0),
+                                        PIDConstants(2,0,0)),
                 SW.path_planner_config,
                 self.shouldFlipPath,
                 #If the alliance is red, this line will return true which flips the path(primary path are made based on blue)
@@ -242,6 +242,8 @@ class drivetrainSubsystemClass(commands2.Subsystem):
         self.frontRightModule.setDesiredState(swerveModuleState[1])
         self.backLeftModule.setDesiredState(swerveModuleState[2])
         self.backRightModule.setDesiredState(swerveModuleState[3])
+        
+        self.showRobotPose()
 
     def shouldFlipPath(self) -> bool:
         # return DriverStation.getAlliance() == DriverStation.Alliance.kRed
@@ -258,6 +260,11 @@ class drivetrainSubsystemClass(commands2.Subsystem):
             self.backRightModule.getPosition()
             )
         )
+        
+    def getRobotPose(self) -> Pose2d:
+        self.updateOdometry()
+        pose = self.odometry.getPose()
+        return pose
 
     def resetAllEncoders(self) -> None:
         self.frontLeftModule.resetEncoders()
@@ -310,6 +317,14 @@ class drivetrainSubsystemClass(commands2.Subsystem):
         SmartDashboard.putNumber("RFdesiredSpeed", self.frontRightModule.getDesiredSpeed(self.swerveModuleState[1]))
         SmartDashboard.putNumber("LBdesiredSpeed", self.backLeftModule.getDesiredSpeed(self.swerveModuleState[2]))        
         SmartDashboard.putNumber("RBdesiredSpeed", self.backRightModule.getDesiredSpeed(self.swerveModuleState[3]))
+    
+    def showRobotPose(self) -> None:
+        field = Field2d()
+        field.setRobotPose(self.getRobotPose())
+        SmartDashboard.putData("Field", field)
+        
+    def periodic(self) -> None:
+        self.showRobotPose()
         
     # def showHeading(self) -> None:
     #     shuffleboard.Shuffleboard.getTab("Heading").add(self.gyro)

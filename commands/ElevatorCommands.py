@@ -31,6 +31,8 @@ class ElevatorWithJoysticks(commands2.Command):
     def end(self, interrupted):
         self.ElevatorSub.elevatorMotorStop()
         
+        
+    # Elevator with PID
 class ElevatorL2(commands2.Command):
 
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
@@ -93,6 +95,26 @@ class ElevatorL4(commands2.Command):
     def end(self, interrupted):
         self.ElevatorSub.elevatorMotorStop()
         
+class ElevatorBarge(commands2.Command):
+
+    def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
+        self.addRequirements(ElevSub)
+        self.ElevatorSub = ElevSub
+        logger.info("Elevator constructor")
+
+    
+    def initialize(self):
+        logger.info("Elevaotr to L4 initialize")
+
+    def execute(self):
+        self.ElevatorSub.normalPID(SW.Barge_Setpoint)
+
+    def isFinished(self):
+        return False
+    
+    def end(self, interrupted):
+        self.ElevatorSub.elevatorMotorStop()
+        
 class ElevatorHome(commands2.Command):
 
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
@@ -113,6 +135,8 @@ class ElevatorHome(commands2.Command):
     def end(self, interrupted):
         self.ElevatorSub.elevatorMotorStop()
         
+        
+    # Elevator with PID
 class AutoElevatorL2(commands2.Command):
 
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
@@ -178,6 +202,46 @@ class AutoElevatorL4(commands2.Command):
             return True
         else:
             return False
+    
+    def end(self, interrupted):
+        self.ElevatorSub.elevatorMotorStop()
+        
+class AutoElevatorBarge(commands2.Command):
+
+    def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
+        self.addRequirements(ElevSub)
+        self.ElevatorSub = ElevSub
+        logger.info("Elevator constructor")
+
+    
+    def initialize(self):
+        logger.info("Elevaotr to L4 initialize")
+
+    def execute(self):
+        self.ElevatorSub.normalPID(SW.Barge_Setpoint)
+
+    def isFinished(self):
+        return False
+    
+    def end(self, interrupted):
+        self.ElevatorSub.elevatorMotorStop()
+        
+class AutoElevatorHome(commands2.Command):
+
+    def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
+        self.addRequirements(ElevSub)
+        self.ElevatorSub = ElevSub
+        logger.info("Elevator constructor")
+
+    
+    def initialize(self):
+        logger.info("Elevaotr with PID initialize")
+
+    def execute(self):
+        self.ElevatorSub.homeElevator()
+
+    def isFinished(self):
+        return self.ElevatorSub.bottomOveride
     
     def end(self, interrupted):
         self.ElevatorSub.elevatorMotorStop()

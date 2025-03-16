@@ -12,13 +12,14 @@ import time
 class wristWithJoystick(commands2.Command):
     def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
         self.WristSub = WristSubsytem
+        self.addRequirements(self.WristSub)
 
     def initialize(self):
         logger.info(" wrist initialized")
 
     def execute(self):
         self.inputvalue = XboxController(OP.operator_controller).getRightY()
-        if self.inputvalue > 0.1 or self.inputvalue < -0.1:
+        if self.inputvalue > 0.13 or self.inputvalue < -0.13:
             self.WristSub.wristWithJoystick(self.inputvalue)
         else:
             self.WristSub.WristStop()
@@ -33,6 +34,7 @@ class wristWithJoystick(commands2.Command):
     
 class WristForward(commands2.Command):
     def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.addRequirements(WristSubsytem)
         self.WristSub = WristSubsytem
 
     def initialize(self):
@@ -80,6 +82,8 @@ class WristStop(commands2.Command):
     def end(self, interrupted):
         self.WristSub.WristStop()
 
+
+
 # Wrist PID Commands
 class WristL2(commands2.Command):
     def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
@@ -89,7 +93,7 @@ class WristL2(commands2.Command):
         logger.info(" wrist to robot")
 
     def execute(self):
-        self.WristSub.writPID(SW.Wrist_L2_Setpoint)
+        self.WristSub.wristWithPID(SW.Wrist_L2_Setpoint)
 
     def isFinished(self):
         return False
@@ -105,15 +109,15 @@ class WristL3(commands2.Command):
         logger.info(" wrist to proccesor")
 
     def execute(self):
-        self.WristSub.writPID(SW.Wrist_L3_Setpoint)
+        self.WristSub.wristWithPID(SW.Wrist_L3_Setpoint)
 
     def isFinished(self):
         return False
    
     def end(self, interrupted):
-        XboxController(OP.driver_controller).setRumble(XboxController.RumbleType(2), 0.8)
+        # XboxController(OP.driver_controller).setRumble(XboxController.RumbleType(2), 0.8)
         self.WristSub.WristStop()
-        time.sleep(.3)
+
 
 class WristL4(commands2.Command):
     def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
@@ -123,7 +127,7 @@ class WristL4(commands2.Command):
         logger.info(" wrist to floor")
 
     def execute(self):
-        self.WristSub.writPID(SW.Wrist_L4_Setpoint)
+        self.WristSub.wristWithPID(SW.Wrist_L4_Setpoint)
 
     def isFinished(self):
         return False
@@ -131,6 +135,40 @@ class WristL4(commands2.Command):
     def end(self, interrupted):
         self.WristSub.WristStop()
         
+class WristBarge(commands2.Command):
+    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.WristSub = WristSubsytem
+
+    def initialize(self):
+        logger.info(" wrist to floor")
+
+    def execute(self):
+        self.WristSub.wristWithPID(SW.Wrist_Barge_Setpoint)
+
+    def isFinished(self):
+        return False
+   
+    def end(self, interrupted):
+        self.WristSub.WristStop()
+        
+class WristHome(commands2.Command):
+    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.WristSub = WristSubsytem
+
+    def initialize(self):
+        logger.info(" wrist to robot")
+
+    def execute(self):
+        self.WristSub.wristWithPID(0)
+
+    def isFinished(self):
+        return False
+   
+    def end(self, interrupted):
+        self.WristSub.WristStop()
+        
+
+# PID for auto
 class AutoWristL2(commands2.Command):
     def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
         self.WristSub = WristSubsytem
@@ -139,7 +177,7 @@ class AutoWristL2(commands2.Command):
         logger.info(" wrist to robot")
 
     def execute(self):
-        self.WristSub.writPID(SW.Wrist_L2_Setpoint)
+        self.WristSub.wristWithPID(SW.Wrist_L2_Setpoint)
 
     def isFinished(self):
         if self.WristSub.wristPID.atSetpoint():
@@ -157,7 +195,7 @@ class AutoWristL3(commands2.Command):
         logger.info(" wrist to proccesor")
 
     def execute(self):
-        self.WristSub.writPID(SW.Wrist_L3_Setpoint)
+        self.WristSub.wristWithPID(SW.Wrist_L3_Setpoint)
 
     def isFinished(self):
         if self.WristSub.wristPID.atSetpoint():
@@ -175,7 +213,43 @@ class AutoWristL4(commands2.Command):
         logger.info(" wrist to floor")
 
     def execute(self):
-        self.WristSub.writPID(SW.Wrist_L4_Setpoint)
+        self.WristSub.wristWithPID(SW.Wrist_L4_Setpoint)
+
+    def isFinished(self):
+        if self.WristSub.wristPID.atSetpoint():
+            return True
+        return False
+   
+    def end(self, interrupted):
+        self.WristSub.WristStop()
+        
+class AutoWristBarge(commands2.Command):
+    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.WristSub = WristSubsytem
+
+    def initialize(self):
+        logger.info(" wrist to floor")
+
+    def execute(self):
+        self.WristSub.wristWithPID(SW.Wrist_Barge_Setpoint)
+
+    def isFinished(self):
+        if self.WristSub.wristPID.atSetpoint():
+            return True
+        return False
+   
+    def end(self, interrupted):
+        self.WristSub.WristStop()
+        
+class AutoWristHome(commands2.Command):
+    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.WristSub = WristSubsytem
+
+    def initialize(self):
+        logger.info(" wrist to robot")
+
+    def execute(self):
+        self.WristSub.wristWithPID(0)
 
     def isFinished(self):
         if self.WristSub.wristPID.atSetpoint():

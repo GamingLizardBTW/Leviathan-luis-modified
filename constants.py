@@ -35,11 +35,14 @@ PHYS = namedtuple("Data", phys_data.keys())(**phys_data)
 
 # Mechanical constants
 mech_data = {
+    #Drivetrain
     "swerve_module_driving_gearing_ratio": 6.75,  # SDS Mk4i L2  6.75 rotation on motor per 1 rotatio on drivetrain
     "swerve_module_steering_gearing_ratio": 150 / 7,  # SDS Mk4i
-
     "driving_motor_inverted": False,
     "steering_motor_inverted": True,
+    
+    #Wrist
+    "wrist_gearing_ratio": 625 / 3, #About 208.3 motor rotation to 1 wrist rotation
 }
 MECH = namedtuple("Data", mech_data.keys())(**mech_data)
 
@@ -70,6 +73,7 @@ elec_data = {
 
     #Intake
     "IntakeMotor_ID": 6,
+    "IntakeBeamBreakID": 3,
     "IntakeSpeed": 1,
     "OutakeSpeed": -1,
     
@@ -77,7 +81,7 @@ elec_data = {
     "TopElevatorMotor_ID": 18,
     "BottomElevatorMotor_ID": 17,
     "elevator_neutral_mode": 1,
-    "elevator_speed_multiplier": -0.65,
+    "elevator_speed_multiplier": -1,
     "BottomLimitSwitch": 5,
     "TopLimitSwitch": 4,
     
@@ -117,10 +121,10 @@ sw_data = {
 	#
     "path_planner_config": RobotConfig.fromGUISettings(),
 
-	"lf_enc_zeropos":  0.2598246064956152,
-	"rf_enc_zeropos":  0.17214727930368198,
-	"lb_enc_zeropos":  0.7089264177231605,
-	"rb_enc_zeropos":  0.9897122247428056,
+	"lf_enc_zeropos":  0.23423960585599016,
+	"rf_enc_zeropos":  0.17186782929669572,
+	"lb_enc_zeropos":  0.709713917742848,
+	"rb_enc_zeropos":  0.9381654234541356,
 
     "swerve_drive_kS": 0,
     "swerve_drive_kV": 0.12,
@@ -137,21 +141,25 @@ sw_data = {
     "WristKp": 0.1,
     "WristKi": 0, 
     "WristKd": 0,
-    "WristOffset": 0,
+    "WristOffset": 0.21186,
     
+    # Wrist PID Setpoints
     "Wrist_L2_Setpoint": 0.101,
     "Wrist_L3_Setpoint": 0.131,
     "Wrist_L4_Setpoint": 0.151,
+    "Wrist_Barge_Setpoint": 0.141,
     
     # Elevator PID Constats
     "Elevatorkp": 0.11,
-    "Elevatorki": 0.01,
-    "Elevatorkd": 0,
+    "Elevatorki": 0.05,
+    "Elevatorkd": 0.05,
     "ElevatorTolerance": 0.9,
     
+    # Elevator PID Setpoints
     "L2_Setpoint": 71.001,
     "L3_Setpoint": 91.001,
     "L4_Setpoint": 110.001,
+    "Barge_Setpoint": 120.001,
     
 }
 SW = namedtuple("Data", sw_data.keys())(**sw_data)
