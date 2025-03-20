@@ -29,58 +29,6 @@ class wristWithJoystick(commands2.Command):
    
     def end(self, interrupted):
         self.WristSub.WristStop()
-    
-    
-    
-class WristForward(commands2.Command):
-    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
-        self.addRequirements(WristSubsytem)
-        self.WristSub = WristSubsytem
-
-    def initialize(self):
-        logger.info(" wrist initialized")
-
-    def execute(self):
-        self.WristSub.wristForward()
-
-    def isFinished(self):
-        return False
-   
-    def end(self, interrupted):
-        self.WristSub.WristStop()
-
-class WristBackwards(commands2.Command):
-    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
-        self.WristSub = WristSubsytem
-
-    def initialize(self):
-        logger.info(" wrist initialized")
-
-    def execute(self):
-        self.WristSub.wristBackwards()
-        logger.info("outaking")
-
-    def isFinished(self):
-        return False
-   
-    def end(self, interrupted):
-        self.WristSub.WristStop()
-
-class WristStop(commands2.Command):
-    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
-        self.WristSub = WristSubsytem
-
-    def initialize(self):
-        logger.info(" wrist stop")
-
-    def execute(self):
-        self.WristSub.WristStop()
-
-    def isFinished(self):
-        return False
-   
-    def end(self, interrupted):
-        self.WristSub.WristStop()
 
 
 
@@ -117,7 +65,6 @@ class WristL3(commands2.Command):
     def end(self, interrupted):
         # XboxController(OP.driver_controller).setRumble(XboxController.RumbleType(2), 0.8)
         self.WristSub.WristStop()
-
 
 class WristL4(commands2.Command):
     def __init__(self, WristSubsytem: WristSubsystemClass) -> None:

@@ -22,7 +22,7 @@ class ElevatorSubsystemClass(commands2.Subsystem):
         
         # Get motor encoders
         # self.encoder = (self.topMotor.get_rotor_position().value + self.bottoMmotor.get_rotor_position().value)/2
-        self.encoder = self.topMotor.get_rotor_position().value
+
         
         # Motor Settings
         self.brakemode = phoenix6.signals.NeutralModeValue(ELEC.elevator_neutral_mode)
@@ -32,25 +32,20 @@ class ElevatorSubsystemClass(commands2.Subsystem):
         self.topMotor.setNeutralMode(self.brakemode)
         self.bottoMmotor.setNeutralMode(self.brakemode)
         
-        # Trapezoid PID Controls (Dosent work as of 3/11/25)
-        self.constraints = wpimath.trajectory.TrapezoidProfile.Constraints(.2, 0.015) # Elevator Constraints
-        self.controller = wpimath.controller.ProfiledPIDController(
-            .1, 0, 0, self.constraints
-        )
-        self.controller.setTolerance(0.1, 0.01)
-        # self.conversionToRadians = (1 / 360 * 2 * math.pi * 1.5)
-        
         # Normal PID Controll
+        self.topMotor.set_position(0)
+        # self.bottoMmotor.set_position(0)
         self.elevatorPID = wpimath.controller.PIDController(SW.Elevatorkp, SW.Elevatorki, SW.Elevatorkd)
         self.elevatorPID.setTolerance(SW.ElevatorTolerance)
         
     def periodic(self) -> None:
         # Update encoders
-        self.encoder = (self.topMotor.get_rotor_position().value + self.bottoMmotor.get_rotor_position().value)/2
+        # self.encoder = (self.topMotor.get_rotor_position().value + self.bottoMmotor.get_rotor_position().value)/2
+        self.encoder = self.topMotor.get_rotor_position().value
+        # self.setEncoderToZeroAtBottom()
         
         # SmartDashboard
-        wpilib.SmartDashboard.putNumber("Elevator Goal", self.controller.getGoal().position)
-        wpilib.SmartDashboard.putNumber("Elevator Setpoint", self.controller.getSetpoint().position)
+        # wpilib.SmartDashboard.putNumber("Elevator Setpoint", self.elevatorPID.getSetpoint())
         
         wpilib.SmartDashboard.putNumber("Top Motor encoder", self.topMotor.get_rotor_position().value)
         wpilib.SmartDashboard.putNumber("Bottom Motor Encoder", self.bottoMmotor.get_rotor_position().value)
@@ -78,22 +73,18 @@ class ElevatorSubsystemClass(commands2.Subsystem):
         else:
             self.topMotor.set(calculatedinput)
             self.bottoMmotor.set(calculatedinput)
-        self.setEncoderToZeroAtBottom()
+        # self.setEncoderToZeroAtBottom()
 
     def elevatorMotorStop(self):
         self.topMotor.set(0)
         self.bottoMmotor.set(0)
         
-    # def trapezoidPID(self):
-    #     self.topMotor.set(self.controller.calculate(self.encoder, 0))
-    #     self.bottoMmotor.set(self.controller.calculate(self.encoder, 1))
-        
     def normalPID(self, target):
         elevatorPIDoutput = self.elevatorPID.calculate(self.encoder, target)
-        if self.bottomOveride is True and elevatorPIDoutput < 0:
+        if self.bottomOveride and elevatorPIDoutput < 0:
             self.topMotor.set(0)
             self.bottoMmotor.set(0)
-        elif self.topOveride is True and elevatorPIDoutput > 0:
+        elif self.topOveride and elevatorPIDoutput > 0:
             self.topMotor.set(0)
             self.bottoMmotor.set(0)
         else:
@@ -110,10 +101,10 @@ class ElevatorSubsystemClass(commands2.Subsystem):
         
     def homeElevator(self):
         elevatorPIDoutput = self.elevatorPID.calculate(self.encoder, 0)
-        if self.bottomOveride is True and elevatorPIDoutput < 0:
+        if self.bottomOveride and elevatorPIDoutput < 0:
             self.topMotor.set(0)
             self.bottoMmotor.set(0)
-        elif self.topOveride is True and elevatorPIDoutput > 0:
+        elif self.topOveride and elevatorPIDoutput > 0:
             self.topMotor.set(0)
             self.bottoMmotor.set(0)
         else:
@@ -121,7 +112,7 @@ class ElevatorSubsystemClass(commands2.Subsystem):
             self.bottoMmotor.set(elevatorPIDoutput)
             
     def setEncoderToZeroAtBottom(self):
-        if self.bottomOveride is True:
+        if self.bottomSwitch.get():
             self.topMotor.set_position(0)
         # if self.bottomOveride:
         #     setpoint = self.elevatorPID.calculate(self.encoder, 0)

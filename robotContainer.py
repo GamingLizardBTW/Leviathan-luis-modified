@@ -12,14 +12,16 @@ import subsystems.WristSubsystem
 import subsystems.ElevatorSubsystem
 import subsystems.VisionSubsystem
 import subsystems.HangSubsystem
+import subsystems.MotionMagicExample
 
 # Commands
 from commands.IntakeCommands import IntakeCommand, OutakeCommand, IntakeStop, AutoIntakeCommand, AutoOuttakeCommand
 # from commands.IntakeCommands import IntakeCommand, OutakeCommand, IntakeStop
-from commands.WristCommands import wristWithJoystick, WristForward, WristBackwards, WristStop, WristL2, WristL3, WristL4, WristBarge, WristHome, AutoWristL2, AutoWristL3, AutoWristL4, AutoWristBarge, AutoWristHome
+from commands.WristCommands import wristWithJoystick, WristL2, WristL3, WristL4, WristBarge, WristHome, AutoWristL2, AutoWristL3, AutoWristL4, AutoWristBarge, AutoWristHome
 from commands.ElevatorCommands import ElevatorWithJoysticks, ElevatorL2, ElevatorL3, ElevatorL4, ElevatorBarge, ElevatorHome, AutoElevatorL2, AutoElevatorL3, AutoElevatorL4, AutoElevatorBarge, AutoElevatorHome
 from commands.HangCommands import hangBackwards, hangForward, hangStop
 from commands.ReefScoringCommand import ScoringL2, ScoringL3, ScoringL4, BargeScoring
+from commands.MotionMagicCommand import MotionWithJoystick
 
 from commands.DrivetrainCommands import driveWithJoystickCommand
 from pathplannerlib.auto import AutoBuilder, PathPlannerAuto, NamedCommands
@@ -46,6 +48,7 @@ class RobotContainer:
         self.elevatorsub = subsystems.ElevatorSubsystem.ElevatorSubsystemClass()
         self.drivetrainSub = subsystems.DrivetrainSubsystem.drivetrainSubsystemClass()
         self.hangSub = subsystems.HangSubsystem.HangSubsystem()
+        self.testSub = subsystems.MotionMagicExample.MotionMagicClass()
         
         # Controllers
         self.DriverController = commands2.button.CommandXboxController(OP.driver_controller)
@@ -93,33 +96,28 @@ class RobotContainer:
         pass
         
         # Default Commands
+        self.testSub.setDefaultCommand(MotionWithJoystick(self.testSub))
         self.elevatorsub.setDefaultCommand(ElevatorWithJoysticks(self.elevatorsub))
-        self.wristsub.setDefaultCommand(wristWithJoystick(self.wristsub))
-        self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub, self.visionSub)) # Additional Buttons used: A
+        # self.wristsub.setDefaultCommand(wristWithJoystick(self.wristsub))
+        # self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub, self.visionSub)) # Additional Buttons used: A
         
-        # Intake Intake Commands
-        self.OperatorController.leftBumper().onTrue(IntakeCommand(self.Intakesub))
-        self.OperatorController.leftBumper().onFalse(IntakeStop(self.Intakesub))
-        self.OperatorController.rightBumper().onTrue(OutakeCommand(self.Intakesub))
-        self.OperatorController.rightBumper().onFalse(IntakeStop(self.Intakesub))
+        # # Intake Intake Commands
+        # self.OperatorController.leftBumper().onTrue(IntakeCommand(self.Intakesub))
+        # self.OperatorController.leftBumper().onFalse(IntakeStop(self.Intakesub))
+        # self.OperatorController.rightBumper().onTrue(OutakeCommand(self.Intakesub))
+        # self.OperatorController.rightBumper().onFalse(IntakeStop(self.Intakesub))
         
-        # Elevator and Wrist Teleop PID Commands
-        self.OperatorController.y().whileTrue(self.teleopL4) # Considering making it to "on true" to only have to press once
-        self.OperatorController.x().whileTrue(self.teleopL3)
-        self.OperatorController.a().whileTrue(self.teleopL2)
-        self.OperatorController.b().whileTrue(self.teleopHome)
+        # # Elevator and Wrist Teleop PID Commands
+        # self.OperatorController.y().whileTrue(self.teleopL4) # Considering making it to "on true" to only have to press once
+        # self.OperatorController.x().whileTrue(self.teleopL3)
+        # self.OperatorController.a().whileTrue(self.teleopL2)
+        # self.OperatorController.b().whileTrue(self.teleopHome)
         
-        # Hang Commands
-        self.DriverController.a().whileTrue(hangBackwards(self.hangSub))
-        self.DriverController.a().whileFalse(hangStop(self.hangSub))
-        self.DriverController.y().whileTrue(hangForward(self.hangSub))
-        self.DriverController.y().whileFalse(hangStop(self.hangSub))
-        
-        # Intake Wrist Manual Commands (Dont need this anymore)
-        # self.OperatorController.a().whileTrue(WristForward(self.wristsub))
-        # self.OperatorController.a().whileFalse(WristStop(self.wristsub))
-        # self.OperatorController.y().whileTrue(WristBackwards(self.wristsub))
-        # self.OperatorController.y().whileFalse(WristStop(self.wristsub))
+        # # Hang Commands
+        # self.DriverController.a().whileTrue(hangBackwards(self.hangSub))
+        # self.DriverController.a().whileFalse(hangStop(self.hangSub))
+        # self.DriverController.y().whileTrue(hangForward(self.hangSub))
+        # self.DriverController.y().whileFalse(hangStop(self.hangSub))
         
         # Elevator PID Commands
         # self.OperatorController.a().whileTrue(ElevatorL2(self.elevatorsub))

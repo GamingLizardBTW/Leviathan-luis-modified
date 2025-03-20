@@ -81,7 +81,7 @@ elec_data = {
     "TopElevatorMotor_ID": 18,
     "BottomElevatorMotor_ID": 17,
     "elevator_neutral_mode": 1,
-    "elevator_speed_multiplier": -1,
+    "elevator_speed_multiplier": -0.4,
     "BottomLimitSwitch": 5,
     "TopLimitSwitch": 4,
     
@@ -121,10 +121,10 @@ sw_data = {
 	#
     "path_planner_config": RobotConfig.fromGUISettings(),
 
-	"lf_enc_zeropos":  0.23423960585599016,
-	"rf_enc_zeropos":  0.17186782929669572,
-	"lb_enc_zeropos":  0.709713917742848,
-	"rb_enc_zeropos":  0.9381654234541356,
+	"lf_enc_zeropos":  0.2816313570407839,
+	"rf_enc_zeropos":  0.16989345424733635,
+	"lb_enc_zeropos":  0.7052724176318105,
+	"rb_enc_zeropos":  0.4591871364796784,
 
     "swerve_drive_kS": 0,
     "swerve_drive_kV": 0.12,

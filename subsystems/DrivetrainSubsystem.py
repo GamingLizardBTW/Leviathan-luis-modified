@@ -246,8 +246,8 @@ class drivetrainSubsystemClass(commands2.Subsystem):
         self.showRobotPose()
 
     def shouldFlipPath(self) -> bool:
-        # return DriverStation.getAlliance() == DriverStation.Alliance.kRed
-        return False
+        # False
+        return DriverStation.getAlliance() == DriverStation.Alliance.kRed
 
 
     def updateOdometry(self) -> None:

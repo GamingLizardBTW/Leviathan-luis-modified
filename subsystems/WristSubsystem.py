@@ -16,6 +16,7 @@ class WristSubsystemClass(commands2.Subsystem):
         self.wristMotor = phoenix6.hardware.TalonFX(ELEC.WristMotor_ID)
         self.brakemode = phoenix6.signals.NeutralModeValue(ELEC.wrist_neutral_mode)
         self.wristMotor.setNeutralMode(self.brakemode)
+        self.wristMotor.set_position(0)
         # self.wristMotor.set_position(self.wristEncoder.get() * MECH.wrist_gearing_ratio)
 
         
@@ -35,6 +36,10 @@ class WristSubsystemClass(commands2.Subsystem):
         wpilib.SmartDashboard.putBoolean("Wrist PID at setpoint", self.wristPID.atSetpoint())
         wpilib.SmartDashboard.putNumber("Wrist Absolute Encoder Value", self.wristEncoder.get())
         wpilib.SmartDashboard.putNumber("Wrist Motor Encoder Value", self.encoder)
+        
+        self.level2 = wpilib.SmartDashboard.getNumber("Elevator L2", 0)
+        self.level3 = wpilib.SmartDashboard.getNumber("Elevator L3", 0)
+        self.level4 = wpilib.SmartDashboard.getNumber("Elevator L4", 0)
 
     def wristwithjoystick(self, joystickinput):
         calculatedinput = joystickinput * ELEC.elevator_speed_multiplier
@@ -54,17 +59,20 @@ class WristSubsystemClass(commands2.Subsystem):
         self.wristMotor.set(0)
         
     def wristWithPID(self, target):
-        self.wristMotor.set(self.wristPID.calculate(self.wristsEncoderVal, target))
+        self.wristMotor.set(self.wristPID.calculate(self.encoder, target))
         
     def WristL2(self):
-        self.wristMotor.set(self.wristPID.calculate(self.encoder, SW.Wrist_L2_Setpoint))
+        self.wristMotor.set(self.wristPID.calculate(self.encoder, self.level2))
+        # self.wristMotor.set(self.wristPID.calculate(self.encoder, SW.Wrist_L2_Setpoint))
         return self.wristPID.atSetpoint()
     
     def WristL3(self):
-        self.wristMotor.set(self.wristPID.calculate(self.encoder, SW.Wrist_L3_Setpoint)) # Not tested
+        self.wristMotor.set(self.wristPID.calculate(self.encoder, self.level3))
+        # self.wristMotor.set(self.wristPID.calculate(self.encoder, SW.Wrist_L3_Setpoint)) # Not tested
         return self.wristPID.atSetpoint()
         
     def WristL4(self):
-        self.wristMotor.set(self.wristPID.calculate(self.encoder, SW.Wrist_L4_Setpoint)) # Not tested
+        self.wristMotor.set(self.wristPID.calculate(self.encoder, self.level4))
+        # self.wristMotor.set(self.wristPID.calculate(self.encoder, SW.Wrist_L4_Setpoint)) # Not tested
         return self.wristPID.atSetpoint()
         
