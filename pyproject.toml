@@ -22,7 +22,7 @@ robotpy_extras = [
     # "romi",
     # "sim",
     # "xrp",
-    #"photonlibpy",
+    # "photonlibpy",
 ]
 
 # Other pip packages to install

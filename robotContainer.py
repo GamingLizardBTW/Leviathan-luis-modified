@@ -43,8 +43,8 @@ class RobotContainer:
         
         # Subsytems
         # self.visionSub = subsystems.VisionSubsystem.visionSubsystem()
-        # self.Intakesub = subsystems.IntakeSubsystem.IntakeSubsystemClass()
-        # self.wristsub = subsystems.WristSubsystem.WristSubsystemClass()
+        self.Intakesub = subsystems.IntakeSubsystem.IntakeSubsystemClass()
+        self.wristsub = subsystems.WristSubsystem.WristSubsystemClass()
         self.elevatorsub = subsystems.ElevatorSubsystem.ElevatorSubsystemClass()
         self.drivetrainSub = subsystems.DrivetrainSubsystem.drivetrainSubsystemClass()
         # self.hangSub = subsystems.HangSubsystem.HangSubsystem()
@@ -97,15 +97,15 @@ class RobotContainer:
         
         # Default Commands
         # self.testSub.setDefaultCommand(MotionWithJoystick(self.testSub))
-        self.elevatorsub.setDefaultCommand(ElevatorWithJoysticks(self.elevatorsub))
-        # self.wristsub.setDefaultCommand(wristWithJoystick(self.wristsub))
+        # self.elevatorsub.setDefaultCommand(ElevatorWithJoysticks(self.elevatorsub))
+        self.wristsub.setDefaultCommand(wristWithJoystick(self.wristsub))
         # self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub, self.visionSub)) # Additional Buttons used: A
         
         # # Intake Intake Commands
-        # self.OperatorController.leftBumper().onTrue(IntakeCommand(self.Intakesub))
-        # self.OperatorController.leftBumper().onFalse(IntakeStop(self.Intakesub))
-        # self.OperatorController.rightBumper().onTrue(OutakeCommand(self.Intakesub))
-        # self.OperatorController.rightBumper().onFalse(IntakeStop(self.Intakesub))
+        self.OperatorController.leftBumper().onTrue(IntakeCommand(self.Intakesub))
+        self.OperatorController.leftBumper().onFalse(IntakeStop(self.Intakesub))
+        self.OperatorController.rightBumper().onTrue(OutakeCommand(self.Intakesub))
+        self.OperatorController.rightBumper().onFalse(IntakeStop(self.Intakesub))
         
         # # Elevator and Wrist Teleop PID Commands
         # self.OperatorController.y().whileTrue(self.teleopL4) # Considering making it to "on true" to only have to press once

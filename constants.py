@@ -153,24 +153,24 @@ sw_data = {
     "Wrist_Barge_Setpoint": 0.141,
     
     # Elevator PID Constats
-    "Elevatorks": 0.25, # Add 0.25 V output to overcome static friction
-    "Elevatorkv": 0.12, # A velocity target of 1 rps results in 0.12 V outp
-    "Elevatorka": 0.01, # An acceleration of 1 rps/s requires 0.01 V output
-    "Elevatorkp": 10,
+    "Elevatorks": 1.45, # Add 0.25 V output to overcome static friction
+    "Elevatorkv": 0.45, # A velocity target of 1 rps results in 0.20 V outp
+    "Elevatorka": 0.28, # An acceleration of 1 rps/s requires 0.08 V output
+    "Elevatorkp": 2,
     "Elevatorki": 0, # No output for integrated error
-    "Elevatorkd": 0.5,
-    "ElevatorTolerance": 0.9, 
+    "Elevatorkd": 0.1,
+    "ElevatorTolerance": 0.9, # Not using anymore
+    
+    # Elevator Speed controls
+    "Cruise_Velocity": 4, # (mechanism) cruise (measured in rotations per sec)
+    "acceleration": 3, # seconds to reach max vel (Measured in rotations per sec²) (time = Velocity/accel)
+    "motion_jerk": 10, # seconds to reach max accel (Measured in rotations per sec³) (time = accel/jerk)
     
     # Elevator PID Setpoints (Using Mechanism rotations not motor rotations)
     "L2_Setpoint": 1.5,
-    "L3_Setpoint": 1.9,
-    "L4_Setpoint": 2.4,
+    "L3_Setpoint": 4,
+    "L4_Setpoint": 5.2,
     "Barge_Setpoint": 3,
-    
-    # Elevator Speed controls
-    "Cruise_Velocity": 1.5, # (mechanism) cruise (measured in rotations per sec)
-    "acceleration": 3, # Take approximately 0.5 seconds to reach max vel (Measured in rotations per sec²) (time = Velocity/accel)
-    "motion_jerk": 30 # Take apprximately 1 seconds to reach max accel (Measured in rotations per sec³) (time = accel/jerk)
     
 }
 SW = namedtuple("Data", sw_data.keys())(**sw_data)
