@@ -43,6 +43,9 @@ mech_data = {
     
     #Wrist
     "wrist_gearing_ratio": 625 / 3, #About 208.3 motor rotation to 1 wrist rotation
+    
+    # Elevator
+    "Elevator_gear_ratio": 14.5, # rotor rotations per mechanism rotation
 }
 MECH = namedtuple("Data", mech_data.keys())(**mech_data)
 
@@ -150,19 +153,24 @@ sw_data = {
     "Wrist_Barge_Setpoint": 0.141,
     
     # Elevator PID Constats
-    "Elevatorks": 0.25,
-    "Elevatorkv": 0.12,
-    "Elevatorka": 0.01,
+    "Elevatorks": 0.25, # Add 0.25 V output to overcome static friction
+    "Elevatorkv": 0.12, # A velocity target of 1 rps results in 0.12 V outp
+    "Elevatorka": 0.01, # An acceleration of 1 rps/s requires 0.01 V output
     "Elevatorkp": 10,
-    "Elevatorki": 0,
+    "Elevatorki": 0, # No output for integrated error
     "Elevatorkd": 0.5,
-    "ElevatorTolerance": 0.9,
+    "ElevatorTolerance": 0.9, 
     
-    # Elevator PID Setpoints
-    "L2_Setpoint": 15.001,
-    "L3_Setpoint": 30.001,
-    "L4_Setpoint": 45.001,
-    "Barge_Setpoint": 120.001,
+    # Elevator PID Setpoints (Using Mechanism rotations not motor rotations)
+    "L2_Setpoint": 1.5,
+    "L3_Setpoint": 1.9,
+    "L4_Setpoint": 2.4,
+    "Barge_Setpoint": 3,
+    
+    # Elevator Speed controls
+    "Cruise_Velocity": 1.5, # (mechanism) cruise (measured in rotations per sec)
+    "acceleration": 3, # Take approximately 0.5 seconds to reach max vel (Measured in rotations per sec²) (time = Velocity/accel)
+    "motion_jerk": 30 # Take apprximately 1 seconds to reach max accel (Measured in rotations per sec³) (time = accel/jerk)
     
 }
 SW = namedtuple("Data", sw_data.keys())(**sw_data)
