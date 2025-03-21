@@ -323,8 +323,8 @@ class drivetrainSubsystemClass(commands2.Subsystem):
         field.setRobotPose(self.getRobotPose())
         SmartDashboard.putData("Field", field)
         
-    def periodic(self) -> None:
-        self.showRobotPose()
+    # def periodic(self) -> None:
+    #     self.showRobotPose()
         
     # def showHeading(self) -> None:
     #     shuffleboard.Shuffleboard.getTab("Heading").add(self.gyro)

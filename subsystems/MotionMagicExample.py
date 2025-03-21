@@ -38,20 +38,22 @@ class MotionMagicClass(commands2.Subsystem):
         slot0.k_d = 0.5 # A velocity error of 1 rps results in 0.5 V output
 
         # Retry config apply up to 5 times, report if failure
-        # status: StatusCode = StatusCode.STATUS_CODE_NOT_INITIALIZED
-        # for _ in range(0, 5):
-        #     status = self.talonfx.configurator.apply(cfg)
-        #     if status.is_ok():
-        #         break
-        # if not status.is_ok():
-        #     print(f"Could not apply configs, error code: {status.name}")
+        status: StatusCode = StatusCode.STATUS_CODE_NOT_INITIALIZED
+        for _ in range(0, 5):
+            status = self.talonfx.configurator.apply(cfg)
+            if status.is_ok():
+                break
+        if not status.is_ok():
+            print(f"Could not apply configs, error code: {status.name}")
 
     def teleopInit(self):
         pass
         
     def periodic(self) -> None:
-        num = wpilib.SmartDashboard.getNumber("Num", 0)
-        print(num)
+        pass
+        # wpilib.SmartDashboard.putNumber("Num", 0)
+        # num = wpilib.SmartDashboard.getNumber("Num", 0)
+        # print(num)
             
     def motionMagic(self):
         # Deadband the joystick
@@ -62,3 +64,4 @@ class MotionMagicClass(commands2.Subsystem):
         self.talonfx.set_control(self.motion_magic.with_position(left_y * 10).with_slot(0))
         if (self.joystick.getBButton()):
             self.talonfx.set_position(1)
+        # elif (self.joystick)

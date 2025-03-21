@@ -20,10 +20,11 @@ class ElevatorWithJoysticks(commands2.Command):
     def execute(self):
         self.inputvalue = XboxController(OP.operator_controller).getLeftY()
         if self.inputvalue > 0.1 or self.inputvalue < -0.1:
-            self.ElevatorSub.elevatorWithjoystick(self.inputvalue)
-        else:
-            self.ElevatorSub.elevatorMotorStop()
-        #logging.info("Running motor")
+            # self.ElevatorSub.elevatorWithjoystick(self.inputvalue)
+            self.ElevatorSub.motionMagic(self.inputvalue)
+        # else:
+        #     self.ElevatorSub.elevatorMotorStop()
+        # #logging.info("Running motor")
 
     def isFinished(self):
         return False
@@ -45,7 +46,8 @@ class ElevatorL2(commands2.Command):
         logger.info("Elevaotr to L2 initialize")
 
     def execute(self):
-        self.ElevatorSub.normalPID(SW.L2_Setpoint)
+        # self.ElevatorSub.normalPID(SW.L2_Setpoint)
+        self.ElevatorSub.normalPID2(SW.L2_Setpoint)
 
     def isFinished(self):
         return False
@@ -65,7 +67,8 @@ class ElevatorL3(commands2.Command):
         logger.info("Elevaotr to L3 initialize")
 
     def execute(self):
-        self.ElevatorSub.normalPID(SW.L3_Setpoint)
+        # self.ElevatorSub.normalPID(SW.L3_Setpoint)
+        self.ElevatorSub.normalPID2(SW.L3_Setpoint)
 
     def isFinished(self):
         return False

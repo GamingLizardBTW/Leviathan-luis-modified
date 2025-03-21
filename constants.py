@@ -150,15 +150,18 @@ sw_data = {
     "Wrist_Barge_Setpoint": 0.141,
     
     # Elevator PID Constats
-    "Elevatorkp": 0.11,
-    "Elevatorki": 0.05,
-    "Elevatorkd": 0.05,
+    "Elevatorks": 0.25,
+    "Elevatorkv": 0.12,
+    "Elevatorka": 0.01,
+    "Elevatorkp": 10,
+    "Elevatorki": 0,
+    "Elevatorkd": 0.5,
     "ElevatorTolerance": 0.9,
     
     # Elevator PID Setpoints
-    "L2_Setpoint": 71.001,
-    "L3_Setpoint": 91.001,
-    "L4_Setpoint": 110.001,
+    "L2_Setpoint": 15.001,
+    "L3_Setpoint": 30.001,
+    "L4_Setpoint": 45.001,
     "Barge_Setpoint": 120.001,
     
 }
