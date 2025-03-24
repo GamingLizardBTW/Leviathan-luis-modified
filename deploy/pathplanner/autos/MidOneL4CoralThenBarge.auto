@@ -5,21 +5,27 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "autoBarge"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "autoOuttake"
+            "pathName": "DriveToReef"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BackupAfterScoreAlgae"
+            "pathName": "AimForAlgae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GoToBarge"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeaveBarge"
           }
         }
       ]

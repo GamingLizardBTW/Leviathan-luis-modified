@@ -23,7 +23,6 @@ class driveWithJoystickCommand(commands2.Command):
         logger.info("driveWithJoystick constructor")
     
     def initialize(self):
-        self.drivetrainSub.resetAllEncoders()
         logger.info("driveWithJoystick initiate")
 
     def execute(self):
