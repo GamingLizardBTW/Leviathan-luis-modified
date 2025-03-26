@@ -137,6 +137,11 @@ sw_data = {
     "swerve_steer_kI": 0,
     "swerve_steer_kD": 0,
     
+    #Automation:
+    "drivetrain_rotation_kP": 0,
+    "drivetrain_rotation_kI": 0,
+    "drivetrain_rotation_kD": 0,
+    
     # Wrist PID constants
     "WristKp": 0.1,
     "WristKi": 0, 

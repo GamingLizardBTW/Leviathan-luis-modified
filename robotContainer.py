@@ -84,7 +84,10 @@ class RobotContainer:
         self.autoChooser = AutoBuilder.buildAutoChooser("AutoDriveBack")
         SmartDashboard.putData("Auto Chooser", self.autoChooser)
         logger.info("Robot container created")
-        self.autoChooser.addOption("Score1AlgaeThenBackup", PathPlannerAuto("Score1AlgaeThenBackup"))
+        self.autoChooser.addOption("LeftAuto", PathPlannerAuto("LeftAuto"))
+        self.autoChooser.addOption("RightAuto", PathPlannerAuto("RightAuto"))
+        self.autoChooser.addOption("MidOneL4Coral", PathPlannerAuto("MidOneL4Coral"))
+        self.autoChooser.addOption("MidOneL4CoralThenBarge", PathPlannerAuto("MidOneL4CoralThenBarge"))
     
     def get_autonomous_command(self):
         # return self.autoChooser.getSelected()
