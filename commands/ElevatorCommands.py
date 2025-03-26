@@ -6,6 +6,7 @@ logger = logging.getLogger("elevator Subsystem Logger")
 from wpilib import XboxController
 from constants import OP, SW
 
+# Elevator with joystick
 class ElevatorWithJoysticks(commands2.Command):
 
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
@@ -21,7 +22,7 @@ class ElevatorWithJoysticks(commands2.Command):
         self.inputvalue = XboxController(OP.operator_controller).getLeftY()
         if self.inputvalue > 0.1 or self.inputvalue < -0.1:
             # self.ElevatorSub.elevatorWithjoystick(self.inputvalue)
-            self.ElevatorSub.motionMagic(self.inputvalue)
+            self.ElevatorSub.motionMagicWithJoystick(self.inputvalue)
         # else:
         #     self.ElevatorSub.elevatorMotorStop()
         # #logging.info("Running motor")
@@ -31,6 +32,8 @@ class ElevatorWithJoysticks(commands2.Command):
     
     def end(self, interrupted):
         self.ElevatorSub.elevatorMotorStop()
+        
+        
         
         
     # Elevator with PID
@@ -46,13 +49,13 @@ class ElevatorL2(commands2.Command):
         logger.info("Elevaotr to L2 initialize")
 
     def execute(self):
-        # self.ElevatorSub.normalPID(SW.L2_Setpoint)
-        self.ElevatorSub.normalPID2(SW.L2_Setpoint)
+        self.ElevatorSub.elevatorPID(SW.L2_Setpoint)
 
     def isFinished(self):
-        return False
+        self.ElevatorSub.motionFinished()
     
     def end(self, interrupted):
+        print("MotionMagic to L2 Ended")
         self.ElevatorSub.elevatorMotorStop()
         
 class ElevatorL3(commands2.Command):
@@ -67,8 +70,7 @@ class ElevatorL3(commands2.Command):
         logger.info("Elevaotr to L3 initialize")
 
     def execute(self):
-        # self.ElevatorSub.normalPID(SW.L3_Setpoint)
-        self.ElevatorSub.normalPID2(SW.L3_Setpoint)
+        self.ElevatorSub.elevatorPID(SW.L3_Setpoint)
 
     def isFinished(self):
         return False
@@ -88,7 +90,7 @@ class ElevatorL4(commands2.Command):
         logger.info("Elevaotr to L4 initialize")
 
     def execute(self):
-        self.ElevatorSub.normalPID(SW.L4_Setpoint)
+        self.ElevatorSub.elevatorPID(SW.L4_Setpoint)
 
     def isFinished(self):
         return False
@@ -110,7 +112,7 @@ class ElevatorBarge(commands2.Command):
         logger.info("Elevaotr to L4 initialize")
 
     def execute(self):
-        self.ElevatorSub.normalPID(SW.Barge_Setpoint)
+        self.ElevatorSub.elevatorPID(SW.Barge_Setpoint)
 
     def isFinished(self):
         return False
@@ -130,7 +132,7 @@ class ElevatorHome(commands2.Command):
         logger.info("Elevaotr with PID initialize")
 
     def execute(self):
-        self.ElevatorSub.homeElevator()
+        self.ElevatorSub.elevatorPID(0)
 
     def isFinished(self):
         return self.ElevatorSub.bottomOveride
@@ -139,7 +141,9 @@ class ElevatorHome(commands2.Command):
         self.ElevatorSub.elevatorMotorStop()
         
         
-    # Elevator with PID
+        
+        
+    # Autonomous Elevator with PID
 class AutoElevatorL2(commands2.Command):
 
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
@@ -152,7 +156,7 @@ class AutoElevatorL2(commands2.Command):
         logger.info("Elevaotr to L2 initialize")
 
     def execute(self):
-        self.ElevatorSub.normalPID(SW.L2_Setpoint)
+        self.ElevatorSub.elevatorPID(SW.L2_Setpoint)
 
     def isFinished(self):
         if self.ElevatorSub.encoder == SW.L2_Setpoint:
@@ -175,7 +179,7 @@ class AutoElevatorL3(commands2.Command):
         logger.info("Elevaotr to L3 initialize")
 
     def execute(self):
-        self.ElevatorSub.normalPID(SW.L3_Setpoint)
+        self.ElevatorSub.elevatorPID(SW.L3_Setpoint)
 
     def isFinished(self):
         if self.ElevatorSub.encoder == SW.L3_Setpoint:
@@ -198,7 +202,7 @@ class AutoElevatorL4(commands2.Command):
         logger.info("Elevaotr to L4 initialize")
 
     def execute(self):
-        self.ElevatorSub.normalPID(SW.L4_Setpoint)
+        self.ElevatorSub.elevatorPID(SW.L4_Setpoint)
 
     def isFinished(self):
         if self.ElevatorSub.encoder == SW.L4_Setpoint:
@@ -221,7 +225,7 @@ class AutoElevatorBarge(commands2.Command):
         logger.info("Elevaotr to L4 initialize")
 
     def execute(self):
-        self.ElevatorSub.normalPID(SW.Barge_Setpoint)
+        self.ElevatorSub.elevatorPID(SW.Barge_Setpoint)
 
     def isFinished(self):
         return False
@@ -241,7 +245,7 @@ class AutoElevatorHome(commands2.Command):
         logger.info("Elevaotr with PID initialize")
 
     def execute(self):
-        self.ElevatorSub.homeElevator()
+        self.ElevatorSub.elevatorPID(0)
 
     def isFinished(self):
         return self.ElevatorSub.bottomOveride

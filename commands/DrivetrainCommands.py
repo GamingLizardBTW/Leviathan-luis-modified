@@ -46,7 +46,7 @@ class driveWithJoystickCommand(commands2.Command):
 
         if self.controller.getXButton() and targetVisible:
             targetYaw = self.visionSub.getClosestData("Z-Rot")
-            rotationSpeed = (-self.rotateSpeedLimiter.calculate(targetYaw) * OP.max_turn_speed)
+            rotationSpeed = (-self.rotateSpeedLimiter.calculate(targetYaw) * OP.max_turn_speed * VISION_TURN_kP)
             # rotationSpeed = (-1.0 * targetYaw * OP.max_turn_speed * VISION_TURN_kP)
 
         # self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed)

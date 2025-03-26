@@ -60,19 +60,3 @@ class WristSubsystemClass(commands2.Subsystem):
         
     def wristWithPID(self, target):
         self.wristMotor.set(self.wristPID.calculate(self.encoder, target))
-        
-    def WristL2(self):
-        self.wristMotor.set(self.wristPID.calculate(self.encoder, self.level2))
-        # self.wristMotor.set(self.wristPID.calculate(self.encoder, SW.Wrist_L2_Setpoint))
-        return self.wristPID.atSetpoint()
-    
-    def WristL3(self):
-        self.wristMotor.set(self.wristPID.calculate(self.encoder, self.level3))
-        # self.wristMotor.set(self.wristPID.calculate(self.encoder, SW.Wrist_L3_Setpoint)) # Not tested
-        return self.wristPID.atSetpoint()
-        
-    def WristL4(self):
-        self.wristMotor.set(self.wristPID.calculate(self.encoder, self.level4))
-        # self.wristMotor.set(self.wristPID.calculate(self.encoder, SW.Wrist_L4_Setpoint)) # Not tested
-        return self.wristPID.atSetpoint()
-        

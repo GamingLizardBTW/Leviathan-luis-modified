@@ -45,7 +45,7 @@ mech_data = {
     "wrist_gearing_ratio": 625 / 3, #About 208.3 motor rotation to 1 wrist rotation
     
     # Elevator
-    "Elevator_gear_ratio": 14.5, # rotor rotations per mechanism rotation
+    "Elevator_gear_ratio": 71.85, # rotor rotations per mechanism rotation
 }
 MECH = namedtuple("Data", mech_data.keys())(**mech_data)
 
@@ -144,7 +144,7 @@ sw_data = {
     "WristKp": 0.1,
     "WristKi": 0, 
     "WristKd": 0,
-    "WristOffset": 0.21186,
+    "WristOffset": 0,
     
     # Wrist PID Setpoints
     "Wrist_L2_Setpoint": 0.101,
@@ -153,23 +153,26 @@ sw_data = {
     "Wrist_Barge_Setpoint": 0.141,
     
     # Elevator PID Constats
-    "Elevatorks": 1.45, # Add 0.25 V output to overcome static friction
-    "Elevatorkv": 0.45, # A velocity target of 1 rps results in 0.20 V outp
-    "Elevatorka": 0.28, # An acceleration of 1 rps/s requires 0.08 V output
-    "Elevatorkp": 2,
+    "Elevatorks": 3, # Add 3 V output to overcome static friction
+    "Elevatorkv": 0.12, # A velocity target of 1 rps results in 0.12 V outp
+    "Elevatorka": 0, # An acceleration of 1 rps/s requires 0 V output
+    "Elevatorkp": 12,
     "Elevatorki": 0, # No output for integrated error
-    "Elevatorkd": 0.1,
-    "ElevatorTolerance": 0.9, # Not using anymore
+    "Elevatorkd": 0.01,
+    
+    # Elevator Tolerence Constants
+    "ElevatorTolerance": 0.1,
+    "ElevatorSpeedTolerence": 0.1,
     
     # Elevator Speed controls
-    "Cruise_Velocity": 4, # (mechanism) cruise (measured in rotations per sec)
-    "acceleration": 3, # seconds to reach max vel (Measured in rotations per sec²) (time = Velocity/accel)
-    "motion_jerk": 10, # seconds to reach max accel (Measured in rotations per sec³) (time = accel/jerk)
+    "Cruise_Velocity": 20, # (mechanism) cruise (measured in rotations per sec)
+    "acceleration": 35, # seconds to reach max vel (Measured in rotations per sec²) (time = Velocity/accel)
+    "motion_jerk": 350, # seconds to reach max accel (Measured in rotations per sec³) (time = accel/jerk)
     
     # Elevator PID Setpoints (Using Mechanism rotations not motor rotations)
-    "L2_Setpoint": 1.5,
-    "L3_Setpoint": 4,
-    "L4_Setpoint": 5.2,
+    "L2_Setpoint": .8,
+    "L3_Setpoint": 1.5,
+    "L4_Setpoint": 2.8,
     "Barge_Setpoint": 3,
     
 }
