@@ -82,7 +82,10 @@ class RobotContainer:
         self.autoChooser = AutoBuilder.buildAutoChooser("AutoDriveBack")
         SmartDashboard.putData("Auto Chooser", self.autoChooser)
         logger.info("Robot container created")
-        self.autoChooser.addOption("Score1AlgaeThenBackup", PathPlannerAuto("Score1AlgaeThenBackup"))
+        self.autoChooser.addOption("LeftAuto", PathPlannerAuto("LeftAuto"))
+        self.autoChooser.addOption("RightAuto", PathPlannerAuto("RightAuto"))
+        self.autoChooser.addOption("MidOneL4Coral", PathPlannerAuto("MidOneL4Coral"))
+        self.autoChooser.addOption("MidOneL4CoralThenBarge", PathPlannerAuto("MidOneL4CoralThenBarge"))
     
     def get_autonomous_command(self):
         # return self.autoChooser.getSelected()
@@ -106,10 +109,10 @@ class RobotContainer:
         self.OperatorController.rightBumper().onFalse(IntakeStop(self.Intakesub))
         
         # # Hang Commands
-        self.DriverController.a().whileTrue(hangBackwards(self.hangSub))
-        self.DriverController.a().whileFalse(hangStop(self.hangSub))
-        self.DriverController.y().whileTrue(hangForward(self.hangSub))
-        self.DriverController.y().whileFalse(hangStop(self.hangSub))
+        self.DriverController.povDown().whileTrue(hangBackwards(self.hangSub))
+        self.DriverController.povDown().whileFalse(hangStop(self.hangSub))
+        self.DriverController.povUp().whileTrue(hangForward(self.hangSub))
+        self.DriverController.povUp().whileFalse(hangStop(self.hangSub))
         
         # # Elevator and Wrist Teleop PID Commands
         # self.OperatorController.a().whileTrue(self.teleopL2)

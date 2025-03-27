@@ -23,7 +23,6 @@ class driveWithJoystickCommand(commands2.Command):
         logger.info("driveWithJoystick constructor")
     
     def initialize(self):
-        self.drivetrainSub.resetAllEncoders()
         logger.info("driveWithJoystick initiate")
 
     def execute(self):
@@ -36,17 +35,31 @@ class driveWithJoystickCommand(commands2.Command):
         ySpeed = (-self.ySpeedLimiter.calculate(wpimath.applyDeadband(self.leftX, 0.08)) * OP.max_speed)
         #ySpeed = -self.leftX * OP.max_speed
 
-        self.rightX = XboxController(OP.driver_controller).getRightX()#This will be rotation(turn heading left and right)
-        rotationSpeed = (-self.rotateSpeedLimiter.calculate(wpimath.applyDeadband(self.rightX, 0.08)) * OP.max_turn_speed)
+        if self.drivetrainSub.shouldFlipPath() == False:
+            self.rotateAroundReef = self.drivetrainSub.rotateToBlueReef()
+        elif self.drivetrainSub.shouldFlipPath() == True:
+            self.rotateAroundReef = self.drivetrainSub.rotateToRedReef()
+
+        if self.controller.getRawButton(4):
+            rotationSpeed = self.drivetrainSub.rotateToBarge()
+        elif self.controller.getRawButton(3):
+            rotationSpeed = self.drivetrainSub.rotateToLeftHuman()
+        elif self.controller.getRawButton(2):
+            rotationSpeed = self.drivetrainSub.rotateToRightHuman()
+        elif self.controller.getRawButton(1):
+            rotationSpeed = self.rotateAroundReef
+        else:
+            self.rightX = XboxController(OP.driver_controller).getRightX()#This will be rotation(turn heading left and right)
+            rotationSpeed = (-self.rotateSpeedLimiter.calculate(wpimath.applyDeadband(self.rightX, 0.08)) * OP.max_turn_speed)
         #rotationSpeed = -self.rightX * OP.max_speed
         
         # Create Auto Target
         targetYaw = 0.0
         targetVisible = self.visionSub.hasTargets
 
-        if self.controller.getXButton() and targetVisible:
-            targetYaw = self.visionSub.getClosestData("Z-Rot")
-            rotationSpeed = (-self.rotateSpeedLimiter.calculate(targetYaw) * OP.max_turn_speed * VISION_TURN_kP)
+        # if self.controller.getXButton() and targetVisible:
+        #     targetYaw = self.visionSub.getClosestData("Z-Rot")
+        #     rotationSpeed = (-self.rotateSpeedLimiter.calculate(targetYaw) * OP.max_turn_speed)
             # rotationSpeed = (-1.0 * targetYaw * OP.max_turn_speed * VISION_TURN_kP)
 
         # self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed)

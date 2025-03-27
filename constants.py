@@ -140,6 +140,11 @@ sw_data = {
     "swerve_steer_kI": 0,
     "swerve_steer_kD": 0,
     
+    # Automation:
+    "drivetrain_rotation_kP": 0.01,
+    "drivetrain_rotation_kI": 0,
+    "drivetrain_rotation_kD": 0,
+    
     # Wrist PID constants
     "WristKp": 0.1,
     "WristKi": 0, 
@@ -156,7 +161,7 @@ sw_data = {
     "Elevatorks": 3, # Add 3 V output to overcome static friction
     "Elevatorkv": 0.12, # A velocity target of 1 rps results in 0.12 V outp
     "Elevatorka": 0, # An acceleration of 1 rps/s requires 0 V output
-    "Elevatorkp": 12,
+    "Elevatorkp": 45,
     "Elevatorki": 0, # No output for integrated error
     "Elevatorkd": 0.01,
     
@@ -165,14 +170,14 @@ sw_data = {
     "ElevatorSpeedTolerence": 0.1,
     
     # Elevator Speed controls
-    "Cruise_Velocity": 20, # (mechanism) cruise (measured in rotations per sec)
-    "acceleration": 35, # seconds to reach max vel (Measured in rotations per sec²) (time = Velocity/accel)
-    "motion_jerk": 350, # seconds to reach max accel (Measured in rotations per sec³) (time = accel/jerk)
+    "Cruise_Velocity": 24, # (mechanism) cruise (measured in rotations per sec)
+    "acceleration": 54, # seconds to reach max vel (Measured in rotations per sec²) (time = Velocity/accel)
+    "motion_jerk": 500, # seconds to reach max accel (Measured in rotations per sec³) (time = accel/jerk)
     
     # Elevator PID Setpoints (Using Mechanism rotations not motor rotations)
-    "L2_Setpoint": .8,
-    "L3_Setpoint": 1.5,
-    "L4_Setpoint": 2.8,
+    "L2_Setpoint": 0.8858923756089075,
+    "L3_Setpoint": 1.776643778270703,
+    "L4_Setpoint": 3.1,
     "Barge_Setpoint": 3,
     
 }

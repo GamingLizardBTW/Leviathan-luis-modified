@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftGoToI"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftGoToHumanFromI"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftHumanToL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftGoToHumanFromL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftHumanToK"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

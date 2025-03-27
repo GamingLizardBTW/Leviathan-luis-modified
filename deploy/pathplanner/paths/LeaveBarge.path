@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.438806818181819,
+        "y": 4.807769886363635
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.626206910868567,
+        "y": 4.2376775155907636
+      },
+      "isLocked": false,
+      "linkedName": "AtBarge"
+    },
+    {
+      "anchor": {
+        "x": 6.371846590909091,
+        "y": 4.049928977272727
+      },
+      "prevControl": {
+        "x": 7.221705735364484,
+        "y": 4.643584369446967
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "MidOneL4CoralThenBarge",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

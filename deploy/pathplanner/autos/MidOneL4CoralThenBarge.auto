@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "DriveToReef"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AimForAlgae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GoToBarge"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeaveBarge"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

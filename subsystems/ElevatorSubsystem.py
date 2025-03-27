@@ -99,9 +99,9 @@ class ElevatorSubsystemClass(commands2.Subsystem):
         self.topMotor.set(0)
         self.bottoMmotor.set(0)
             
-    # def setEncoderToZeroAtBottom(self):
-    #     if self.bottomSwitch.get():
-    #         self.topMotor.set_position(0)
+    def setEncoderToZeroAtBottom(self):
+        if self.bottomSwitch.get():
+            self.topMotor.set_position(0)
         
     
     # PID controls with mtion magic

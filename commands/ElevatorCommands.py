@@ -132,7 +132,7 @@ class ElevatorHome(commands2.Command):
         logger.info("Elevaotr with PID initialize")
 
     def execute(self):
-        self.ElevatorSub.elevatorPID(0)
+        self.ElevatorSub.elevatorPID(0.1)
 
     def isFinished(self):
         return self.ElevatorSub.bottomOveride

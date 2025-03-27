@@ -205,6 +205,10 @@ class drivetrainSubsystemClass(commands2.Subsystem):
                 self
             )
 
+    def shouldFlipPath(self) -> bool:
+        # False
+        return DriverStation.getAlliance() == DriverStation.Alliance.kRed
+    
     def drive(self, 
               xSpeed: float, 
               ySpeed: float, 
@@ -245,10 +249,6 @@ class drivetrainSubsystemClass(commands2.Subsystem):
         
         self.showRobotPose()
 
-    def shouldFlipPath(self) -> bool:
-        # False
-        return DriverStation.getAlliance() == DriverStation.Alliance.kRed
-
 
     def updateOdometry(self) -> None:
         self.odometry.update(            
@@ -266,6 +266,41 @@ class drivetrainSubsystemClass(commands2.Subsystem):
         pose = self.odometry.getPose()
         return pose
 
+    def rotateToBlueReef(self) -> float:
+        PIDController = wpimath.controller.PIDController(SW.drivetrain_rotation_kP, SW.drivetrain_rotation_kI, SW.drivetrain_rotation_kD)
+        PIDController.enableContinuousInput(180,180)
+        reef = Pose2d.rotateAround(self.getRobotPose(), Translation2d(4.475, 4.025), self.gyro.getRotation2d())
+        rotationValue = PIDController.calculate(-self.getRobotPose().rotation().degrees(), reef.rotation().degrees())
+        return -rotationValue
+
+    def rotateToRedReef(self) -> float:
+        PIDController = wpimath.controller.PIDController(SW.drivetrain_rotation_kP, SW.drivetrain_rotation_kI, SW.drivetrain_rotation_kD)
+        PIDController.enableContinuousInput(180,180)
+        reef = Pose2d.rotateAround(self.getRobotPose(), Translation2d(13.075, 4.025), self.gyro.getRotation2d())
+        rotationValue = PIDController.calculate(-self.getRobotPose().rotation().degrees(), reef.rotation().degrees())
+        return -rotationValue
+    
+    def rotateToBarge(self) -> float:
+        PIDController = wpimath.controller.PIDController(SW.drivetrain_rotation_kP, SW.drivetrain_rotation_kI, SW.drivetrain_rotation_kD)
+        PIDController.enableContinuousInput(180,180)
+        barge = Rotation2d.degrees(0)
+        rotationValue = PIDController.calculate(-self.gyro.getRotation2d(), barge)
+        return -rotationValue
+        
+    def rotateToLeftHuman(self) -> float:
+        PIDController = wpimath.controller.PIDController(SW.drivetrain_rotation_kP, SW.drivetrain_rotation_kI, SW.drivetrain_rotation_kD)
+        PIDController.enableContinuousInput(180,180)
+        leftHuman = Rotation2d.degrees(125)
+        rotationValue = PIDController.calculate(-self.gyro.getRotation2d(), leftHuman)
+        return -rotationValue
+        
+    def rotateToRightHuman(self) -> float:
+        PIDController = wpimath.controller.PIDController(SW.drivetrain_rotation_kP, SW.drivetrain_rotation_kI, SW.drivetrain_rotation_kD)
+        PIDController.enableContinuousInput(-180,180)
+        rightHuman = Rotation2d.degrees(-125)
+        rotationValue = PIDController.calculate(self.gyro.getRotation2d(), rightHuman)
+        return -rotationValue
+    
     def resetAllEncoders(self) -> None:
         self.frontLeftModule.resetEncoders()
         self.frontRightModule.resetEncoders()
@@ -323,8 +358,9 @@ class drivetrainSubsystemClass(commands2.Subsystem):
         field.setRobotPose(self.getRobotPose())
         SmartDashboard.putData("Field", field)
         
-    # def periodic(self) -> None:
-    #     self.showRobotPose()
+    def periodic(self) -> None:
+        
+        self.showRobotPose()
         
     # def showHeading(self) -> None:
     #     shuffleboard.Shuffleboard.getTab("Heading").add(self.gyro)
