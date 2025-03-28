@@ -18,6 +18,10 @@ class IntakeSubsystemClass(commands2.Subsystem):
         # Settings for motors
         self.brakMode = phoenix6.signals.NeutralModeValue(1)
         self.Intakeintakemotor.setNeutralMode(self.brakMode)
+        
+    def periodic(self):
+        # SmartDashboard
+        wpilib.SmartDashboard.putBoolean("Intake Beam Break", self.beamBreak.get())
     
     def Outake(self):
         print("outake")

@@ -209,8 +209,6 @@ class visionSubsystem(commands2.Subsystem):
         wpilib.SmartDashboard.putNumber("Yaw", self.getClosestData("Yaw"))
         wpilib.SmartDashboard.putNumber("Skew", self.getClosestData("Skew"))
         wpilib.SmartDashboard.putNumber("Pitch", self.getClosestData("Pitch"))
-        wpilib.SmartDashboard.putNumber("X-Rot", self.getClosestData("X-Dist"))
-        wpilib.SmartDashboard.putNumber("Y-Rot", self.getClosestData("X-Dist"))
-        wpilib.SmartDashboard.putNumber("Z-Rot", self.getClosestData("X-Dist"))
-        
-        # time.sleep(.25) # Limit the print values
+        wpilib.SmartDashboard.putNumber("X-Rot", self.getClosestData("X-Rot"))
+        wpilib.SmartDashboard.putNumber("Y-Rot", self.getClosestData("Y-Rot"))
+        wpilib.SmartDashboard.putNumber("Z-Rot", self.getClosestData("Z-Rot"))

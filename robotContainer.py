@@ -4,7 +4,7 @@ import subsystems.DrivetrainSubsystem
 import commands2
 
 # Constants
-from constants import OP
+from constants import OP, ELEC
 
 # Subsystems
 import subsystems.IntakeSubsystem
@@ -12,14 +12,16 @@ import subsystems.WristSubsystem
 import subsystems.ElevatorSubsystem
 import subsystems.VisionSubsystem
 import subsystems.HangSubsystem
-import subsystems.MotionMagicExample
+import subsystems.LEDSubsytem 
 
 # Commands
 from commands.IntakeCommands import IntakeCommand, OutakeCommand, IntakeStop, AutoIntakeCommand, AutoOuttakeCommand
-from commands.WristCommands import wristWithJoystick, WristL2, WristL3, WristL4, WristBarge, WristHome, AutoWristL2, AutoWristL3, AutoWristL4, AutoWristBarge, AutoWristHome
-from commands.ElevatorCommands import ElevatorWithJoysticks, ElevatorL2, ElevatorL3, ElevatorL4, ElevatorBarge, ElevatorHome, AutoElevatorL2, AutoElevatorL3, AutoElevatorL4, AutoElevatorBarge, AutoElevatorHome
+from commands.WristCommands import wristWithJoystick, WristL2, WristL3, WristL4, WristHome, CoralMode, AlgaeMode, WristStation, WristGroundIntake
+from commands.WristCommands import CoralL2, CoralL3, CoralL4, AutoWristBarge, AutoWristHome, AutoWristHumanPlayer, AutoWristProcessor, AlgaeL2, AlgaeL3   # Auto
+from commands.ElevatorCommands import ElevatorWithJoysticks, ElevatorL2, ElevatorL3, ElevatorL4, ElevatorHome, ElevatorToStation
+from commands.ElevatorCommands import AutoElevatorL2, AutoElevatorL3, AutoElevatorL4, AutoElevatorHome, AutoElevatorHumanStation     # Auto
 from commands.HangCommands import hangBackwards, hangForward, hangStop
-from commands.MotionMagicCommand import MotionWithJoystick
+from commands.LEDCommands import SetLEDColorCommand
 
 from commands.DrivetrainCommands import driveWithJoystickCommand
 from pathplannerlib.auto import AutoBuilder, PathPlannerAuto, NamedCommands
@@ -46,7 +48,7 @@ class RobotContainer:
         self.elevatorsub = subsystems.ElevatorSubsystem.ElevatorSubsystemClass()
         self.drivetrainSub = subsystems.DrivetrainSubsystem.drivetrainSubsystemClass()
         self.hangSub = subsystems.HangSubsystem.HangSubsystem()
-        # self.testSub = subsystems.MotionMagicExample.MotionMagicClass()
+        self.ledsub = subsystems.LEDSubsytem.LED_5v_Subsystem(pwm_port = ELEC.pwm_port, length = ELEC.LED_length)
         
         # Controllers
         self.DriverController = commands2.button.CommandXboxController(OP.driver_controller)
@@ -56,22 +58,35 @@ class RobotContainer:
         self.teleopL2 = commands2.ParallelCommandGroup(WristL2(self.wristsub), ElevatorL2(self.elevatorsub))
         self.teleopL3 = commands2.ParallelCommandGroup(WristL3(self.wristsub), ElevatorL3(self.elevatorsub))
         self.teleopL4 = commands2.ParallelCommandGroup(WristL4(self.wristsub), ElevatorL4(self.elevatorsub))
-        self.teleopBarge = commands2.ParallelCommandGroup(WristBarge(self.wristsub), ElevatorBarge(self.elevatorsub))
+        self.teleopGroundIntake = commands2.ParallelCommandGroup(WristGroundIntake(self.wristsub), ElevatorHome(self.elevatorsub))
+        self.teleopStation = commands2.ParallelCommandGroup(WristStation(self.wristsub), ElevatorToStation(self.elevatorsub, self.wristsub))
         self.teleopHome = commands2.ParallelCommandGroup(WristHome(self.wristsub), ElevatorHome(self.elevatorsub))
+        
+        # self.teleopBarge = commands2.ParallelCommandGroup(WristBarge(self.wristsub), ElevatorL4(self.elevatorsub))
+        # self.teleopProcessor = commands2.ParallelCommandGroup(WristProcessor(self.wristsub), ElevatorHome(self.elevatorsub))
 
         
         #Auto command groups
-        self.autoL2 = commands2.ParallelCommandGroup(AutoWristL2(self.wristsub), AutoElevatorL2(self.elevatorsub))
-        self.autoL3 = commands2.ParallelCommandGroup(AutoWristL3(self.wristsub), AutoElevatorL3(self.elevatorsub))
-        self.autoL4 = commands2.ParallelCommandGroup(AutoWristL4(self.wristsub), AutoElevatorL4(self.elevatorsub))
-        self.AutoBarge = commands2.ParallelCommandGroup(AutoWristBarge(self.wristsub), AutoElevatorBarge(self.elevatorsub))
+        #  ------------------------ Coral -----------------------------------
+        self.coralL2 = commands2.ParallelCommandGroup(CoralL2(self.wristsub), AutoElevatorL2(self.elevatorsub))
+        self.coralL3 = commands2.ParallelCommandGroup(CoralL3(self.wristsub), AutoElevatorL3(self.elevatorsub))
+        self.coralL4 = commands2.ParallelCommandGroup(CoralL4(self.wristsub), AutoElevatorL4(self.elevatorsub))
+        self.autoHumanPlayer = commands2.ParallelCommandGroup(AutoWristHumanPlayer(self.wristsub), AutoElevatorHumanStation(self.elevatorsub))
+        
+        # -------------------------- Algae ----------------------------------
+        self.algaeL2 = commands2.ParallelCommandGroup(AlgaeL2(self.wristsub), AutoElevatorL2(self.elevatorsub))
+        self.algaeL3 = commands2.ParallelCommandGroup(AlgaeL3(self.wristsub), AutoElevatorL3(self.elevatorsub))
+        self.AutoBarge = commands2.ParallelCommandGroup(AutoWristBarge(self.wristsub), AutoElevatorL4(self.elevatorsub))
+        self.AutoProcessor = commands2.ParallelCommandGroup(AutoWristProcessor(self.wristsub), AutoElevatorHome(self.elevatorsub))
+        
+        # -------------------------- Home -----------------------------------
         self.autoHome = commands2.ParallelCommandGroup(AutoWristHome(self.wristsub), AutoElevatorHome(self.elevatorsub))
         
         
         #Path planner commands
-        NamedCommands.registerCommand("autoL2", self.autoL2)
-        NamedCommands.registerCommand("autoL3", self.autoL3)
-        NamedCommands.registerCommand("autoL4", self.autoL4)
+        NamedCommands.registerCommand("autoL2", self.coralL2)
+        NamedCommands.registerCommand("autoL3", self.coralL3)
+        NamedCommands.registerCommand("autoL4", self.coralL4)
         NamedCommands.registerCommand("autoBarge", self.AutoBarge)
         NamedCommands.registerCommand("autoHome", self.autoHome)
         NamedCommands.registerCommand("autoIntake", AutoIntakeCommand(self.Intakesub))
@@ -97,9 +112,8 @@ class RobotContainer:
         pass
         
         # Default Commands
-        # self.testSub.setDefaultCommand(MotionWithJoystick(self.testSub))
         # self.elevatorsub.setDefaultCommand(ElevatorWithJoysticks(self.elevatorsub))
-        self.wristsub.setDefaultCommand(wristWithJoystick(self.wristsub))
+        # self.wristsub.setDefaultCommand(wristWithJoystick(self.wristsub))
         self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub, self.visionSub)) # Additional Buttons used: A
         
         # # Intake Intake Commands
@@ -114,19 +128,31 @@ class RobotContainer:
         self.DriverController.povUp().whileTrue(hangForward(self.hangSub))
         self.DriverController.povUp().whileFalse(hangStop(self.hangSub))
         
-        # # Elevator and Wrist Teleop PID Commands
-        # self.OperatorController.a().whileTrue(self.teleopL2)
-        # self.OperatorController.x().whileTrue(self.teleopL3)
-        # self.OperatorController.y().whileTrue(self.teleopL4) # Considering making it to "on true" to only have to press once
-        # self.OperatorController.b().whileTrue(self.teleopHome)
+        # # Elevator and Wrist Teleop PID Commands (Considering making it to "on true" to only have to press once)
+        self.OperatorController.a().whileTrue(self.teleopL2) # Alge L2 & coral L2
+        self.OperatorController.x().whileTrue(self.teleopL3) # Alge L3 & coral L3
+        self.OperatorController.y().whileTrue(self.teleopL4) # Barge & coral L4
+        self.OperatorController.b().whileTrue(self.teleopStation) # Human Player & Processor
+        self.OperatorController.povDown().whileTrue(self.teleopHome) # Home robot
+        self.OperatorController.povUp().whileTrue(self.teleopGroundIntake) # Home robot
         
         # Elevator PID Commands
-        self.OperatorController.a().whileTrue(ElevatorL2(self.elevatorsub))
-        self.OperatorController.x().whileTrue(ElevatorL3(self.elevatorsub))
-        self.OperatorController.y().whileTrue(ElevatorL4(self.elevatorsub))
-        self.OperatorController.b().whileTrue(ElevatorHome(self.elevatorsub))
+        # self.OperatorController.a().whileTrue(ElevatorL2(self.elevatorsub))
+        # self.OperatorController.x().whileTrue(ElevatorL3(self.elevatorsub))
+        # self.OperatorController.y().whileTrue(ElevatorL4(self.elevatorsub))
+        # self.OperatorController.b().whileTrue(ElevatorHome(self.elevatorsub))
         
         # Intake Wrist PID Commands
-        # self.OperatorController.a().whileTrue(WristL2(self.Intakesub)) # Considering making it to "on true" to only have to press once
-        # self.OperatorController.x().whileTrue(WristL3(self.Intakesub))
-        # self.OperatorController.y().whileTrue(WristL4(self.Intakesub))
+        # self.OperatorController.a().whileTrue(WristL2(self.wristsub)) # Considering making it to "on true" to only have to press once
+        # self.OperatorController.x().whileTrue(WristL3(self.wristsub))
+        # self.OperatorController.y().whileTrue(WristL4(self.wristsub))
+        # self.OperatorController.b().whileTrue(WristHome(self.wristsub))
+        
+        # Change target mode for wrist
+        self.OperatorController.start().onTrue(CoralMode(self.wristsub))
+        self.OperatorController.button(7).onTrue(AlgaeMode(self.wristsub))
+        
+        # LEDS
+        self.OperatorController.a().onTrue(SetLEDColorCommand(self.ledsub, (0, 255, 0)))  # Green
+        self.OperatorController.b().onTrue(SetLEDColorCommand(self.ledsub, (255, 0, 0)))  # Red
+        self.OperatorController.povDown().onTrue(SetLEDColorCommand(self.ledsub, (0, 0, 0)))  # Off

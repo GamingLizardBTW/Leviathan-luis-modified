@@ -27,9 +27,7 @@ class ElevatorSubsystemClass(commands2.Subsystem):
         elevatorGravity = signals.GravityTypeValue(0)
         
         # Setting motor brakemode
-        self.brakemode = signals.NeutralModeValue(ELEC.elevator_neutral_mode)
-        self.topMotor.setNeutralMode(self.brakemode)
-        self.bottoMmotor.setNeutralMode(self.brakemode)
+        brakemode = signals.NeutralModeValue(ELEC.elevator_neutral_mode)
         
         # Configure gear ratio
         feedBack = config.feedback
@@ -37,9 +35,9 @@ class ElevatorSubsystemClass(commands2.Subsystem):
         
         # Configure Motion Magic
         motionMagic = config.motion_magic
-        motionMagic.motion_magic_cruise_velocity = SW.Cruise_Velocity
-        motionMagic.motion_magic_acceleration = SW.acceleration
-        motionMagic.motion_magic_jerk = SW.motion_jerk
+        motionMagic.motion_magic_cruise_velocity = SW.Elevator_Cruise_Velocity
+        motionMagic.motion_magic_acceleration = SW.Elevator_acceleration
+        motionMagic.motion_magic_jerk = SW.Elevator_motion_jerk
         
         # Configure the PID for slot 0
         slot0 = config.slot0
@@ -59,10 +57,13 @@ class ElevatorSubsystemClass(commands2.Subsystem):
                 break
         if not status.is_ok():
             print(f"Could not apply configs, error code: {status.name}")
+            
+        self.topMotor.setNeutralMode(brakemode)
+        self.bottoMmotor.setNeutralMode(brakemode)
         
     def periodic(self) -> None:
         # Update encoders
-        self.encoder = self.topMotor.get_rotor_position().value
+        self.encoder = self.topMotor.get_rotor_position().value_as_double
         
         # SmartDashboard
         SmartDashboard.putNumber("Top Motor encoder", self.encoder)
@@ -72,15 +73,20 @@ class ElevatorSubsystemClass(commands2.Subsystem):
         
         SmartDashboard.putBoolean("Top Limit Switch", self.topSwitch.get())
         SmartDashboard.putBoolean("Bottom Limit Switch", self.bottomSwitch.get())
+        # SmartDashboard.putBoolean("Is Motion Magic finished", self.motionFinished())
         
         # This is used to force stop any elevator commands if limit switch is hit
         self.topOveride = self.topSwitch.get()
         self.bottomOveride = self.bottomSwitch.get()
         
-        # Get values from SmartDashboard
-        self.elevatorPosition = SmartDashboard.getNumber("Mechanism rotations", 0)
-        self.elevatorSetpoint = SmartDashboard.getNumber("Elevator Setpoint", 0)
-        self.velocity = SmartDashboard.getNumber("Top Motor Speed", 0)
+        # 
+        # self.elevatorPosition = self.encoder/MECH.Elevator_gear_ratio
+        # self.elevatorSetpoint = self.topMotor.get_differential_closed_loop_reference().value_as_double
+        # self.velocity = self.topMotor.get_velocity().value_as_double
+        
+        # Reset motor encoder to 0
+        # if self.bottomOveride:
+        #     self.topMotor.set_position(0)
         
 
     def elevatorWithjoystick(self, joystickinput):
@@ -98,10 +104,6 @@ class ElevatorSubsystemClass(commands2.Subsystem):
     def elevatorMotorStop(self):
         self.topMotor.set(0)
         self.bottoMmotor.set(0)
-            
-    def setEncoderToZeroAtBottom(self):
-        if self.bottomSwitch.get():
-            self.topMotor.set_position(0)
         
     
     # PID controls with mtion magic
@@ -117,8 +119,8 @@ class ElevatorSubsystemClass(commands2.Subsystem):
             .with_limit_reverse_motion(self.bottomOveride))
         self.bottoMmotor.set_control(self.follow_left_request)
         
-    def motionFinished(self):
-        if math.fabs(self.elevatorPosition - self.elevatorSetpoint) < SW.ElevatorTolerance and math.fabs(self.velocity) < SW.ElevatorSpeedTolerence:
-            return True
-        else:
-            return False
+    # def motionFinished(self):
+    #     if math.fabs(self.elevatorPosition - self.elevatorSetpoint) < SW.ElevatorTolerance and math.fabs(self.velocity) < SW.ElevatorSpeedTolerence:
+    #         return True
+    #     else:
+    #         return False

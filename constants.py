@@ -42,10 +42,11 @@ mech_data = {
     "steering_motor_inverted": True,
     
     #Wrist
-    "wrist_gearing_ratio": 625 / 3, #About 208.3 motor rotation to 1 wrist rotation
+    "wrist_gearing_ratio": 125, #About 208.3 motor rotation to 1 wrist rotation
+    "wrist_motor_inverted": False,
     
     # Elevator
-    "Elevator_gear_ratio": 71.85, # rotor rotations per mechanism rotation
+    "Elevator_gear_ratio": 57.48, # rotor rotations per mechanism rotation
 }
 MECH = namedtuple("Data", mech_data.keys())(**mech_data)
 
@@ -91,6 +92,10 @@ elec_data = {
     # Hang
     "Hang_Motor_ID": 16,
     "Hang_Neutal_Mode": 1,
+    
+    #LED
+    "LED_length": 200,
+    "pwm_port": 0,
 
 }    
 ELEC = namedtuple("Data", elec_data.keys())(**elec_data)
@@ -145,17 +150,36 @@ sw_data = {
     "drivetrain_rotation_kI": 0,
     "drivetrain_rotation_kD": 0,
     
+    # -------------------------------- WRIST --------------------------------------
+    
     # Wrist PID constants
-    "WristKp": 0.1,
-    "WristKi": 0, 
-    "WristKd": 0,
+    "WristKs": 2,
+    "WristKv": 0.12,
+    "WristKa": 0,
+    "WristKp": 50,
+    "WristKi": 0,
+    "WristKd": 0.02,
     "WristOffset": 0,
     
     # Wrist PID Setpoints
-    "Wrist_L2_Setpoint": 0.101,
-    "Wrist_L3_Setpoint": 0.131,
-    "Wrist_L4_Setpoint": 0.151,
-    "Wrist_Barge_Setpoint": 0.141,
+    "Wrist_L2_Setpoint": 0.31801953125, # Coral L2
+    "Wrist_L3_Setpoint": 0.28, # Coral L3
+    "Wrist_L4_Setpoint": 0.16, # Coral L4
+    
+    "Algae_L2_Setpoint": 0.265, # Algae L2
+    "Algae_L3_Setpoint": 0.265, # Algae L3
+    "Wrist_Barge_Setpoint": 0.141, # Barge
+    
+    "Wrist_Processor_Setpoint": 0.285, # Processor
+    "Wrist_ground_Setpoint": 0.4, # Algae Ground Intake
+    "Wrist_Human_Player_Setpoint": 0.145, # Human Player
+    
+    # Elevator Speed controls
+    "Wrist_Cruise_Velocity": 20, # (mechanism) cruise (measured in rotations per sec)
+    "Wrist_acceleration": 35, # seconds to reach max vel (Measured in rotations per sec²) (time = Velocity/accel)
+    "Wrist_motion_jerk": 280, # seconds to reach max accel (Measured in rotations per sec³) (time = accel/jerk)
+    
+    # ------------------------------- ELEVATOR ---------------------------------------
     
     # Elevator PID Constats
     "Elevatorks": 3, # Add 3 V output to overcome static friction
@@ -166,19 +190,20 @@ sw_data = {
     "Elevatorkd": 0.01,
     
     # Elevator Tolerence Constants
-    "ElevatorTolerance": 0.1,
-    "ElevatorSpeedTolerence": 0.1,
+    "ElevatorTolerance": 0.15,
+    "ElevatorSpeedTolerence": 0.2,
     
     # Elevator Speed controls
-    "Cruise_Velocity": 24, # (mechanism) cruise (measured in rotations per sec)
-    "acceleration": 54, # seconds to reach max vel (Measured in rotations per sec²) (time = Velocity/accel)
-    "motion_jerk": 500, # seconds to reach max accel (Measured in rotations per sec³) (time = accel/jerk)
+    "Elevator_Cruise_Velocity": 24, # (mechanism) cruise (measured in rotations per sec)
+    "Elevator_acceleration": 54, # seconds to reach max vel (Measured in rotations per sec²) (time = Velocity/accel)
+    "Elevator_motion_jerk": 500, # seconds to reach max accel (Measured in rotations per sec³) (time = accel/jerk)
     
     # Elevator PID Setpoints (Using Mechanism rotations not motor rotations)
-    "L2_Setpoint": 0.8858923756089075,
-    "L3_Setpoint": 1.776643778270703,
-    "L4_Setpoint": 3.1,
-    "Barge_Setpoint": 3,
+    "L2_Setpoint": 0.9309539051626653,
+    "L3_Setpoint": 1.8,
+    "L4_Setpoint": 3.12,
+    "Human_Player_Station": 0.38,
+    "Home": 0.05,
     
 }
 SW = namedtuple("Data", sw_data.keys())(**sw_data)

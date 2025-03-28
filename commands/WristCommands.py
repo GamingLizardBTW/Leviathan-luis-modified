@@ -20,7 +20,7 @@ class wristWithJoystick(commands2.Command):
     def execute(self):
         self.inputvalue = XboxController(OP.operator_controller).getRightY()
         if self.inputvalue > 0.13 or self.inputvalue < -0.13:
-            self.WristSub.wristWithJoystick(self.inputvalue)
+            self.WristSub.wristwithjoystick(self.inputvalue)
         else:
             self.WristSub.WristStop()
 
@@ -32,21 +32,29 @@ class wristWithJoystick(commands2.Command):
 
 
 
+#======================================= Teleop =======================================================
+
 # Wrist PID Commands
 class WristL2(commands2.Command):
     def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
         self.WristSub = WristSubsytem
 
     def initialize(self):
-        logger.info(" wrist to robot")
+        logger.info(" wrist to L2")
 
     def execute(self):
-        self.WristSub.wristWithPID(SW.Wrist_L2_Setpoint)
+        # self.WristSub.wristMotionMagic(SW.Wrist_L2_Setpoint)
+            
+        if self.WristSub.coralMode:
+            self.WristSub.wristMotionMagic(SW.Wrist_L2_Setpoint)
+        else:
+            self.WristSub.wristMotionMagic(SW.Algae_L2_Setpoint)
 
     def isFinished(self):
         return False
    
     def end(self, interrupted):
+        print("MotionMagic to L2 Ended")
         self.WristSub.WristStop()
         
 class WristL3(commands2.Command):
@@ -54,10 +62,13 @@ class WristL3(commands2.Command):
         self.WristSub = WristSubsytem
 
     def initialize(self):
-        logger.info(" wrist to proccesor")
+        logger.info(" wrist to L3")
 
     def execute(self):
-        self.WristSub.wristWithPID(SW.Wrist_L3_Setpoint)
+        if self.WristSub.coralMode:
+            self.WristSub.wristMotionMagic(SW.Wrist_L3_Setpoint)
+        else:
+            self.WristSub.wristMotionMagic(SW.Algae_L3_Setpoint)
 
     def isFinished(self):
         return False
@@ -71,10 +82,13 @@ class WristL4(commands2.Command):
         self.WristSub = WristSubsytem
 
     def initialize(self):
-        logger.info(" wrist to floor")
+        logger.info(" wrist to L4")
 
     def execute(self):
-        self.WristSub.wristWithPID(SW.Wrist_L4_Setpoint)
+        if self.WristSub.coralMode:
+            self.WristSub.wristMotionMagic(SW.Wrist_L4_Setpoint)
+        else:
+            self.WristSub.wristMotionMagic(SW.Wrist_Barge_Setpoint)
 
     def isFinished(self):
         return False
@@ -82,15 +96,34 @@ class WristL4(commands2.Command):
     def end(self, interrupted):
         self.WristSub.WristStop()
         
-class WristBarge(commands2.Command):
+class WristStation(commands2.Command):
     def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
         self.WristSub = WristSubsytem
 
     def initialize(self):
-        logger.info(" wrist to floor")
+        logger.info(" wrist to human player")
 
     def execute(self):
-        self.WristSub.wristWithPID(SW.Wrist_Barge_Setpoint)
+        if self.WristSub.coralMode:
+            self.WristSub.wristMotionMagic(SW.Wrist_Human_Player_Setpoint)
+        else:
+            self.WristSub.wristMotionMagic(SW.Wrist_Processor_Setpoint)
+
+    def isFinished(self):
+        return False
+   
+    def end(self, interrupted):
+        self.WristSub.WristStop()
+        
+class WristGroundIntake(commands2.Command):
+    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.WristSub = WristSubsytem
+
+    def initialize(self):
+        logger.info(" wrist to robot")
+
+    def execute(self):
+        self.WristSub.wristMotionMagic(SW.Wrist_ground_Setpoint)
 
     def isFinished(self):
         return False
@@ -106,7 +139,7 @@ class WristHome(commands2.Command):
         logger.info(" wrist to robot")
 
     def execute(self):
-        self.WristSub.wristWithPID(0)
+        self.WristSub.wristMotionMagic(0)
 
     def isFinished(self):
         return False
@@ -114,9 +147,39 @@ class WristHome(commands2.Command):
     def end(self, interrupted):
         self.WristSub.WristStop()
         
+class CoralMode(commands2.Command):
+    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.WristSub = WristSubsytem
 
-# PID for auto
-class AutoWristL2(commands2.Command):
+    def initialize(self):
+        logger.info("changing modes")
+
+    def execute(self):
+        self.WristSub.cMode()
+
+    def isFinished(self):
+        return True
+        
+class AlgaeMode(commands2.Command):
+    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.WristSub = WristSubsytem
+
+    def initialize(self):
+        logger.info("changing modes")
+
+    def execute(self):
+        self.WristSub.aMode()
+
+    def isFinished(self):
+        return True
+        
+        
+        
+        
+# ==================================== Auto ================================================
+
+#         ---------------------------- Coral ---------------------------
+class CoralL2(commands2.Command):
     def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
         self.WristSub = WristSubsytem
 
@@ -124,7 +187,7 @@ class AutoWristL2(commands2.Command):
         logger.info(" wrist to robot")
 
     def execute(self):
-        self.WristSub.wristWithPID(SW.Wrist_L2_Setpoint)
+        self.WristSub.wristMotionMagic(SW.Wrist_L2_Setpoint)
 
     def isFinished(self):
         if self.WristSub.wristPID.atSetpoint():
@@ -134,7 +197,7 @@ class AutoWristL2(commands2.Command):
     def end(self, interrupted):
         self.WristSub.WristStop()
         
-class AutoWristL3(commands2.Command):
+class CoralL3(commands2.Command):
     def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
         self.WristSub = WristSubsytem
 
@@ -142,7 +205,7 @@ class AutoWristL3(commands2.Command):
         logger.info(" wrist to proccesor")
 
     def execute(self):
-        self.WristSub.wristWithPID(SW.Wrist_L3_Setpoint)
+        self.WristSub.wristMotionMagic(SW.Wrist_L3_Setpoint)
 
     def isFinished(self):
         if self.WristSub.wristPID.atSetpoint():
@@ -152,7 +215,7 @@ class AutoWristL3(commands2.Command):
     def end(self, interrupted):
         self.WristSub.WristStop()
 
-class AutoWristL4(commands2.Command):
+class CoralL4(commands2.Command):
     def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
         self.WristSub = WristSubsytem
 
@@ -160,7 +223,62 @@ class AutoWristL4(commands2.Command):
         logger.info(" wrist to floor")
 
     def execute(self):
-        self.WristSub.wristWithPID(SW.Wrist_L4_Setpoint)
+        self.WristSub.wristMotionMagic(SW.Wrist_L4_Setpoint)
+
+    def isFinished(self):
+        if self.WristSub.wristPID.atSetpoint():
+            return True
+        return False
+   
+    def end(self, interrupted):
+        self.WristSub.WristStop()
+        
+class AutoWristHumanPlayer(commands2.Command):
+    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.WristSub = WristSubsytem
+
+    def initialize(self):
+        logger.info(" wrist to floor")
+
+    def execute(self):
+        self.WristSub.wristMotionMagic(SW.Wrist_Human_Player_Setpoint)
+
+    def isFinished(self):
+        return False
+   
+    def end(self, interrupted):
+        self.WristSub.WristStop()
+        
+        
+#      ------------------------ Algae -----------------------------
+        
+class AlgaeL2(commands2.Command):
+    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.WristSub = WristSubsytem
+
+    def initialize(self):
+        logger.info(" wrist to robot")
+
+    def execute(self):
+        self.WristSub.wristMotionMagic(SW.Algae_L2_Setpoint)
+
+    def isFinished(self):
+        if self.WristSub.wristPID.atSetpoint():
+            return True
+        return False
+   
+    def end(self, interrupted):
+        self.WristSub.WristStop()
+        
+class AlgaeL3(commands2.Command):
+    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.WristSub = WristSubsytem
+
+    def initialize(self):
+        logger.info(" wrist to proccesor")
+
+    def execute(self):
+        self.WristSub.wristMotionMagic(SW.Algae_L3_Setpoint)
 
     def isFinished(self):
         if self.WristSub.wristPID.atSetpoint():
@@ -178,7 +296,7 @@ class AutoWristBarge(commands2.Command):
         logger.info(" wrist to floor")
 
     def execute(self):
-        self.WristSub.wristWithPID(SW.Wrist_Barge_Setpoint)
+        self.WristSub.wristMotionMagic(SW.Wrist_Barge_Setpoint)
 
     def isFinished(self):
         if self.WristSub.wristPID.atSetpoint():
@@ -188,6 +306,24 @@ class AutoWristBarge(commands2.Command):
     def end(self, interrupted):
         self.WristSub.WristStop()
         
+class AutoWristProcessor(commands2.Command):
+    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+        self.WristSub = WristSubsytem
+
+    def initialize(self):
+        logger.info(" wrist to floor")
+
+    def execute(self):
+        self.WristSub.wristMotionMagic(SW.Wrist_Processor_Setpoint)
+
+    def isFinished(self):
+        return False
+   
+    def end(self, interrupted):
+        self.WristSub.WristStop()
+        
+        
+    #      --------------------- Home ---------------------------- 
 class AutoWristHome(commands2.Command):
     def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
         self.WristSub = WristSubsytem
@@ -196,7 +332,7 @@ class AutoWristHome(commands2.Command):
         logger.info(" wrist to robot")
 
     def execute(self):
-        self.WristSub.wristWithPID(0)
+        self.WristSub.wristMotionMagic(0)
 
     def isFinished(self):
         if self.WristSub.wristPID.atSetpoint():

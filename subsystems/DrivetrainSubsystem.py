@@ -270,35 +270,35 @@ class drivetrainSubsystemClass(commands2.Subsystem):
         PIDController = wpimath.controller.PIDController(SW.drivetrain_rotation_kP, SW.drivetrain_rotation_kI, SW.drivetrain_rotation_kD)
         PIDController.enableContinuousInput(180,180)
         reef = Pose2d.rotateAround(self.getRobotPose(), Translation2d(4.475, 4.025), self.gyro.getRotation2d())
-        rotationValue = PIDController.calculate(-self.getRobotPose().rotation().degrees(), reef.rotation().degrees())
+        rotationValue = PIDController.calculate(self.getRobotPose().rotation().degrees(), reef.rotation().degrees())
         return -rotationValue
 
     def rotateToRedReef(self) -> float:
         PIDController = wpimath.controller.PIDController(SW.drivetrain_rotation_kP, SW.drivetrain_rotation_kI, SW.drivetrain_rotation_kD)
         PIDController.enableContinuousInput(180,180)
         reef = Pose2d.rotateAround(self.getRobotPose(), Translation2d(13.075, 4.025), self.gyro.getRotation2d())
-        rotationValue = PIDController.calculate(-self.getRobotPose().rotation().degrees(), reef.rotation().degrees())
+        rotationValue = PIDController.calculate(self.getRobotPose().rotation().degrees(), reef.rotation().degrees())
         return -rotationValue
     
     def rotateToBarge(self) -> float:
         PIDController = wpimath.controller.PIDController(SW.drivetrain_rotation_kP, SW.drivetrain_rotation_kI, SW.drivetrain_rotation_kD)
         PIDController.enableContinuousInput(180,180)
-        barge = Rotation2d.degrees(0)
-        rotationValue = PIDController.calculate(-self.gyro.getRotation2d(), barge)
+        barge = 0
+        rotationValue = PIDController.calculate(self.getRobotPose().rotation().degrees(), barge)
         return -rotationValue
         
     def rotateToLeftHuman(self) -> float:
         PIDController = wpimath.controller.PIDController(SW.drivetrain_rotation_kP, SW.drivetrain_rotation_kI, SW.drivetrain_rotation_kD)
         PIDController.enableContinuousInput(180,180)
-        leftHuman = Rotation2d.degrees(125)
-        rotationValue = PIDController.calculate(-self.gyro.getRotation2d(), leftHuman)
+        leftHuman = 125
+        rotationValue = PIDController.calculate(self.getRobotPose().rotation().degrees(), leftHuman)
         return -rotationValue
         
     def rotateToRightHuman(self) -> float:
         PIDController = wpimath.controller.PIDController(SW.drivetrain_rotation_kP, SW.drivetrain_rotation_kI, SW.drivetrain_rotation_kD)
         PIDController.enableContinuousInput(-180,180)
-        rightHuman = Rotation2d.degrees(-125)
-        rotationValue = PIDController.calculate(self.gyro.getRotation2d(), rightHuman)
+        rightHuman = -125
+        rotationValue = PIDController.calculate(self.getRobotPose().rotation().degrees(), rightHuman)
         return -rotationValue
     
     def resetAllEncoders(self) -> None:

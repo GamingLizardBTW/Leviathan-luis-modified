@@ -1,8 +1,12 @@
 import wpilib
 import commands2
+
 from subsystems.ElevatorSubsystem import ElevatorSubsystemClass
+from subsystems.WristSubsystem import WristSubsystemClass
+
 import logging
 logger = logging.getLogger("elevator Subsystem Logger")
+
 from wpilib import XboxController
 from constants import OP, SW
 
@@ -12,7 +16,6 @@ class ElevatorWithJoysticks(commands2.Command):
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
         self.addRequirements(ElevSub)
         self.ElevatorSub = ElevSub
-        logger.info("Elevator constructor")
 
     
     def initialize(self):
@@ -34,7 +37,7 @@ class ElevatorWithJoysticks(commands2.Command):
         self.ElevatorSub.elevatorMotorStop()
         
         
-        
+    # ------------------------------------------------- TELEOP -------------------------------------------------------
         
     # Elevator with PID
 class ElevatorL2(commands2.Command):
@@ -42,7 +45,6 @@ class ElevatorL2(commands2.Command):
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
         self.addRequirements(ElevSub)
         self.ElevatorSub = ElevSub
-        logger.info("Elevator constructor")
 
     
     def initialize(self):
@@ -52,7 +54,8 @@ class ElevatorL2(commands2.Command):
         self.ElevatorSub.elevatorPID(SW.L2_Setpoint)
 
     def isFinished(self):
-        self.ElevatorSub.motionFinished()
+        # self.ElevatorSub.motionFinished()
+        return False
     
     def end(self, interrupted):
         print("MotionMagic to L2 Ended")
@@ -63,7 +66,6 @@ class ElevatorL3(commands2.Command):
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
         self.addRequirements(ElevSub)
         self.ElevatorSub = ElevSub
-        logger.info("Elevator constructor")
 
     
     def initialize(self):
@@ -83,7 +85,6 @@ class ElevatorL4(commands2.Command):
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
         self.addRequirements(ElevSub)
         self.ElevatorSub = ElevSub
-        logger.info("Elevator constructor")
 
     
     def initialize(self):
@@ -100,39 +101,41 @@ class ElevatorL4(commands2.Command):
     def end(self, interrupted):
         self.ElevatorSub.elevatorMotorStop()
         
-class ElevatorBarge(commands2.Command):
-
-    def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
-        self.addRequirements(ElevSub)
-        self.ElevatorSub = ElevSub
-        logger.info("Elevator constructor")
-
-    
-    def initialize(self):
-        logger.info("Elevaotr to L4 initialize")
-
-    def execute(self):
-        self.ElevatorSub.elevatorPID(SW.Barge_Setpoint)
-
-    def isFinished(self):
-        return False
-    
-    def end(self, interrupted):
-        self.ElevatorSub.elevatorMotorStop()
-        
 class ElevatorHome(commands2.Command):
 
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
         self.addRequirements(ElevSub)
         self.ElevatorSub = ElevSub
-        logger.info("Elevator constructor")
 
     
     def initialize(self):
         logger.info("Elevaotr with PID initialize")
 
     def execute(self):
-        self.ElevatorSub.elevatorPID(0.1)
+        self.ElevatorSub.elevatorPID(SW.Home)
+
+    def isFinished(self):
+        return self.ElevatorSub.bottomOveride
+    
+    def end(self, interrupted):
+        self.ElevatorSub.elevatorMotorStop()
+        
+class ElevatorToStation(commands2.Command):
+
+    def __init__(self, ElevSub: ElevatorSubsystemClass, WristSub: WristSubsystemClass) -> None:
+        self.addRequirements(ElevSub)
+        self.ElevatorSub = ElevSub
+        self.wrist = WristSub
+    
+    def initialize(self):
+        logger.info("Elevaotr with PID initialize")
+
+    def execute(self):
+        
+        if self.wrist.pieceStatus():
+            self.ElevatorSub.elevatorPID(SW.Human_Player_Station)
+        else:
+            self.ElevatorSub.elevatorPID(SW.Home)
 
     def isFinished(self):
         return self.ElevatorSub.bottomOveride
@@ -142,6 +145,7 @@ class ElevatorHome(commands2.Command):
         
         
         
+        # ------------------------------ AUTO ------------------------------------------------
         
     # Autonomous Elevator with PID
 class AutoElevatorL2(commands2.Command):
@@ -149,7 +153,6 @@ class AutoElevatorL2(commands2.Command):
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
         self.addRequirements(ElevSub)
         self.ElevatorSub = ElevSub
-        logger.info("Elevator constructor")
 
     
     def initialize(self):
@@ -172,7 +175,6 @@ class AutoElevatorL3(commands2.Command):
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
         self.addRequirements(ElevSub)
         self.ElevatorSub = ElevSub
-        logger.info("Elevator constructor")
 
     
     def initialize(self):
@@ -195,7 +197,6 @@ class AutoElevatorL4(commands2.Command):
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
         self.addRequirements(ElevSub)
         self.ElevatorSub = ElevSub
-        logger.info("Elevator constructor")
 
     
     def initialize(self):
@@ -213,39 +214,37 @@ class AutoElevatorL4(commands2.Command):
     def end(self, interrupted):
         self.ElevatorSub.elevatorMotorStop()
         
-class AutoElevatorBarge(commands2.Command):
-
-    def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
-        self.addRequirements(ElevSub)
-        self.ElevatorSub = ElevSub
-        logger.info("Elevator constructor")
-
-    
-    def initialize(self):
-        logger.info("Elevaotr to L4 initialize")
-
-    def execute(self):
-        self.ElevatorSub.elevatorPID(SW.Barge_Setpoint)
-
-    def isFinished(self):
-        return False
-    
-    def end(self, interrupted):
-        self.ElevatorSub.elevatorMotorStop()
-        
 class AutoElevatorHome(commands2.Command):
 
     def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
         self.addRequirements(ElevSub)
         self.ElevatorSub = ElevSub
-        logger.info("Elevator constructor")
 
     
     def initialize(self):
         logger.info("Elevaotr with PID initialize")
 
     def execute(self):
-        self.ElevatorSub.elevatorPID(0)
+        self.ElevatorSub.elevatorPID(SW.Home)
+
+    def isFinished(self):
+        return self.ElevatorSub.bottomOveride
+    
+    def end(self, interrupted):
+        self.ElevatorSub.elevatorMotorStop()
+        
+class AutoElevatorHumanStation(commands2.Command):
+
+    def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
+        self.addRequirements(ElevSub)
+        self.ElevatorSub = ElevSub
+
+    
+    def initialize(self):
+        logger.info("Elevaotr with PID initialize")
+
+    def execute(self):
+        self.ElevatorSub.elevatorPID(SW.Human_Player_Station)
 
     def isFinished(self):
         return self.ElevatorSub.bottomOveride
