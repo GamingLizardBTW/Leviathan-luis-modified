@@ -40,7 +40,7 @@ class LED_5v_Subsystem(commands2.Subsystem):
         self.timer.start()
 
         # Whats the default color
-        self.data = self.red(self.length)
+        self.data = self.white(self.length)
         
 
         self.leds.setLength(self.length)
@@ -57,8 +57,32 @@ class LED_5v_Subsystem(commands2.Subsystem):
         self.leds.start()  # Apply changes
 
 
+    # @classmethod
+    # def red(cls, length):
+    #     """
+    #     Return a list of colors (as LEDData objects) that form a rainbow
+    #     pattern of the given length.
+
+    #     Parameters:
+    #       length (int): number of active LEDs in the strip
+
+    #     Returns:
+    #       [LEDData("red"), LEDData("orange"), ...]
+    #       with the pattern repeated until the given length is reached
+    #       where "red" actually means (255, 0, 0) which is RGB values for red,
+    #       and "orange" actually means etc. etc.
+
+    #       In other words, this method returns a list of LEDData objects
+    #       representing a rainbow pattern, which can be passed in as a parameter
+    #       to self.leds.setData() if you want to set your LEDs to a rainbow.
+    #     """
+    #     color = (255, 0, 0) #single RGB color
+
+    #     result = []
+    #     for _ in range(length):
+    #         return [wpilib.AddressableLED.LEDData(255, 0, 0) for _ in range(length)]
     @classmethod
-    def red(cls, length):
+    def white(cls, length):
         """
         Return a list of colors (as LEDData objects) that form a rainbow
         pattern of the given length.
@@ -76,11 +100,11 @@ class LED_5v_Subsystem(commands2.Subsystem):
           representing a rainbow pattern, which can be passed in as a parameter
           to self.leds.setData() if you want to set your LEDs to a rainbow.
         """
-        color = (255, 0, 0) #single RGB color
+        color = (255, 255, 255) #single RGB color
 
         result = []
         for _ in range(length):
-            return [wpilib.AddressableLED.LEDData(255, 0, 0) for _ in range(length)]
+            return [wpilib.AddressableLED.LEDData(255, 255, 255) for _ in range(length)]
 
     
     @classmethod

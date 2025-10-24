@@ -63,16 +63,22 @@ class ElevatorL2(commands2.Command):
         
 class ElevatorL3(commands2.Command):
 
-    def __init__(self, ElevSub: ElevatorSubsystemClass) -> None:
+    def __init__(self, ElevSub: ElevatorSubsystemClass, WristSub: WristSubsystemClass) -> None:
         self.addRequirements(ElevSub)
         self.ElevatorSub = ElevSub
+        self.wrist = WristSub
 
     
     def initialize(self):
         logger.info("Elevaotr to L3 initialize")
 
     def execute(self):
-        self.ElevatorSub.elevatorPID(SW.L3_Setpoint)
+        
+        if self.wrist.pieceStatus():
+            self.ElevatorSub.elevatorPID(SW.L3_Setpoint)
+        else:
+            self.ElevatorSub.elevatorPID(SW.L3_AlgaeSetpoint)
+        # self.ElevatorSub.elevatorPID(SW.L3_Setpoint)
 
     def isFinished(self):
         return False

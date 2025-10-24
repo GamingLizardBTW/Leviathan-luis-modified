@@ -16,10 +16,10 @@ class HangSubsystem(commands2.Subsystem):
         self.hangMotor.setNeutralMode(self.brakemode)
         
     def hangForward(self):
-        self.hangMotor.set(0.6)
+        self.hangMotor.set(1)
         
     def hangBackwards(self):
-        self.hangMotor.set(-0.6)
+        self.hangMotor.set(-1)
         
     def hangStop(self):
         self.hangMotor.set(0)

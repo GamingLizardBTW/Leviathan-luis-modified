@@ -56,7 +56,7 @@ class RobotContainer:
         
         #Command groups
         self.teleopL2 = commands2.ParallelCommandGroup(WristL2(self.wristsub), ElevatorL2(self.elevatorsub))
-        self.teleopL3 = commands2.ParallelCommandGroup(WristL3(self.wristsub), ElevatorL3(self.elevatorsub))
+        self.teleopL3 = commands2.ParallelCommandGroup(WristL3(self.wristsub), ElevatorL3(self.elevatorsub, self.wristsub))
         self.teleopL4 = commands2.ParallelCommandGroup(WristL4(self.wristsub), ElevatorL4(self.elevatorsub))
         self.teleopGroundIntake = commands2.ParallelCommandGroup(WristGroundIntake(self.wristsub), ElevatorHome(self.elevatorsub))
         self.teleopStation = commands2.ParallelCommandGroup(WristStation(self.wristsub), ElevatorToStation(self.elevatorsub, self.wristsub))
@@ -94,9 +94,11 @@ class RobotContainer:
         
         # Configure Bindings
         self.configureButtonBindings()
-        self.autoChooser = AutoBuilder.buildAutoChooser("AutoDriveBack")
+        self.autoChooser = AutoBuilder.buildAutoChooser("MidAutoDriveBack")
         SmartDashboard.putData("Auto Chooser", self.autoChooser)
         logger.info("Robot container created")
+        self.autoChooser.addOption("LeftAutoDriveBack", PathPlannerAuto("LeftAutoDriveBack"))
+        self.autoChooser.addOption("RightAutoDriveBack", PathPlannerAuto("RightAutoDriveBack"))
         self.autoChooser.addOption("LeftAuto", PathPlannerAuto("LeftAuto"))
         self.autoChooser.addOption("RightAuto", PathPlannerAuto("RightAuto"))
         self.autoChooser.addOption("MidOneL4Coral", PathPlannerAuto("MidOneL4Coral"))
@@ -149,10 +151,10 @@ class RobotContainer:
         # self.OperatorController.b().whileTrue(WristHome(self.wristsub))
         
         # Change target mode for wrist
-        self.OperatorController.start().onTrue(CoralMode(self.wristsub))
-        self.OperatorController.button(7).onTrue(AlgaeMode(self.wristsub))
+        self.OperatorController.start().onTrue(CoralMode(self.wristsub, self.ledsub))
+        self.OperatorController.button(7).onTrue(AlgaeMode(self.wristsub, self.ledsub))
         
-        # LEDS
-        self.OperatorController.a().onTrue(SetLEDColorCommand(self.ledsub, (0, 255, 0)))  # Green
-        self.OperatorController.b().onTrue(SetLEDColorCommand(self.ledsub, (255, 0, 0)))  # Red
-        self.OperatorController.povDown().onTrue(SetLEDColorCommand(self.ledsub, (0, 0, 0)))  # Off
+        # # LEDS
+        # self.OperatorController.button(7).onTrue(SetLEDColorCommand(self.ledsub, (0, 255, 255)))  # cyan
+        # self.OperatorController.start().onTrue(SetLEDColorCommand(self.ledsub, (255, 255, 255)))  # white
+        # self.OperatorController.povDown().onTrue(SetLEDColorCommand(self.ledsub, (0, 0, 0)))  # Off

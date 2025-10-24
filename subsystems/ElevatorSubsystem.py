@@ -109,14 +109,16 @@ class ElevatorSubsystemClass(commands2.Subsystem):
     # PID controls with mtion magic
     def motionMagicWithJoystick(self, left_y):
         self.topMotor.set_control(self.motion_magic.with_position(left_y * 10).with_slot(0)
-            .with_limit_forward_motion(self.topOveride)
-            .with_limit_reverse_motion(self.bottomOveride))
+            # .with_limit_forward_motion(self.topOveride)
+            .with_limit_reverse_motion(self.bottomOveride)
+            )
         self.bottoMmotor.set_control(self.follow_left_request)
             
     def elevatorPID(self, target):
         self.topMotor.set_control(self.motion_magic.with_position(target).with_slot(0)
-            .with_limit_forward_motion(self.topOveride)
-            .with_limit_reverse_motion(self.bottomOveride))
+            # .with_limit_forward_motion(self.topOveride)
+            .with_limit_reverse_motion(self.bottomOveride)
+            )
         self.bottoMmotor.set_control(self.follow_left_request)
         
     # def motionFinished(self):

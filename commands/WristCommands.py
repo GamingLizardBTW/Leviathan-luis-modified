@@ -1,6 +1,7 @@
 import wpilib
 import commands2
 from subsystems.WristSubsystem import WristSubsystemClass
+from subsystems.LEDSubsytem import LED_5v_Subsystem
 import logging
 logger = logging.getLogger("WristSubsystem Logger")
 from wpilib import XboxController
@@ -148,11 +149,12 @@ class WristHome(commands2.Command):
         self.WristSub.WristStop()
         
 class CoralMode(commands2.Command):
-    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+    def __init__(self, WristSubsytem: WristSubsystemClass, ledSub: LED_5v_Subsystem) -> None:
         self.WristSub = WristSubsytem
-
+        self.ledSub = ledSub
     def initialize(self):
         logger.info("changing modes")
+        self.ledSub.set_led_color((255,255,255)) #white
 
     def execute(self):
         self.WristSub.cMode()
@@ -161,12 +163,14 @@ class CoralMode(commands2.Command):
         return True
         
 class AlgaeMode(commands2.Command):
-    def __init__(self, WristSubsytem: WristSubsystemClass) -> None:
+    def __init__(self, WristSubsytem: WristSubsystemClass, ledSub: LED_5v_Subsystem) -> None:
         self.WristSub = WristSubsytem
+        self.ledSub = ledSub
 
     def initialize(self):
         logger.info("changing modes")
-
+        self.ledSub.set_led_color((0,255,50)) # light green
+        
     def execute(self):
         self.WristSub.aMode()
 

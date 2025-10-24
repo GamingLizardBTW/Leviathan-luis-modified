@@ -6,6 +6,7 @@ import wpinet
 # from wpilib import SmartDashboard, Field2d
 from constants import OP
 import time
+import math
 
 # Math
 import wpimath.geometry
@@ -38,7 +39,7 @@ class visionSubsystem(commands2.Subsystem):
     def __init__(self) -> None:
         
         # Create coral camera instance
-        self.camera = PhotonCamera("Coral_Cam")
+        self.camera = PhotonCamera("Coral_2")
         
         # gets latest result from coral camera
         self.result = self.camera.getLatestResult()
@@ -212,3 +213,4 @@ class visionSubsystem(commands2.Subsystem):
         wpilib.SmartDashboard.putNumber("X-Rot", self.getClosestData("X-Rot"))
         wpilib.SmartDashboard.putNumber("Y-Rot", self.getClosestData("Y-Rot"))
         wpilib.SmartDashboard.putNumber("Z-Rot", self.getClosestData("Z-Rot"))
+        wpilib.SmartDashboard.putNumber("Vision To target", (self.getClosestData("Z-Rot")/math.pi))

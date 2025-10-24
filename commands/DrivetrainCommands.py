@@ -42,6 +42,8 @@ class driveWithJoystickCommand(commands2.Command):
             self.rotateAroundReef = self.drivetrainSub.rotateToRedReef()
 
         if self.controller.getRawButton(4):
+            # yS = self.visionSub.getClosestData("Y-Dist")
+            # ySpeed = (yS * OP.max_speed)
             rotationSpeed = self.drivetrainSub.rotateToBarge()
         elif self.controller.getRawButton(3):
             rotationSpeed = self.drivetrainSub.rotateToLeftHuman()
@@ -52,19 +54,32 @@ class driveWithJoystickCommand(commands2.Command):
         else:
             self.rightX = XboxController(OP.driver_controller).getRightX()#This will be rotation(turn heading left and right)
             rotationSpeed = (-self.rotateSpeedLimiter.calculate(wpimath.applyDeadband(self.rightX, 0.08)) * OP.max_turn_speed)
-        #rotationSpeed = -self.rightX * OP.max_speed
+        # rotationSpeed = -self.rightX * OP.max_speed
         
         # Create Auto Target
-        targetYaw = 0.0
-        targetVisible = self.visionSub.hasTargets
+        # targetYaw = 0.0
+        # targetVisible = self.visionSub.hasTargets
 
-        # if self.controller.getXButton() and targetVisible:
+        # # if self.controller.getRawButton(3) and targetVisible:
+        # if self.controller.getRawButton(3):
         #     targetYaw = self.visionSub.getClosestData("Z-Rot")
-        #     rotationSpeed = (-self.rotateSpeedLimiter.calculate(wpimath.applyDeadband(targetYaw/math.pi, 0.08)) * OP.max_turn_speed)
-            # rotationSpeed = (-1.0 * targetYaw * OP.max_turn_speed * VISION_TURN_kP)
+        #     # rotationSpeed = (-self.rotateSpeedLimiter.calculate(wpimath.applyDeadband(targetYaw/math.pi, 0.08)) * OP.max_turn_speed)
+        #     rotationSpeed = self.drivetrainSub.rotateToAprilTag(targetYaw)
+        #     # rotationSpeed = (-1.0 * targetYaw * OP.max_turn_speed * VISION_TURN_kP)
+        # else:
+        #     self.rightX = XboxController(OP.driver_controller).getRightX()#This will be rotation(turn heading left and right)
+        #     rotationSpeed = (-self.rotateSpeedLimiter.calculate(wpimath.applyDeadband(self.rightX, 0.08)) * OP.max_turn_speed)
 
         # self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed)
-
+        
+        
+        
+        # if self.controller.getRawButton(4) or self.controller.getRawButton(4) or self.controller.getRawButton(4) or self.controller.getRawButton(4):
+        # if self.controller.getRawButton(4):
+        #     self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed, False, 0.02, self.controller.getRawButtonPressed(8))
+        # else:
+        #     self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed, SW.field_relative, 0.02, self.controller.getRawButtonPressed(8))
+            
         self.drivetrainSub.drive(xSpeed, ySpeed, rotationSpeed, SW.field_relative, 0.02, self.controller.getRawButtonPressed(8))
         self.drivetrainSub.showAbsoluteEncoderValues()
         self.drivetrainSub.showAbsoluteEncoderValuesInRadians()

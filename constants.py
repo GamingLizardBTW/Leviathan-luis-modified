@@ -110,8 +110,8 @@ op_data = {
     #Swerve
     "max_steering_velocity": math.pi,
     "max_steering_acceleration": math.tau,
-    "max_speed": 4.0, #unit in meter per second
-    "max_turn_speed": 8.0 #unit in radian per second
+    "max_speed": 3.25, #unit in meter per second
+    "max_turn_speed": 6.5 #unit in radian per second
 
 }
 OP = namedtuple("Data", op_data.keys())(**op_data)
@@ -129,24 +129,24 @@ sw_data = {
 	#
     "path_planner_config": RobotConfig.fromGUISettings(),
 
-	"lf_enc_zeropos":  0.2816313570407839,
-	"rf_enc_zeropos":  0.16989345424733635,
-	"lb_enc_zeropos":  0.7052724176318105,
-	"rb_enc_zeropos":  0.4591871364796784,
+	"lf_enc_zeropos":  0.3395293834882346,
+	"rf_enc_zeropos":  0.1649970041249251,
+	"lb_enc_zeropos":  0.7011371425284285,
+	"rb_enc_zeropos":  0.44212201105305027,
 
     "swerve_drive_kS": 0,
     "swerve_drive_kV": 0.12,
-    "swerve_drive_kP": 0.13,
+    "swerve_drive_kP": 0.11,
     "swerve_drive_kI": 0,
     "swerve_drive_kD": 0,
 
-    # "swerve_steer_kP": 0,
     "swerve_steer_kP": 1,
+    # "swerve_steer_kP": 0,
     "swerve_steer_kI": 0,
     "swerve_steer_kD": 0,
     
     # Automation:
-    "drivetrain_rotation_kP": 0.01,
+    "drivetrain_rotation_kP": 0.1,
     "drivetrain_rotation_kI": 0,
     "drivetrain_rotation_kD": 0,
     
@@ -156,22 +156,22 @@ sw_data = {
     "WristKs": 2,
     "WristKv": 0.12,
     "WristKa": 0,
-    "WristKp": 50,
+    "WristKp": 65,
     "WristKi": 0,
-    "WristKd": 0.02,
+    "WristKd": 0,
     "WristOffset": 0,
     
     # Wrist PID Setpoints
     "Wrist_L2_Setpoint": 0.31801953125, # Coral L2
     "Wrist_L3_Setpoint": 0.28, # Coral L3
-    "Wrist_L4_Setpoint": 0.16, # Coral L4
+    "Wrist_L4_Setpoint": 0.265, # Coral L4
     
     "Algae_L2_Setpoint": 0.265, # Algae L2
-    "Algae_L3_Setpoint": 0.265, # Algae L3
-    "Wrist_Barge_Setpoint": 0.141, # Barge
+    "Algae_L3_Setpoint": 0.263, # Algae L3
+    "Wrist_Barge_Setpoint": 0.08, # Barge
     
     "Wrist_Processor_Setpoint": 0.285, # Processor
-    "Wrist_ground_Setpoint": 0.4, # Algae Ground Intake
+    "Wrist_ground_Setpoint": 0.35, # Algae Ground Intake
     "Wrist_Human_Player_Setpoint": 0.145, # Human Player
     
     # Elevator Speed controls
@@ -186,7 +186,7 @@ sw_data = {
     "Elevatorkv": 0.12, # A velocity target of 1 rps results in 0.12 V outp
     "Elevatorka": 0, # An acceleration of 1 rps/s requires 0 V output
     "Elevatorkp": 45,
-    "Elevatorki": 0, # No output for integrated error
+    "Elevatorki": 0.01, # No output for integrated error
     "Elevatorkd": 0.01,
     
     # Elevator Tolerence Constants
@@ -199,11 +199,13 @@ sw_data = {
     "Elevator_motion_jerk": 500, # seconds to reach max accel (Measured in rotations per sec³) (time = accel/jerk)
     
     # Elevator PID Setpoints (Using Mechanism rotations not motor rotations)
-    "L2_Setpoint": 0.9309539051626653,
-    "L3_Setpoint": 1.8,
-    "L4_Setpoint": 3.12,
-    "Human_Player_Station": 0.38,
-    "Home": 0.05,
+    "L2_Setpoint": 0.9030026181,
+    "L3_Setpoint": 1.6501570686,
+    "L4_Setpoint": 2.8098507863,
+    # "L2_AlgaeSetpoint": 0.9030026181,
+    "L3_AlgaeSetpoint": 1.7876701577,
+    "Human_Player_Station": 0.3483664923,
+    "Home": 0.0458376964,
     
 }
 SW = namedtuple("Data", sw_data.keys())(**sw_data)

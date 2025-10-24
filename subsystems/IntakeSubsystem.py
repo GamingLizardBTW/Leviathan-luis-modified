@@ -18,6 +18,7 @@ class IntakeSubsystemClass(commands2.Subsystem):
         # Settings for motors
         self.brakMode = phoenix6.signals.NeutralModeValue(1)
         self.Intakeintakemotor.setNeutralMode(self.brakMode)
+        self.Intakeintakemotor.set(-0.1)
         
     def periodic(self):
         # SmartDashboard
@@ -39,4 +40,4 @@ class IntakeSubsystemClass(commands2.Subsystem):
         #     self.Intakeintakemotor.set(ELEC.OutakeSpeed)
     
     def Stop(self):
-        self.Intakeintakemotor.set(0)
+        self.Intakeintakemotor.set(-0.1)

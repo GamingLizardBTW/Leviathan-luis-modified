@@ -268,37 +268,43 @@ class drivetrainSubsystemClass(commands2.Subsystem):
 
     def rotateToBlueReef(self) -> float:
         PIDController = wpimath.controller.PIDController(SW.drivetrain_rotation_kP, SW.drivetrain_rotation_kI, SW.drivetrain_rotation_kD)
-        PIDController.enableContinuousInput(180,180)
+        PIDController.enableContinuousInput(-180,180)
         reef = Pose2d.rotateAround(self.getRobotPose(), Translation2d(4.475, 4.025), self.gyro.getRotation2d())
         rotationValue = PIDController.calculate(self.getRobotPose().rotation().degrees(), reef.rotation().degrees())
-        return -rotationValue
+        return rotationValue
 
     def rotateToRedReef(self) -> float:
         PIDController = wpimath.controller.PIDController(SW.drivetrain_rotation_kP, SW.drivetrain_rotation_kI, SW.drivetrain_rotation_kD)
-        PIDController.enableContinuousInput(180,180)
+        PIDController.enableContinuousInput(-180,180)
         reef = Pose2d.rotateAround(self.getRobotPose(), Translation2d(13.075, 4.025), self.gyro.getRotation2d())
         rotationValue = PIDController.calculate(self.getRobotPose().rotation().degrees(), reef.rotation().degrees())
-        return -rotationValue
+        return rotationValue
     
     def rotateToBarge(self) -> float:
         PIDController = wpimath.controller.PIDController(SW.drivetrain_rotation_kP, SW.drivetrain_rotation_kI, SW.drivetrain_rotation_kD)
-        PIDController.enableContinuousInput(180,180)
+        PIDController.enableContinuousInput(-180,180)
         barge = 0
         rotationValue = PIDController.calculate(self.getRobotPose().rotation().degrees(), barge)
-        return -rotationValue
+        return rotationValue
         
     def rotateToLeftHuman(self) -> float:
         PIDController = wpimath.controller.PIDController(SW.drivetrain_rotation_kP, SW.drivetrain_rotation_kI, SW.drivetrain_rotation_kD)
-        PIDController.enableContinuousInput(180,180)
+        PIDController.enableContinuousInput(-180,180)
         leftHuman = 125
         rotationValue = PIDController.calculate(self.getRobotPose().rotation().degrees(), leftHuman)
-        return -rotationValue
+        return rotationValue
         
     def rotateToRightHuman(self) -> float:
         PIDController = wpimath.controller.PIDController(SW.drivetrain_rotation_kP, SW.drivetrain_rotation_kI, SW.drivetrain_rotation_kD)
         PIDController.enableContinuousInput(-180,180)
         rightHuman = -125
         rotationValue = PIDController.calculate(self.getRobotPose().rotation().degrees(), rightHuman)
+        return rotationValue
+    
+    def rotateToAprilTag(self, visionToTarget: float) -> float:
+        PIDController = wpimath.controller.PIDController(5, SW.drivetrain_rotation_kI, SW.drivetrain_rotation_kD)
+        PIDController.enableContinuousInput(-1,1)
+        rotationValue = PIDController.calculate(visionToTarget, 1)
         return -rotationValue
     
     def resetAllEncoders(self) -> None:
