@@ -24,7 +24,7 @@ from commands.HangCommands import hangBackwards, hangForward, hangStop
 from commands.LEDCommands import SetLEDColorCommand
 
 from commands.DrivetrainCommands import driveWithJoystickCommand
-from commands.SingleDrivetrainCommand import singledriveWithJoystickCommand
+#from commands.SingleDrivetrainCommand import singledriveWithJoystickCommand
 from pathplannerlib.auto import AutoBuilder, PathPlannerAuto, NamedCommands
 from pathplannerlib.path import PathPlannerPath
 
@@ -55,7 +55,7 @@ class RobotContainer:
         # Controllers
         self.DriverController = commands2.button.CommandXboxController(OP.driver_controller)
         self.OperatorController = commands2.button.CommandXboxController(OP.operator_controller)
-        self.SingleController = commands2.button.CommandXboxController(OP.single_controller)
+        #self.SingleController = commands2.button.CommandXboxController(OP.single_controller)
         
         #Command groups
         self.teleopL2 = commands2.ParallelCommandGroup(WristL2(self.wristsub), ElevatorL2(self.elevatorsub))
@@ -118,33 +118,51 @@ class RobotContainer:
         
         # Default Commands
         # 2 seperate driver
-        #self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub))
+        self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub))
         # Single controller driver
-        self.drivetrainSub.setDefaultCommand(singledriveWithJoystickCommand(self.drivetrainSub))
+        #self.drivetrainSub.setDefaultCommand(singledriveWithJoystickCommand(self.drivetrainSub))
         
+        # # Intake Intake Commands
+        self.OperatorController.leftBumper().onTrue(IntakeCommand(self.Intakesub))
+        self.OperatorController.leftBumper().onFalse(IntakeStop(self.Intakesub))
+        self.OperatorController.rightBumper().onTrue(OutakeCommand(self.Intakesub))
+        self.OperatorController.rightBumper().onFalse(IntakeStop(self.Intakesub))
         
+        # # Hang Commands
+        self.DriverController.povDown().whileTrue(hangBackwards(self.hangSub))
+        self.DriverController.povDown().whileFalse(hangStop(self.hangSub))
+        self.DriverController.povUp().whileTrue(hangForward(self.hangSub))
+        self.DriverController.povUp().whileFalse(hangStop(self.hangSub))
+        
+        # # Elevator and Wrist Teleop PID Commands (Considering making it to "on true" to only have to press once)
+        self.OperatorController.a().whileTrue(self.teleopL2) # Alge L2 & coral L2
+        self.OperatorController.x().whileTrue(self.teleopL3) # Alge L3 & coral L3
+        self.OperatorController.y().whileTrue(self.teleopL4) # Barge & coral L4
+        self.OperatorController.b().whileTrue(self.teleopStation) # Human Player & Processor
+        self.OperatorController.povDown().whileTrue(self.teleopHome) # Home robot
+        self.OperatorController.povUp().whileTrue(self.teleopGroundIntake) # Home robot
         
         # Change target mode for wrist
         #self.OperatorController.start().onTrue(CoralMode(self.wristsub, self.ledsub))
         #self.OperatorController.button(7).onTrue(AlgaeMode(self.wristsub, self.ledsub))
 
         # Buttons for single controller on port 3
-        self.SingleController.start().onTrue(CoralMode(self.wristsub, self.ledsub))
-        self.SingleController.button(7).onTrue(AlgaeMode(self.wristsub, self.ledsub))
-        self.SingleController.a().whileTrue(self.teleopL2) # Alge L2 & coral L2
-        self.SingleController.x().whileTrue(self.teleopL3) # Alge L3 & coral L3
-        self.SingleController.y().whileTrue(self.teleopL4) # Barge & coral L4
-        self.SingleController.b().whileTrue(self.teleopStation) # Human Player & Processor
-        self.SingleController.povDown().whileTrue(self.teleopHome) # Home robot
-        self.SingleController.povUp().whileTrue(self.teleopGroundIntake) # Home robot
-        self.SingleController.povLeft().whileTrue(hangBackwards(self.hangSub))
-        self.SingleController.povLeft().whileFalse(hangStop(self.hangSub))
-        self.SingleController.povRight().whileTrue(hangForward(self.hangSub))
-        self.SingleController.povRight().whileFalse(hangStop(self.hangSub))
-        self.SingleController.leftBumper().onTrue(IntakeCommand(self.Intakesub))
-        self.SingleController.leftBumper().onFalse(IntakeStop(self.Intakesub))
-        self.SingleController.rightBumper().onTrue(OutakeCommand(self.Intakesub))
-        self.SingleController.rightBumper().onFalse(IntakeStop(self.Intakesub))
+        #self.SingleController.start().onTrue(CoralMode(self.wristsub, self.ledsub))
+        #self.SingleController.button(7).onTrue(AlgaeMode(self.wristsub, self.ledsub))
+        #self.SingleController.a().whileTrue(self.teleopL2) # Alge L2 & coral L2
+        #self.SingleController.x().whileTrue(self.teleopL3) # Alge L3 & coral L3
+        #self.SingleController.y().whileTrue(self.teleopL4) # Barge & coral L4
+        #self.SingleController.b().whileTrue(self.teleopStation) # Human Player & Processor
+        #self.SingleController.povDown().whileTrue(self.teleopHome) # Home robot
+        #self.SingleController.povUp().whileTrue(self.teleopGroundIntake) # Home robot
+        #self.SingleController.povLeft().whileTrue(hangBackwards(self.hangSub))
+        #self.SingleController.povLeft().whileFalse(hangStop(self.hangSub))
+        #self.SingleController.povRight().whileTrue(hangForward(self.hangSub))
+        #self.SingleController.povRight().whileFalse(hangStop(self.hangSub))
+        #self.SingleController.leftBumper().onTrue(IntakeCommand(self.Intakesub))
+        #self.SingleController.leftBumper().onFalse(IntakeStop(self.Intakesub))
+        #self.SingleController.rightBumper().onTrue(OutakeCommand(self.Intakesub))
+        #self.SingleController.rightBumper().onFalse(IntakeStop(self.Intakesub))
         
         # # LEDS
         # self.OperatorController.button(7).onTrue(SetLEDColorCommand(self.ledsub, (0, 255, 255)))  # cyan
