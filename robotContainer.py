@@ -118,7 +118,7 @@ class RobotContainer:
         
         # Default Commands
         # 2 seperate driver
-        self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub))
+        #self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub))
         # Single controller driver
         self.drivetrainSub.setDefaultCommand(singledriveWithJoystickCommand(self.drivetrainSub))
         
