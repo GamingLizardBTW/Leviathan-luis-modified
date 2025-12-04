@@ -156,10 +156,10 @@ class RobotContainer:
         self.SingleController.b().whileTrue(self.teleopStation) # Human Player & Processor
         self.SingleController.povDown().whileTrue(self.teleopHome) # Home robot
         self.SingleController.povUp().whileTrue(self.teleopGroundIntake) # Home robot
-        self.SingleController.povDown().whileTrue(hangBackwards(self.hangSub))
-        self.SingleController.povDown().whileFalse(hangStop(self.hangSub))
-        self.SingleController.povUp().whileTrue(hangForward(self.hangSub))
-        self.SingleController.povUp().whileFalse(hangStop(self.hangSub))
+        self.SingleController.povLeft().whileTrue(hangBackwards(self.hangSub))
+        self.SingleController.povLeft().whileFalse(hangStop(self.hangSub))
+        self.SingleController.povRight().whileTrue(hangForward(self.hangSub))
+        self.SingleController.povRight().whileFalse(hangStop(self.hangSub))
         self.SingleController.leftBumper().onTrue(IntakeCommand(self.Intakesub))
         self.SingleController.leftBumper().onFalse(IntakeStop(self.Intakesub))
         self.SingleController.rightBumper().onTrue(OutakeCommand(self.Intakesub))
