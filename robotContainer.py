@@ -10,7 +10,7 @@ from constants import OP, ELEC
 import subsystems.IntakeSubsystem
 import subsystems.WristSubsystem
 import subsystems.ElevatorSubsystem
-import subsystems.VisionSubsystem
+#import subsystems.VisionSubsystem
 import subsystems.HangSubsystem
 import subsystems.LEDSubsytem 
 
@@ -42,7 +42,7 @@ class RobotContainer:
         logger.info("Creating robot container")
         
         # Subsytems
-        self.visionSub = subsystems.VisionSubsystem.visionSubsystem()
+        #self.visionSub = subsystems.VisionSubsystem.visionSubsystem()
         self.Intakesub = subsystems.IntakeSubsystem.IntakeSubsystemClass()
         self.wristsub = subsystems.WristSubsystem.WristSubsystemClass()
         self.elevatorsub = subsystems.ElevatorSubsystem.ElevatorSubsystemClass()
@@ -116,7 +116,8 @@ class RobotContainer:
         # Default Commands
         # self.elevatorsub.setDefaultCommand(ElevatorWithJoysticks(self.elevatorsub))
         # self.wristsub.setDefaultCommand(wristWithJoystick(self.wristsub))
-        self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub, self.visionSub)) # Additional Buttons used: A
+        #self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub, self.visionSub)) # Additional Buttons used: A
+        self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub))
         
         # # Intake Intake Commands
         self.OperatorController.leftBumper().onTrue(IntakeCommand(self.Intakesub))

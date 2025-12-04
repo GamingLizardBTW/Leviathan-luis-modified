@@ -3,7 +3,7 @@ import wpimath
 import commands2
 import wpimath.filter
 from subsystems.DrivetrainSubsystem import drivetrainSubsystemClass
-from subsystems.VisionSubsystem import visionSubsystem
+#from subsystems.VisionSubsystem import visionSubsystem
 import logging
 logger = logging.getLogger("Drivetrain Logger")
 from wpilib import XboxController
@@ -13,9 +13,9 @@ import math
 VISION_TURN_kP = 0.01
 
 class driveWithJoystickCommand(commands2.Command):
-    def __init__(self, drivetrainSubsystem: drivetrainSubsystemClass, visionSubsystem: visionSubsystem) -> None :
+    def __init__(self, drivetrainSubsystem: drivetrainSubsystemClass) -> None :
         self.drivetrainSub = drivetrainSubsystem
-        self.visionSub = visionSubsystem
+        #self.visionSub = visionSubsystem
         self.xSpeedLimiter = wpimath.filter.SlewRateLimiter(3)
         self.ySpeedLimiter = wpimath.filter.SlewRateLimiter(3)
         self.rotateSpeedLimiter = wpimath.filter.SlewRateLimiter(3)
