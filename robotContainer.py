@@ -143,8 +143,8 @@ class RobotContainer:
         self.OperatorController.povUp().whileTrue(self.teleopGroundIntake) # Home robot
         
         # Change target mode for wrist
-        #self.OperatorController.start().onTrue(CoralMode(self.wristsub, self.ledsub))
-        #self.OperatorController.button(7).onTrue(AlgaeMode(self.wristsub, self.ledsub))
+        self.OperatorController.start().onTrue(CoralMode(self.wristsub, self.ledsub))
+        self.OperatorController.button(7).onTrue(AlgaeMode(self.wristsub, self.ledsub))
 
         # Buttons for single controller on port 3
         #self.SingleController.start().onTrue(CoralMode(self.wristsub, self.ledsub))
