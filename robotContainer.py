@@ -122,29 +122,11 @@ class RobotContainer:
         # Single controller driver
         self.drivetrainSub.setDefaultCommand(singledriveWithJoystickCommand(self.drivetrainSub))
         
-        # # Intake Intake Commands
-        self.OperatorController.leftBumper().onTrue(IntakeCommand(self.Intakesub))
-        self.OperatorController.leftBumper().onFalse(IntakeStop(self.Intakesub))
-        self.OperatorController.rightBumper().onTrue(OutakeCommand(self.Intakesub))
-        self.OperatorController.rightBumper().onFalse(IntakeStop(self.Intakesub))
         
-        # # Hang Commands
-        self.DriverController.povDown().whileTrue(hangBackwards(self.hangSub))
-        self.DriverController.povDown().whileFalse(hangStop(self.hangSub))
-        self.DriverController.povUp().whileTrue(hangForward(self.hangSub))
-        self.DriverController.povUp().whileFalse(hangStop(self.hangSub))
-        
-        # # Elevator and Wrist Teleop PID Commands (Considering making it to "on true" to only have to press once)
-        self.OperatorController.a().whileTrue(self.teleopL2) # Alge L2 & coral L2
-        self.OperatorController.x().whileTrue(self.teleopL3) # Alge L3 & coral L3
-        self.OperatorController.y().whileTrue(self.teleopL4) # Barge & coral L4
-        self.OperatorController.b().whileTrue(self.teleopStation) # Human Player & Processor
-        self.OperatorController.povDown().whileTrue(self.teleopHome) # Home robot
-        self.OperatorController.povUp().whileTrue(self.teleopGroundIntake) # Home robot
         
         # Change target mode for wrist
-        self.OperatorController.start().onTrue(CoralMode(self.wristsub, self.ledsub))
-        self.OperatorController.button(7).onTrue(AlgaeMode(self.wristsub, self.ledsub))
+        #self.OperatorController.start().onTrue(CoralMode(self.wristsub, self.ledsub))
+        #self.OperatorController.button(7).onTrue(AlgaeMode(self.wristsub, self.ledsub))
 
         # Buttons for single controller on port 3
         self.SingleController.start().onTrue(CoralMode(self.wristsub, self.ledsub))
