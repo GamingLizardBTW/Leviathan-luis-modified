@@ -117,10 +117,9 @@ class RobotContainer:
         pass
         
         # Default Commands
-        # self.elevatorsub.setDefaultCommand(ElevatorWithJoysticks(self.elevatorsub))
-        # self.wristsub.setDefaultCommand(wristWithJoystick(self.wristsub))
-        #self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub, self.visionSub)) # Additional Buttons used: A
+        # 2 seperate driver
         self.drivetrainSub.setDefaultCommand(driveWithJoystickCommand(self.drivetrainSub))
+        # Single controller driver
         self.drivetrainSub.setDefaultCommand(singledriveWithJoystickCommand(self.drivetrainSub))
         
         # # Intake Intake Commands
