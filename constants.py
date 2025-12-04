@@ -106,6 +106,8 @@ op_data = {
     #Driver/Operator's controllers
     "driver_controller": 0,
     "operator_controller": 1,
+    #Single Operator controller
+    "single_controller": 2,
     
     #Swerve
     "max_steering_velocity": math.pi,
